@@ -3,19 +3,19 @@ import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 export async function middleware(request: NextRequest) {
-  const token = await getToken({ req: request });
+//   const token = await getToken({ req: request });
 
-  // Protect cart and checkout routes
-  if (
-    request.nextUrl.pathname.startsWith("/cart") ||
-    request.nextUrl.pathname.startsWith("/checkout")
-  ) {
-    if (!token) {
-      return NextResponse.redirect(new URL("/auth/signin", request.url));
-    }
-  }
+//   // Protect cart and checkout routes
+//   if (
+//     request.nextUrl.pathname.startsWith("/cart") ||
+//     request.nextUrl.pathname.startsWith("/checkout")
+//   ) {
+//     if (!token) {
+//       return NextResponse.redirect(new URL("/auth/signin", request.url));
+//     }
+//   }
 
-  return NextResponse.next();
+//   return NextResponse.next();
 }
 
 export const config = {
