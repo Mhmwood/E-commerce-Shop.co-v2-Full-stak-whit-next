@@ -1,0 +1,122 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String    @id @default(cuid())
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime?
+  image          String?
+
+  accounts       Account[]
+  sessions       Session[]
+  reviews        ProductReview[]
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  products Product[]
+}
+
+model Product {
+  id                   Int                 @id @default(autoincrement())
+  title                String
+  description          String
+  price                Float
+  discountPercentage   Float
+  rating               Float
+  stock                Int
+  tags                 String[]
+  brand                String
+  sku                  String
+  weight               Float
+  warrantyInformation  String
+  shippingInformation  String
+  availabilityStatus   String
+  returnPolicy         String
+  minimumOrderQuantity Int
+  thumbnail            String
+  images               String[]
+
+  categoryId           Int
+  category             Category           @relation(fields: [categoryId], references: [id])
+
+  dimensions           ProductDimensions?
+  meta                 ProductMeta?
+  reviews              ProductReview[]
+}
+
+model ProductDimensions {
+  id        Int      @id @default(autoincrement())
+  width     Float
+  height    Float
+  depth     Float
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int      @unique
+}
+
+model ProductMeta {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  barcode   String
+  qrCode    String
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int      @unique
+}
+
+model ProductReview {
+  id            Int      @id @default(autoincrement())
+  rating        Float
+  comment       String
+  date          DateTime
+  reviewerName  String
+  reviewerEmail String
+  product       Product  @relation(fields: [productId], references: [id])
+  productId     Int
+  user          User?    @relation(fields: [userId], references: [id])
+  userId        String?
+}
