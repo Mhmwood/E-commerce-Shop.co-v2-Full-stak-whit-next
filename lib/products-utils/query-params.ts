@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createApiError } from "../errHandle";
 
 export interface QueryParams {
   minPrice: number;
@@ -17,17 +18,25 @@ export const parseQueryParams = (
 ): QueryParams | NextResponse => {
   const { searchParams } = new URL(request.url);
 
-
   const minPrice = parseFloat(searchParams.get("minPrice") || "0");
   const maxPrice = parseFloat(searchParams.get("maxPrice") || "9999999");
   const page = parseInt(searchParams.get("page") || "1");
   const limit = parseInt(searchParams.get("limit") || "10");
 
   if (isNaN(page) || isNaN(limit) || isNaN(minPrice) || isNaN(maxPrice)) {
-    return new NextResponse(
-      JSON.stringify({ error: "Invalid numeric parameters" }),
+    return NextResponse.json(
+      createApiError("Invalid numeric parameters", 400, "BAD_REQUEST"),
       { status: 400 }
     );
+
+    // const error = createApiError(
+    //   "You can only select from the following fields: price, rating,title, meta, meta.createdAt, meta.updatedAt",
+    //   400,
+    //   "BAD_REQUEST"
+    // );
+    // return NextResponse.json(error, {
+    //   status: error.status,
+    // });
   }
 
   return {

@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Product" ALTER COLUMN "sku" SET DEFAULT '',
+ALTER COLUMN "weight" SET DEFAULT 0,
+ALTER COLUMN "minimumOrderQuantity" SET DEFAULT 1;

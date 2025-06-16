@@ -11,7 +11,6 @@ export const generateOrderBy = (
     price: "direct",
     rating: "direct",
     title: "direct",
-
     meta: "relation",
     "meta.createdAt": "nested",
     "meta.updatedAt": "nested",
@@ -44,6 +43,8 @@ export const generateOrderBy = (
       400,
       "BAD_REQUEST"
     );
-    return NextResponse.json(error, { status: error.status });
+    return NextResponse.json(error, {
+      status: error.status,
+    });
   }
 };

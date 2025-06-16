@@ -1,22 +1,48 @@
 import { z } from "zod";
 
-export const productSchema = z.object({
-  title: z.string().min(1),
-  description: z.string().min(1),
-  price: z.number().positive(),
-  discountPercentage: z.number().min(0).max(100),
-  rating: z.number().min(0).max(5),
-  stock: z.number().int().nonnegative(),
-  tags: z.array(z.string()),
-  brand: z.string(),
-  sku: z.string(),
-  weight: z.number().positive(),
-  warrantyInformation: z.string(),
-  shippingInformation: z.string(),
-  availabilityStatus: z.string(),
-  returnPolicy: z.string(),
-  minimumOrderQuantity: z.number().int().min(1),
-  thumbnail: z.string().url(),
-  images: z.array(z.string().url()),
-  categoryId: z.number().int(),
+// Helper schemas
+const nonEmptyString = z.string().min(1, "Cannot be empty");
+const positiveNumber = z.number().positive();
+
+// Base product schema without refinements
+const BaseProductSchema = z.object({
+  title: nonEmptyString
+    .min(3, "Title must be at least 3 characters")
+    .max(20, "Title cannot exceed 20 characters"),
+  description: nonEmptyString.max(
+    50,
+    "Description cannot exceed 50 characters"
+  ),
+  price: positiveNumber,
+  stock: z.number().int().nonnegative("Stock cannot be negative"),
+  thumbnail: z.string().url("Invalid thumbnail URL"),
+  images: z.array(z.string().url("Invalid image URL")).max(3).optional(),
+  categoryId: z.number().int().positive(),
+  discountPercentage: z.number().optional(),
 });
+
+export const ProductSchema = BaseProductSchema.refine(
+  (data) => {
+    if (data.discountPercentage !== undefined) {
+      return data.discountPercentage < data.price;
+    }
+    return true;
+  },
+  {
+    message: "Discount must be less than price",
+  }
+);
+export const UpdateProductSchema = BaseProductSchema.partial().refine(
+  (data) => {
+    if (data.discountPercentage && data.price) {
+      return data.discountPercentage < data.price;
+    }
+    return true;
+  },
+  {
+    message: "Discount must be less than price",
+  }
+);
+
+// TypeScript type
+export type ProductInput = z.infer<typeof ProductSchema>;
