@@ -1,20 +1,24 @@
-import { handlePrismaError } from "@/lib/errHandle";
+import { createAsyncRoute } from "@/lib/asyncRoute.ts";
+
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export const GET = async () => {
-  try {
-    const categories = await prisma.category.findMany({
-      select: {
-        name: true,
+export const GET = createAsyncRoute(async () => {
+  const categories = await prisma.product.findMany({
+    select: {
+      category: true,
+    },
+    distinct: ["category"],
+    where: {
+      category: {
+        not: null,
       },
-    });
-    const categoryNames = categories.map((category) => category.name);
-    return NextResponse.json(categoryNames);
-  } catch (error) {
-    const handledError = handlePrismaError(error);
-    return NextResponse.json(handledError, {
-      status: handledError.status || 500,
-    });
-  }
-};
+    },
+  });
+
+  const categoryNames = categories
+    .map((item) => item.category)
+    .filter((category) => category && category !== "Uncategorized");
+
+  return NextResponse.json(categoryNames);
+});

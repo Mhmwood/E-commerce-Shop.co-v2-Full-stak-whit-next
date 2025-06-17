@@ -1,10 +1,11 @@
 import { z } from "zod";
 
 // Helper schemas
-const nonEmptyString = z.string().min(1, "Cannot be empty");
+const nonEmptyString = z.string().trim().min(1, "Cannot be empty");
 const positiveNumber = z.number().positive();
+const stringAndOptional = z.string().trim().optional();
+const numberAndOptional = z.number().positive().optional();
 
-// Base product schema without refinements
 const BaseProductSchema = z.object({
   title: nonEmptyString
     .min(3, "Title must be at least 3 characters")
@@ -17,8 +18,21 @@ const BaseProductSchema = z.object({
   stock: z.number().int().nonnegative("Stock cannot be negative"),
   thumbnail: z.string().url("Invalid thumbnail URL"),
   images: z.array(z.string().url("Invalid image URL")).max(3).optional(),
-  categoryId: z.number().int().positive(),
-  discountPercentage: z.number().optional(),
+  category: nonEmptyString
+    .max(20, "category cannot exceed 20 characters")
+    .toLowerCase(),
+  discountPercentage: numberAndOptional,
+  brand: stringAndOptional,
+  sku: stringAndOptional,
+  warrantyInformation: stringAndOptional,
+  shippingInformation: stringAndOptional,
+  availabilityStatus: stringAndOptional,
+  returnPolicy: stringAndOptional,
+
+  weight: numberAndOptional,
+  minimumOrderQuantity: numberAndOptional,
+
+
 });
 
 export const ProductSchema = BaseProductSchema.refine(

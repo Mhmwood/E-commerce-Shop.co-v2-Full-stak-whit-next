@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createApiError } from "../errHandle";
+import { LIMIT_DEFAULT } from "../constinst";
 
 export interface QueryParams {
   minPrice: number;
@@ -21,7 +22,7 @@ export const parseQueryParams = (
   const minPrice = parseFloat(searchParams.get("minPrice") || "0");
   const maxPrice = parseFloat(searchParams.get("maxPrice") || "9999999");
   const page = parseInt(searchParams.get("page") || "1");
-  const limit = parseInt(searchParams.get("limit") || "10");
+  const limit = parseInt(searchParams.get("limit") || LIMIT_DEFAULT);
 
   if (isNaN(page) || isNaN(limit) || isNaN(minPrice) || isNaN(maxPrice)) {
     return NextResponse.json(
@@ -29,14 +30,7 @@ export const parseQueryParams = (
       { status: 400 }
     );
 
-    // const error = createApiError(
-    //   "You can only select from the following fields: price, rating,title, meta, meta.createdAt, meta.updatedAt",
-    //   400,
-    //   "BAD_REQUEST"
-    // );
-    // return NextResponse.json(error, {
-    //   status: error.status,
-    // });
+
   }
 
   return {
@@ -77,7 +71,10 @@ export const buildWhereClause = (params: {
   };
 
   if (params.category) {
-    where.category = { name: params.category };
+    where.category = {
+      equals: params.category,
+      mode: "insensitive",
+    };
   }
 
   if (params.search) {

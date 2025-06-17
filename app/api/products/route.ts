@@ -9,7 +9,7 @@ import {
 } from "@/lib/products-utils/query-params";
 import { createAsyncRoute } from "@/lib/asyncRoute.ts";
 import { ProductSchema } from "@/validations/productSchema";
-import { createApiError } from "@/lib/errHandle";
+
 
 export const GET = createAsyncRoute(async (request: NextRequest) => {
   const params = parseQueryParams(request);
@@ -28,10 +28,7 @@ export const GET = createAsyncRoute(async (request: NextRequest) => {
       where,
       skip,
       take: params.limit,
-      select: {
-        ...select,
-        category: true,
-      },
+      select,
       orderBy,
     }),
     prisma.product.count({ where }),
@@ -47,25 +44,9 @@ export const GET = createAsyncRoute(async (request: NextRequest) => {
 
 export const POST = createAsyncRoute(async (request: NextRequest) => {
   const rawData = await request.json();
-  if (!rawData.category) {
-    const error = createApiError("Category is required", 400, "BAD_REQUEST");
-    return NextResponse.json(error, { status: error.status });
-  }
 
-  const categoryName = rawData.category.toLowerCase();
+  const validation = ProductSchema.safeParse(rawData);
 
-  const category = await prisma.category.upsert({
-    where: { name: categoryName },
-    create: { name: categoryName },
-    update: {},
-  });
-
-  delete rawData.category;
-
-  const validation = ProductSchema.safeParse({
-    ...rawData,
-    categoryId: category.id,
-  });
   if (!validation.success) {
     return NextResponse.json(
       { error: "Validation failed", details: validation.error.flatten() },
@@ -75,9 +56,6 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
 
   const product = await prisma.product.create({
     data: validation.data,
-    include: {
-      category: true,
-    },
   });
 
   return NextResponse.json(product, { status: 201 });

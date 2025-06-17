@@ -8,15 +8,16 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String          @id @default(cuid())
   name          String
-  email         String    @unique
+  email         String          @unique
   emailVerified DateTime?
   image         String?
-
-  accounts Account[]
-  sessions Session[]
-  reviews  ProductReview[]
+  accounts      Account[]
+  sessions      Session[]
+  reviews       ProductReview[]
+  cartItems     CartItem[]
+  orders        Order[]
 }
 
 model Account {
@@ -55,19 +56,13 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Category {
-  id       Int       @id @default(autoincrement())
-  name     String    @unique
-  products Product[]
-}
-
 model Product {
   id                   Int      @id @default(autoincrement())
   title                String
   description          String
   price                Float
   discountPercentage   Float    @default(0)
-  rating               Float    @default(0)
+  rating               Float    @default(0) // remmber build sysstem to calculate rating
   stock                Int      @default(0)
   thumbnail            String
   images               String[] @default([])
@@ -77,15 +72,16 @@ model Product {
   weight               Float?   @default(0)
   warrantyInformation  String?  @default("")
   shippingInformation  String?  @default("")
-  availabilityStatus   String?  @default("InStock") // optional: make enum later
+  availabilityStatus   String?  @default("InStock")
   returnPolicy         String?  @default("")
   minimumOrderQuantity Int?     @default(1)
-  categoryId Int
-  
-  category   Category @relation(fields: [categoryId], references: [id])
+  category             String?  @default("Uncategorized")
+
   dimensions ProductDimensions?
   meta       ProductMeta?
   reviews    ProductReview[]
+  cartItems  CartItem[]
+  orderItems OrderItem[]
 }
 
 model ProductDimensions {
@@ -93,8 +89,8 @@ model ProductDimensions {
   width     Float
   height    Float
   depth     Float
-  product   Product @relation(fields: [productId], references: [id])
   productId Int     @unique
+  product   Product @relation(fields: [productId], references: [id])
 }
 
 model ProductMeta {
@@ -103,8 +99,8 @@ model ProductMeta {
   updatedAt DateTime @updatedAt
   barcode   String
   qrCode    String
-  product   Product  @relation(fields: [productId], references: [id])
   productId Int      @unique
+  product   Product  @relation(fields: [productId], references: [id])
 }
 
 model ProductReview {
@@ -114,8 +110,54 @@ model ProductReview {
   date          DateTime
   reviewerName  String
   reviewerEmail String
-  product       Product  @relation(fields: [productId], references: [id])
   productId     Int
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String
+
+  product Product @relation(fields: [productId], references: [id])
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model CartItem {
+  id        Int    @id @default(autoincrement())
+  userId    String
+  productId Int
+  quantity  Int    @default(1)
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@unique([userId, productId])
+}
+
+model Order {
+  id              Int         @id @default(autoincrement())
+  userId          String
+  totalAmount     Float
+  status          OrderStatus @default(PENDING)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  shippingAddress String
+  paymentMethod   String
+
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orderItems OrderItem[]
+}
+
+model OrderItem {
+  id        Int   @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  quantity  Int
+  price     Float
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
 }

@@ -16,7 +16,6 @@ export const GET = createAsyncRoute(
     const product = await prisma.product.findUnique({
       where: { id },
       include: {
-        category: true,
         dimensions: true,
         meta: true,
         reviews: true,
@@ -45,47 +44,17 @@ export const PATCH = createAsyncRoute(
 
     const rawData = await request.json();
 
-    let categoryId: number | undefined = undefined;
-
-    if (rawData.category) {
-      if (
-        typeof rawData.category !== "string" ||
-        rawData.category.trim() === ""
-      ) {
-        return NextResponse.json(
-          { error: "Category must be a valid non-empty string" },
-          { status: 400 }
-        );
-      }
-
-      const categoryName = rawData.category.toLowerCase();
-      const category = await prisma.category.upsert({
-        where: { name: categoryName },
-        create: { name: categoryName },
-        update: {},
-      });
-
-      categoryId = category.id;
-      delete rawData.category; // because it's not defined in the validation schema
-    }
-
     const validation = UpdateProductSchema.safeParse(rawData);
     if (!validation.success) {
       return NextResponse.json(
-        { error: validation.error.errors },
+        { error: "Validation failed", details: validation.error.flatten() },
         { status: 400 }
       );
     }
 
     const updatedProduct = await prisma.product.update({
       where: { id },
-      data: {
-        ...validation.data,
-        ...(categoryId ? { categoryId } : {}),
-      },
-      include: {
-        category: true,
-      },
+      data: validation.data,
     });
 
     return NextResponse.json(updatedProduct);
