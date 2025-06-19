@@ -1,15 +1,14 @@
 import { prisma } from "@/lib/prisma";
 
 import { NextRequest, NextResponse } from "next/server";
-import { generateOrderBy } from "@/lib/products-utils/generateOrderBy";
+import { generateOrderBy } from "@/lib/api/products-utils/generateOrderBy";
 import {
   buildSelectObject,
   buildWhereClause,
   parseQueryParams,
-} from "@/lib/products-utils/query-params";
-import { createAsyncRoute } from "@/lib/asyncRoute.ts";
+} from "@/lib/api/products-utils/products-query-params";
+import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
 import { ProductSchema } from "@/validations/productSchema";
-
 
 export const GET = createAsyncRoute(async (request: NextRequest) => {
   const params = parseQueryParams(request);

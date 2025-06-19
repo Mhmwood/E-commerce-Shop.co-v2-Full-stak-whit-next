@@ -1,45 +1,46 @@
-import React from "react";
+"use client";
 import Link from "next/link";
-import { ShoppingCart, User } from "lucide-react";
+import { useAuth } from "../../lib/hooks/useAuth";
+import { signOut } from "next-auth/react";
 
 export default function Navbar() {
+  const { session, isAuthenticated } = useAuth();
+
   return (
-    <nav className="bg-white shadow-md">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <Link href="/" className="text-2xl font-bold text-blue-600">
-            E-Shop
+    <nav className="bg-gray-800 text-white p-4 shadow">
+      <div className="max-w-6xl mx-auto flex items-center justify-between">
+        <Link href="/" className="text-xl font-bold">
+          E-Commerce
+        </Link>
+        <div className="flex items-center gap-4">
+          <Link href="/" className="hover:text-gray-300">
+            Home
           </Link>
-
-          <div className="hidden md:flex space-x-8">
-            <Link
-              href="/"
-              className="text-gray-700 hover:text-blue-600 transition-colors"
-            >
-              Home
-            </Link>
-            <Link
-              href="/products"
-              className="text-gray-700 hover:text-blue-600 transition-colors"
-            >
-              Products
-            </Link>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <Link
-              href="/cart"
-              className="relative p-2 text-gray-700 hover:text-blue-600 transition-colors"
-            >
-              <ShoppingCart size={24} />
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                0
-              </span>
-            </Link>
-            <button className="p-2 text-gray-700 hover:text-blue-600 transition-colors">
-              <User size={24} />
+          <Link href="/cart" className="hover:text-gray-300">
+            Cart
+          </Link>
+          {isAuthenticated ? (
+            <button onClick={() => signOut()} className="hover:text-gray-300">
+              {session?.user?.name
+                ? `Log Out (${session?.user?.name})`
+                : "Log Out"}
             </button>
-          </div>
+          ) : (
+            <>
+              <Link href="/auth/signin" className="hover:text-gray-300">
+                Sign In
+              </Link>
+              <Link href="/auth/signup" className="hover:text-gray-300">
+                Sign Up
+              </Link>
+            </>
+          )}
+          <Link
+            href="/admin"
+            className="bg-indigo-600 hover:bg-indigo-700 px-3 py-1 rounded"
+          >
+            Admin
+          </Link>
         </div>
       </div>
     </nav>

@@ -107,35 +107,48 @@ export async function handleApiRequest<T>(
 
 // Handle Prisma errors
 export function handlePrismaError(error: unknown): ApiError {
-  if (typeof error === "object" && error !== null && "code" in error) {
+  if (typeof error === "object" && error !== null) {
     const prismaError = error as { code: string; message: string };
-
-    if (prismaError.code === "P2002") {
+    if ("name" in error && error.name === "PrismaClientValidationError") {
       return createApiError(
-        "A record with this value already exists",
-        409,
-        "DUPLICATE_ENTRY"
-      );
-    }
-
-    if (prismaError.code === "P2025") {
-      return createApiError("Record not found", 404, "NOT_FOUND");
-    }
-
-    if (prismaError.code === "P2003") {
-      return createApiError(
-        "Foreign key constraint failed",
+        "Invalid data provided for database operation",
         400,
-        "FOREIGN_KEY_CONSTRAINT"
+        "VALIDATION_ERROR",
+        // {
+        //   originalError: (error as any).message || "Validation failed",
+        //   clientVersion: (error as any).clientVersion,
+        // }
       );
     }
 
-    if (prismaError.code === "P2014") {
-      return createApiError(
-        "The change you are trying to make would violate the required relation",
-        400,
-        "RELATION_VIOLATION"
-      );
+    if ("code" in error) {
+      if (prismaError.code === "P2002") {
+        return createApiError(
+          "A record with this value already exists",
+          409,
+          "DUPLICATE_ENTRY"
+        );
+      }
+
+      if (prismaError.code === "P2025") {
+        return createApiError("Record not found", 404, "NOT_FOUND");
+      }
+
+      if (prismaError.code === "P2003") {
+        return createApiError(
+          "Foreign key constraint failed",
+          400,
+          "FOREIGN_KEY_CONSTRAINT"
+        );
+      }
+
+      if (prismaError.code === "P2014") {
+        return createApiError(
+          "The change you are trying to make would violate the required relation",
+          400,
+          "RELATION_VIOLATION"
+        );
+      }
     }
 
     // Default Prisma error

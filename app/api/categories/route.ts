@@ -1,4 +1,4 @@
-import { createAsyncRoute } from "@/lib/asyncRoute.ts";
+import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
 
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";

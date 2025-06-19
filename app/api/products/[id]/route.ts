@@ -1,5 +1,6 @@
-import { createAsyncRoute } from "@/lib/asyncRoute.ts";
+import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
 import { prisma } from "@/lib/prisma";
+import { getSelectQuerys } from "@/lib/api/products-utils/products-query-params";
 import { UpdateProductSchema } from "@/validations/productSchema";
 import { NextRequest, NextResponse } from "next/server";
 // assuming you have this
@@ -7,6 +8,10 @@ import { NextRequest, NextResponse } from "next/server";
 export const GET = createAsyncRoute(
   async (request: NextRequest, params?: { [key: string]: string }) => {
     const id = Number(params?.id);
+
+    const select = getSelectQuerys(request);
+    if (select instanceof NextResponse) return select;
+
     if (isNaN(id))
       return NextResponse.json(
         { error: "Invalid product ID" },
@@ -15,7 +20,8 @@ export const GET = createAsyncRoute(
 
     const product = await prisma.product.findUnique({
       where: { id },
-      include: {
+      select: {
+        ...select,
         dimensions: true,
         meta: true,
         reviews: true,

@@ -34,7 +34,6 @@ const BaseProductSchema = z.object({
 
 
 });
-
 export const ProductSchema = BaseProductSchema.refine(
   (data) => {
     if (data.discountPercentage !== undefined) {

@@ -1,6 +1,5 @@
 // prisma/seed.ts
 import { prisma } from "@/lib/prisma";
-import { OrderStatus } from "@prisma/client";
 
 async function main() {
   // Clear existing data
@@ -15,37 +14,18 @@ async function main() {
   await prisma.user.deleteMany();
 
   // Create 5 users
-  const users = await prisma.user.createMany({
-    data: [
-      {
-        name: "John Doe",
-        email: "john@example.com",
-        image: "https://example.com/avatars/john.jpg",
-      },
-      {
-        name: "Jane Smith",
-        email: "jane@example.com",
-        image: "https://example.com/avatars/jane.jpg",
-      },
-      {
-        name: "Bob Johnson",
-        email: "bob@example.com",
-        image: "https://example.com/avatars/bob.jpg",
-      },
-      {
-        name: "Alice Williams",
-        email: "alice@example.com",
-        image: "https://example.com/avatars/alice.jpg",
-      },
-      {
-        name: "Charlie Brown",
-        email: "charlie@example.com",
-        image: "https://example.com/avatars/charlie.jpg",
-      },
-    ],
-  });
 
   // Create 4 categories
+  await prisma.category.createMany({
+    data: [
+      { name: "Electronics" },
+      { name: "Clothing" },
+      { name: "Books" },
+      { name: "Home" },
+      { name: "Toys" },
+    ],
+    skipDuplicates: true,
+  });
 
   // Create 20 products
 
@@ -359,69 +339,10 @@ async function main() {
     products.push(prod);
   }
   // Create cart items for users
-  const user1 = await prisma.user.findFirst({
-    where: { email: "john@example.com" },
-  });
-  const user2 = await prisma.user.findFirst({
-    where: { email: "jane@example.com" },
-  });
 
-  if (user1 && user2) {
-    // Add products to user carts
-    await prisma.cartItem.createMany({
-      data: [
-        { userId: user1.id, productId: products[0].id, quantity: 2 },
-        { userId: user1.id, productId: products[2].id, quantity: 1 },
-        { userId: user2.id, productId: products[1].id, quantity: 3 },
-      ],
-    });
-
-    // Create orders
-    const order1 = await prisma.order.create({
-      data: {
-        userId: user1.id,
-        totalAmount: 799.99 * 2 + 19.99,
-        status: OrderStatus.PAID,
-        shippingAddress: "123 Main St, Anytown, USA",
-        paymentMethod: "Credit Card",
-        orderItems: {
-          create: [
-            { productId: products[0].id, quantity: 2, price: 799.99 },
-            { productId: products[2].id, quantity: 1, price: 19.99 },
-          ],
-        },
-      },
-    });
-
-    const order2 = await prisma.order.create({
-      data: {
-        userId: user2.id,
-        totalAmount: 149.99 * 3,
-        status: OrderStatus.SHIPPED,
-        shippingAddress: "456 Oak Ave, Somewhere, USA",
-        paymentMethod: "PayPal",
-        orderItems: {
-          create: [{ productId: products[1].id, quantity: 3, price: 149.99 }],
-        },
-      },
-    });
-  }
+  // Create orders
 
   // Create some product reviews
-  await prisma.productReview.createMany({
-    data: [
-      {
-        productId: products[0].id,
-        userId: user1?.id || "",
-        rating: 4.5,
-        comment: "Great phone!",
-        reviewerName: "John Doe",
-        reviewerEmail: "john@example.com",
-        date: new Date(),
-      },
-      // ... add more reviews
-    ],
-  });
 }
 
 main()

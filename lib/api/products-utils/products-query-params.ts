@@ -29,8 +29,6 @@ export const parseQueryParams = (
       createApiError("Invalid numeric parameters", 400, "BAD_REQUEST"),
       { status: 400 }
     );
-
-
   }
 
   return {
@@ -85,4 +83,10 @@ export const buildWhereClause = (params: {
   }
 
   return where;
+};
+
+export const getSelectQuerys = (request: NextRequest) => {
+  const query = parseQueryParams(request);
+  if (query instanceof NextResponse) return query;
+  return buildSelectObject(query.selectFields);
 };
