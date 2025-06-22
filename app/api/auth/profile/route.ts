@@ -4,12 +4,12 @@ import {
   ProfileUpdateSchema,
   ChangePasswordSchema,
   AdminProfileUpdateSchema,
-  AdminUserManagementSchema,
 } from "@/validations/authSchema";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/auth";
 import bcrypt from "bcryptjs";
+import { checkServerAdmin } from "@/lib/auth/role-utils";
 //import { checkServerAdmin } from "@/lib/role-utils";
 
 // GET user profile
@@ -56,21 +56,21 @@ export const PATCH = createAsyncRoute(async (request: NextRequest) => {
   // Check if this is an admin operation (includes role field)
   const isAdminOperation = "role" in rawData;
 
-  //let validation;
-  // if (isAdminOperation) {
-  //   // Admin can update roles
-  //   const { hasAccess } = await checkServerAdmin();
-  //   if (!hasAccess) {
-  //     return NextResponse.json(
-  //       { error: "Only administrators can update roles" },
-  //       { status: 403 }
-  //     );
-  //   }
-  //   validation = AdminProfileUpdateSchema.safeParse(rawData);
-  // } else {
-  // Regular user profile update
-  const validation = ProfileUpdateSchema.safeParse(rawData);
-  // }
+  let validation;
+  if (isAdminOperation) {
+    // Admin can update roles
+    const { hasAccess } = await checkServerAdmin();
+    if (!hasAccess) {
+      return NextResponse.json(
+        { error: "Only administrators can update roles" },
+        { status: 403 }
+      );
+    }
+    validation = AdminProfileUpdateSchema.safeParse(rawData);
+  } else {
+    // Regular user profile update
+    validation = ProfileUpdateSchema.safeParse(rawData);
+  }
 
   if (!validation.success) {
     return NextResponse.json(
@@ -110,7 +110,6 @@ export const PATCH = createAsyncRoute(async (request: NextRequest) => {
       image: true,
       emailVerified: true,
       createdAt: true,
-      updatedAt: true,
     },
   });
 
@@ -127,46 +126,6 @@ export const PUT = createAsyncRoute(async (request: NextRequest) => {
 
   const rawData = await request.json();
 
-  // Check if this is an admin user management operation
-  if ("userId" in rawData && "role" in rawData) {
-    const { hasAccess } = await checkServerAdmin();
-    if (!hasAccess) {
-      return NextResponse.json(
-        { error: "Only administrators can manage user roles" },
-        { status: 403 }
-      );
-    }
-
-    const validation = AdminUserManagementSchema.safeParse(rawData);
-    if (!validation.success) {
-      return NextResponse.json(
-        { error: "Validation failed", details: validation.error.flatten() },
-        { status: 400 }
-      );
-    }
-
-    const { userId, role } = validation.data;
-
-    // Update user role
-    const updatedUser = await prisma.user.update({
-      where: { id: userId },
-      data: { role },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        updatedAt: true,
-      },
-    });
-
-    return NextResponse.json({
-      message: "User role updated successfully",
-      user: updatedUser,
-    });
-  }
-
-  // Regular password change
   const validation = ChangePasswordSchema.safeParse(rawData);
   if (!validation.success) {
     return NextResponse.json(

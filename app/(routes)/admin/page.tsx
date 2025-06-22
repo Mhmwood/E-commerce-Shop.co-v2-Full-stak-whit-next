@@ -53,13 +53,7 @@ export default function AdminDashboardPage() {
           <h2 className="text-lg font-semibold mb-2">Manage Products</h2>
           <p className="text-gray-300">Add, edit, or delete products</p>
         </a>
-        <a
-          href="/admin/categories"
-          className="bg-gray-800 p-6 rounded shadow hover:bg-gray-700"
-        >
-          <h2 className="text-lg font-semibold mb-2">Manage Categories</h2>
-          <p className="text-gray-300">Rename or delete categories</p>
-        </a>
+    
         <a
           href="/admin/users"
           className="bg-gray-800 p-6 rounded shadow hover:bg-gray-700"

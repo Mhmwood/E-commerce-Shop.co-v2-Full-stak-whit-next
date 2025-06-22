@@ -11,8 +11,9 @@ const BaseReviewSchema = z.object({
     .int("Rating must be a whole number"),
 
   comment: nonEmptyString
-    .min(10, "Comment must be at least 10 characters")
-    .max(500, "Comment cannot exceed 500 characters"),
+    .min(4, "Comment must be at least 10 characters")
+    .max(200, "Comment cannot exceed 500 characters"),
+  reviewerName: nonEmptyString.min(1, "Reviewer name cannot be empty"),
 
   productId: z
     .number()
@@ -38,32 +39,19 @@ export const CreateReviewSchema = BaseReviewSchema.refine(
 );
 
 // Schema for updating an existing review
-export const UpdateReviewSchema = z
-  .object({
-    rating: z
-      .number()
-      .min(1, "Rating must be at least 1")
-      .max(5, "Rating cannot exceed 5")
-      .int("Rating must be a whole number"),
-
-    comment: nonEmptyString
-      .min(10, "Comment must be at least 10 characters")
-      .max(500, "Comment cannot exceed 500 characters"),
-  })
-  .partial()
-  .refine(
-    (data) => {
-      // If rating is provided in update, validate it
-      if (data.rating !== undefined) {
-        return data.rating >= 1 && data.rating <= 5;
-      }
-      return true;
-    },
-    {
-      message: "Rating must be between 1 and 5",
-      path: ["rating"],
+export const UpdateReviewSchema = BaseReviewSchema.partial().refine(
+  (data) => {
+    // If rating is provided in update, validate it
+    if (data.rating !== undefined) {
+      return data.rating >= 1 && data.rating <= 5;
     }
-  );
+    return true;
+  },
+  {
+    message: "Rating must be between 1 and 5",
+    path: ["rating"],
+  }
+);
 
 // TypeScript types
 export type CreateReviewInput = z.infer<typeof CreateReviewSchema>;

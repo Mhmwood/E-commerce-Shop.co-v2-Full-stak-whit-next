@@ -1,11 +1,14 @@
 "use client";
+
+import { ProductReview } from "@prisma/client";
 import { useEffect, useState } from "react";
 
 export default function AdminReviewsPage() {
-  const [reviews, setReviews] = useState([]);
+  const [reviews, setReviews] = useState<ProductReview[]>([]);
+  
 
   useEffect(() => {
-    fetch("/api/reviews")
+    fetch("/api/admin/reviews")
       .then((res) => res.json())
       .then((data) => setReviews(data.data || []));
   }, []);
@@ -27,13 +30,13 @@ export default function AdminReviewsPage() {
             <div key={review.id} className="border-b border-gray-700 pb-4">
               <div className="flex items-center justify-between mb-2">
                 <div className="font-semibold">
-                  {review.reviewerName || review.user?.name || "User"}
+                  {review.reviewerName || "User"}
                 </div>
                 <div className="text-yellow-400">Rating: {review.rating}</div>
               </div>
               <div className="text-gray-300 mb-2">{review.comment}</div>
               <div className="text-sm text-gray-400 mb-2">
-                Product: {review.product?.title || "Unknown"}
+                Product: {review.productId || "Unknown"}
               </div>
               <button
                 onClick={() => handleDelete(review.id)}

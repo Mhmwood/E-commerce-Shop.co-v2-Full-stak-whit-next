@@ -62,10 +62,9 @@ export const authOptions: NextAuthOptions = {
     error: "/auth/error",
   },
   debug: process.env.NODE_ENV === "development",
-
   callbacks: {
     async jwt({ token, user }) {
-      console.log(" jwt callback - user", user);
+    //  console.log(" jwt callback - user", user);
       //console.log("jwt callback - token:", token);
       if (user) {
         token.id = user.id;

@@ -2,54 +2,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
-import {
-  parseReviewsQueryParams,
-  buildReviewsWhereClause,
-  buildReviewsOrderBy,
-} from "@/lib/api/products-utils/reviews-query-params";
+
 import { CreateReviewSchema } from "@/validations/reviewSchema";
-
-export const GET = createAsyncRoute(async (request: NextRequest) => {
-  const queryParams = parseReviewsQueryParams(request);
-  if (queryParams instanceof NextResponse) return queryParams;
-
-  const { limit, productId, rating, sortBy, sortOrder } = queryParams;
-
-  const where = buildReviewsWhereClause({ productId, rating });
-  const orderBy = buildReviewsOrderBy({ sortBy, sortOrder });
-
-  const totalCount = await prisma.productReview.count({ where });
-
-  const reviews = await prisma.productReview.findMany({
-    where,
-    orderBy,
-    take: limit,
-    include: {
-      product: {
-        select: {
-          id: true,
-          title: true,
-          thumbnail: true,
-        },
-      },
-      user: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-        },
-      },
-    },
-  });
-
-  return NextResponse.json(
-    {
-      totalCount: totalCount,
-      data: reviews,
-    },
-    { status: 200 }
-  );
-});
 
 export const POST = createAsyncRoute(async (request: NextRequest) => {
   const rawData = await request.json();
@@ -57,6 +11,7 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
   // Validate the request data
   const validation = CreateReviewSchema.safeParse(rawData);
   if (!validation.success) {
+    console.log(validation.error.issues)
     return NextResponse.json(
       { error: "Validation failed", details: validation.error.flatten() },
       { status: 400 }
@@ -70,13 +25,6 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
   });
   if (!product) {
     return NextResponse.json({ error: "Product not found" }, { status: 404 });
-  }
-
-  const user = await prisma.user.findUnique({
-    where: { id: validatedData.userId },
-  });
-  if (!user) {
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
   const existingReview = await prisma.productReview.findFirst({
@@ -98,9 +46,9 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
       rating: validatedData.rating,
       comment: validatedData.comment,
       date: new Date(),
-      reviewerName: user.name,
+      reviewerName: validatedData.reviewerName,
       productId: product.id,
-      userId: user.id,
+      userId: validatedData.userId,
     },
     include: {
       product: {

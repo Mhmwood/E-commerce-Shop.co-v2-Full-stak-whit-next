@@ -1,14 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  // images: {
-  //   domains: [
-  //     "*.supabase.co", // Allows all Supabase storage domains
-  //   ],
-  // },
   images: {
-    domains: ["bkddaewshluqnvphgnqv.supabase.co"],
+    domains: [process.env.NEXT_PUBLIC_SUPABASE_URL!.replace("https://", "")],
   },
 };
 

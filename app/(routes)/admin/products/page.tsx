@@ -1,8 +1,9 @@
 "use client";
+import { Product } from "@prisma/client";
 import { useEffect, useState } from "react";
 
 export default function AdminProductsPage() {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     fetch("/api/products")
@@ -10,9 +11,10 @@ export default function AdminProductsPage() {
       .then((data) => setProducts(data.products || []));
   }, []);
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: number) => {
     if (!confirm("Delete this product?")) return;
-    const res = await fetch(`/api/products/${id}`, { method: "DELETE" });
+    const res = await fetch(`/api/admin/products/${id}`, { method: "DELETE" });
+    console.log(res);
     if (res.ok) {
       setProducts(products.filter((p) => p.id !== id));
     }
@@ -20,7 +22,15 @@ export default function AdminProductsPage() {
 
   return (
     <main className="dark bg-gray-900 min-h-screen text-white p-4">
-      <h1 className="text-2xl font-bold mb-6">Manage Products</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Manage Products</h1>
+        <a
+          href="/admin/products/new"
+          className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Create New Product
+        </a>
+      </div>
       <div className="max-w-4xl mx-auto bg-gray-800 rounded p-6 shadow">
         <div className="grid grid-cols-1 gap-4">
           {products.map((product) => (

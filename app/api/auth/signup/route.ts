@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { SignUpSchema } from "@/validations/authSchema";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import { checkServerAdmin } from "@/lib/auth/role-utils";
 //import { checkServerAdmin } from "@/lib/role-utils";
 
 export const POST = createAsyncRoute(async (request: NextRequest) => {
@@ -20,15 +21,15 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
   const { name, email, password, image } = validation.data;
 
   // Check if user is trying to create an admin account
-  // if (role === "ADMIN") {
-  //   const { hasAccess } = await checkServerAdmin();
-  //   if (!hasAccess) {
-  //     return NextResponse.json(
-  //       { error: "Only administrators can create admin accounts" },
-  //       { status: 403 }
-  //     );
-  //   }
-  // }
+  if (role === "ADMIN") {
+    const { hasAccess } = await checkServerAdmin();
+    if (!hasAccess) {
+      return NextResponse.json(
+        { error: "Only administrators can create admin accounts" },
+        { status: 403 }
+      );
+    }
+  }
 
   // Check if user already exists
   const existingUser = await prisma.user.findUnique({

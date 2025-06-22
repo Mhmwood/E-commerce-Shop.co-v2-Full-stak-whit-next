@@ -1,7 +1,9 @@
 "use client";
 
+
 import { useAuth } from "@/lib/hooks/useAuth";
 import { uploadImage } from "@/lib/upload/imgeUpload";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -12,23 +14,27 @@ export default function SignUpPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setconfirmPassword] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imgaload, setImgaload] = useState(false);
+
 
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-   
-    
-     let image = "/images/default-user.png"; // default
 
-     if (imageFile) {
-       try {
-         image = await uploadImage(imageFile, "avatars");
-       } catch (err) {
-         console.error("Image upload failed:", err);
-       }
-     }
+    let image =
+      "https://bkddaewshluqnvphgnqv.supabase.co/storage/v1/object/public/avatars/users/1750361164941-2cjwdmitlro.png"; // default
 
+    if (imageFile) {
+      setImgaload(true);
+      try {
+        image = await uploadImage(imageFile, "avatars");
+      } catch (err) {
+        console.error("Image upload failed:", err);
+      } finally {
+        setImgaload(false);
+      }
+    }
 
     const res = await register({
       name,
@@ -84,7 +90,10 @@ export default function SignUpPage() {
           </div>
 
           <div className="mb-5">
-            <label className="block mb-2 text-sm font-medium" htmlFor="password">
+            <label
+              className="block mb-2 text-sm font-medium"
+              htmlFor="password"
+            >
               Password
             </label>
             <input
@@ -103,21 +112,51 @@ export default function SignUpPage() {
 
           <div className="mb-6">
             <label className="block mb-2 text-sm font-medium" htmlFor="image">
-              Profile Image (optional)
+              Profile Image (optional){" "}
+              {imgaload && <span className="text-red-500">Loading...</span>}
             </label>
-            <input
-              id="image"
-              type="file"
-              accept="image/*"
-              onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-              className="w-full text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700"
-            />
+
+            {imageFile && (
+              <div className="flex flex-col items-start gap-2">
+                <Image
+                  className="w-24 h-24 rounded-full object-cover"
+                  src={URL.createObjectURL(imageFile)}
+                  alt="Profile Image"
+                  width={100}
+                  height={100}
+                />
+
+                <label
+                  htmlFor="image"
+                  className="inline-block cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded text-xs font-semibold"
+                  title="Change the image"
+                >
+                  Change Image
+                </label>
+
+                <input
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                  className="hidden"
+                />
+              </div>
+            )}
+
+            {!imageFile && (
+              <input
+                id="image"
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                className="w-full text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700"
+              />
+            )}
           </div>
 
           {error && (
-            <div className="mb-4 text-red-400 text-sm text-center">
-              {error}
-            </div>
+            <div className="mb-4 text-red-400 text-sm text-center">{error}</div>
           )}
 
           <button

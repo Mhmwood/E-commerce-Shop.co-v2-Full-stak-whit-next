@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import UploadTryar from "@/components/upload/uploadtryar";
+import { Product } from "@prisma/client";
 
 export default function HomePage() {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
 
@@ -25,7 +25,7 @@ export default function HomePage() {
 
   return (
     <main className="dark bg-gray-900 min-h-screen text-white p-4">
-      {/* <h1 className="text-2xl font-bold mb-4">Products</h1>
+      <h1 className="text-2xl font-bold mb-4">Products</h1>
       <div className="mb-4">
         <label>Filter by category: </label>
         <select
@@ -60,8 +60,7 @@ export default function HomePage() {
             </div>
           </Link>
         ))}
-      </div> */}
-      <UploadTryar />
+      </div>
     </main>
   );
 }

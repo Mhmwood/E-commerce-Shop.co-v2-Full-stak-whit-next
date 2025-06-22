@@ -98,7 +98,7 @@ model ProductDimensions {
   height    Float
   depth     Float
   productId Int     @unique
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model ProductMeta {
@@ -108,7 +108,7 @@ model ProductMeta {
   barcode   String
   qrCode    String
   productId Int      @unique
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model ProductReview {
@@ -121,7 +121,7 @@ model ProductReview {
   productId Int
   userId    String
 
-  product Product @relation(fields: [productId], references: [id])
+  product Product @relation(fields: [productId], references: [id] , onDelete: Cascade)
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -132,7 +132,7 @@ model CartItem {
   quantity  Int    @default(1)
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id])
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
 }
@@ -159,7 +159,7 @@ model OrderItem {
   price     Float
 
   order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id])
+  product Product @relation(fields: [productId], references: [id] , onDelete: Cascade)
 }
 
 enum OrderStatus {

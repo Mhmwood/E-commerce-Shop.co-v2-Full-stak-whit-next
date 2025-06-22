@@ -1,60 +1,19 @@
 import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
+import { authOptions } from "@/lib/auth/auth";
+import { checkServerRole } from "@/lib/auth/role-utils";
+
 import { prisma } from "@/lib/prisma";
 import { UpdateReviewSchema } from "@/validations/reviewSchema";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = createAsyncRoute(
-  async (request: NextRequest, params?: { [key: string]: string }) => {
-    const id = Number(params?.id);
-
-    if (isNaN(id)) {
-      return NextResponse.json({ error: "Invalid review ID" }, { status: 400 });
-    }
-
-    const review = await prisma.productReview.findMany({
-      where: { id },
-      include: {
-        product: {
-          select: {
-            id: true,
-            title: true,
-            thumbnail: true,
-          },
-        },
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-      },
-    });
-
-    if (!review) {
-      return NextResponse.json({ error: "Review not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(review);
-  }
-);
-
-// UPDATE review by ID
 export const PATCH = createAsyncRoute(
   async (request: NextRequest, params?: { [key: string]: string }) => {
     const id = Number(params?.id);
+     const session = await getServerSession(authOptions);
 
     if (isNaN(id)) {
       return NextResponse.json({ error: "Invalid review ID" }, { status: 400 });
-    }
-
-    // Check if review exists
-    const existingReview = await prisma.productReview.findUnique({
-      where: { id },
-    });
-
-    if (!existingReview) {
-      return NextResponse.json({ error: "Review not found" }, { status: 404 });
     }
 
     const rawData = await request.json();
@@ -69,26 +28,26 @@ export const PATCH = createAsyncRoute(
     }
 
     const validatedData = validation.data;
+    // Check if review exists
+    const existingReview = await prisma.productReview.findUnique({
+      where: { id },
+    });
+
+    if (!existingReview) {
+      return NextResponse.json({ error: "Review not found" }, { status: 404 });
+    }
+    // Check if the user is the owner of the review
+    if (existingReview.userId !== session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
 
     // Update the review
     const updatedReview = await prisma.productReview.update({
       where: { id },
       data: validatedData,
       include: {
-        product: {
-          select: {
-            id: true,
-            title: true,
-            thumbnail: true,
-          },
-        },
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
+        user: true,
+        product: true,
       },
     });
 
@@ -99,6 +58,8 @@ export const PATCH = createAsyncRoute(
 // DELETE review by ID
 export const DELETE = createAsyncRoute(
   async (request: NextRequest, params?: { [key: string]: string }) => {
+    const { user, hasAccess } = await checkServerRole("ADMIN");
+
     const id = Number(params?.id);
 
     if (isNaN(id)) {
@@ -112,6 +73,10 @@ export const DELETE = createAsyncRoute(
 
     if (!existingReview) {
       return NextResponse.json({ error: "Review not found" }, { status: 404 });
+    }
+    // Check if the user is the owner of the review or an admin
+    if (existingReview.userId !== user?.id && !hasAccess) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
     // Delete the review

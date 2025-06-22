@@ -18,6 +18,16 @@ export default function SignInPage() {
       router.push("/");
     }
   };
+  const devhelper = (forAdmin: boolean = false) => {
+    if (forAdmin) {
+      setEmail("Admin@example.com");
+      setPassword("TestPass123!");
+      return;
+    }
+    setEmail("Nnn@example.com");
+    setPassword("TestPass123!");
+    return;
+  };
 
   return (
     <main className="dark bg-gray-900 min-h-screen text-white flex items-center justify-center">
@@ -48,6 +58,22 @@ export default function SignInPage() {
         >
           {loading ? "Sign In ..." : error ? "Error" : "Sign In "}
         </button>
+        <div className="flex gap-2 mt-4">
+          <button
+            type="button"
+            onClick={() => devhelper(false)}
+            className="px-2 py-1 text-xs rounded bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            Dev Helper
+          </button>
+          <button
+            type="button"
+            onClick={() => devhelper(true)}
+            className="px-2 py-1 text-xs rounded bg-red-600 hover:bg-red-700 text-white"
+          >
+            Admin Helper
+          </button>
+        </div>
       </form>
     </main>
   );

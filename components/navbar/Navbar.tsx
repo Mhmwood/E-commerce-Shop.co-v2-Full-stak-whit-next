@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useAuth } from "../../lib/hooks/useAuth";
 import { signOut } from "next-auth/react";
+import Image from "next/image";
 
 export default function Navbar() {
   const { session, isAuthenticated } = useAuth();
@@ -20,11 +21,22 @@ export default function Navbar() {
             Cart
           </Link>
           {isAuthenticated ? (
-            <button onClick={() => signOut()} className="hover:text-gray-300">
-              {session?.user?.name
-                ? `Log Out (${session?.user?.name})`
-                : "Log Out"}
-            </button>
+            <>
+              <button onClick={() => signOut()} className="hover:text-gray-300">
+                {session?.user?.name
+                  ? `Log Out (${session?.user?.name})`
+                  : "Log Out"}
+              </button>
+              <Link href="/profile">
+              <Image
+                src={session?.user?.image ?? "/defaultProfile.png"}
+                alt="User Avatar"
+                width={32}
+                height={32}
+                className="rounded-full"
+              />
+              </Link>
+            </>
           ) : (
             <>
               <Link href="/auth/signin" className="hover:text-gray-300">

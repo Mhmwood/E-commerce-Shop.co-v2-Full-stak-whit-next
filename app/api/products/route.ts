@@ -8,7 +8,6 @@ import {
   parseQueryParams,
 } from "@/lib/api/products-utils/products-query-params";
 import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
-import { ProductSchema } from "@/validations/productSchema";
 
 export const GET = createAsyncRoute(async (request: NextRequest) => {
   const params = parseQueryParams(request);
@@ -41,21 +40,3 @@ export const GET = createAsyncRoute(async (request: NextRequest) => {
   });
 });
 
-export const POST = createAsyncRoute(async (request: NextRequest) => {
-  const rawData = await request.json();
-
-  const validation = ProductSchema.safeParse(rawData);
-
-  if (!validation.success) {
-    return NextResponse.json(
-      { error: "Validation failed", details: validation.error.flatten() },
-      { status: 400 }
-    );
-  }
-
-  const product = await prisma.product.create({
-    data: validation.data,
-  });
-
-  return NextResponse.json(product, { status: 201 });
-});

@@ -9,10 +9,11 @@ export const createAsyncRoute = (
 ) => {
   return async (
     request: NextRequest,
-    context?: { params?: { [key: string]: string } }
+    context?: { params?: Promise<{ [key: string]: string }> }
   ) => {
     try {
-      return await handler(request, context?.params);
+      const params = context?.params ? await context.params : undefined;
+      return await handler(request, params);
     } catch (error) {
       console.log(error);
       const handledError = handlePrismaError(error);

@@ -18,7 +18,7 @@ export default function UploadTryar() {
     const fileName = `${Date.now()}-${Math.random()
       .toString(36)
       .substring(2)}.${fileExt}`;
-    const filePath = `users/${fileName}`;
+    const filePath = `${fileName}`;
 
     const { error } = await supabase.storage
       .from("avatars")

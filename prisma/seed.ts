@@ -16,16 +16,16 @@ async function main() {
   // Create 5 users
 
   // Create 4 categories
-  await prisma.category.createMany({
-    data: [
-      { name: "Electronics" },
-      { name: "Clothing" },
-      { name: "Books" },
-      { name: "Home" },
-      { name: "Toys" },
-    ],
-    skipDuplicates: true,
-  });
+  // await prisma.category.createMany({
+  //   data: [
+  //     { name: "Electronics" },
+  //     { name: "Clothing" },
+  //     { name: "Books" },
+  //     { name: "Home" },
+  //     { name: "Toys" },
+  //   ],
+  //   skipDuplicates: true,
+  // });
 
   // Create 20 products
 
