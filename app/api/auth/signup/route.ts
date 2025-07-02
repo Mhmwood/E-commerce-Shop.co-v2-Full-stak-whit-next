@@ -18,7 +18,7 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
     );
   }
 
-  const { name, email, password, image } = validation.data;
+  const { name, email, password, image, role } = validation.data;
 
   // Check if user is trying to create an admin account
   if (role === "ADMIN") {

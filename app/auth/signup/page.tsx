@@ -1,7 +1,7 @@
 "use client";
 
 
-import { useAuth } from "@/lib/hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { uploadImage } from "@/lib/upload/imgeUpload";
 import Image from "next/image";
 import { useRouter } from "next/navigation";

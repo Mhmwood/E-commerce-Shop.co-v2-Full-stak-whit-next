@@ -31,6 +31,7 @@ export const SignUpSchema = z
 
     confirmPassword: z.string(),
     image: z.string().optional().default("/images/default-user.png"),
+    role: RoleEnum.optional().default("USER"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",

@@ -1,6 +1,20 @@
+import { Navbar } from "@/components/Navbar/Navbar";
 import "./globals.css";
 import { Providers } from "./providers";
-import Navbar from "@/components/navbar/Navbar";
+
+import localFont from "next/font/local";
+import Footer from "@/components/Footer";
+
+const integral = localFont({
+  src: "./fonts/Integral_CF/Fontspring-DEMO-integralcf-bold.otf",
+  variable: "--font-integral",
+  display: "swap",
+});
+const satoshi = localFont({
+  src: "./fonts/Satoshi/Satoshi-Medium.otf",
+  variable: "--font-satoshi",
+  display: "swap",
+});
 
 export default function RootLayout({
   children,
@@ -8,11 +22,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="dark bg-gray-900 text-white font-sans min-h-screen">
+    <html lang="en" className={`${integral.variable} ${satoshi.variable}`}>
+      <body className="font-satoshi bg-background text-primary ">
         <Providers>
           <Navbar />
           {children}
+          <Footer />
         </Providers>
       </body>
     </html>

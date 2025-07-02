@@ -14,16 +14,12 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        console.log("authorize", credentials);
-
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Email and password are required");
         }
 
         const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email,
-          },
+          where: { email: credentials.email },
         });
 
         if (!user || !user.password) {
@@ -51,10 +47,10 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 30 * 24 * 60 * 60,
   },
   jwt: {
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 30 * 24 * 60 * 60,
   },
   pages: {
     signIn: "/auth/signin",
@@ -63,15 +59,19 @@ export const authOptions: NextAuthOptions = {
   },
   debug: process.env.NODE_ENV === "development",
   callbacks: {
-    async jwt({ token, user }) {
-    //  console.log(" jwt callback - user", user);
-      //console.log("jwt callback - token:", token);
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
         token.picture = user.image;
         token.role = user.role;
+      }
+      if (trigger === "update" && session) {
+        token.name = session.name ?? token.name;
+        token.email = session.email ?? token.email;
+        token.picture = session.image ?? token.picture;
+        token.role = session.role ?? token.role;
       }
       return token;
     },
@@ -86,9 +86,7 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // Allows relative callback URLs
       if (url.startsWith("/")) return `${baseUrl}${url}`;
-      // Allows callback URLs on the same origin
       else if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     },

@@ -17,6 +17,7 @@ export const GET = createAsyncRoute(async (request: NextRequest) => {
   const where = buildWhereClause(params);
 
   const orderBy = generateOrderBy(params.sortBy || null, params.sortOrder);
+   
   if (orderBy instanceof NextResponse) return orderBy;
 
   const skip = (params.page - 1) * params.limit;
@@ -39,4 +40,3 @@ export const GET = createAsyncRoute(async (request: NextRequest) => {
     products,
   });
 });
-
