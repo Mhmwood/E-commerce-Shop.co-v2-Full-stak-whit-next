@@ -77,11 +77,18 @@ export const useProducts = (params: UseProductsParams) =>
     // staleTime: 1000 * 60 * 5,
   });
 
-export const useProductById = (id: string) => {
+export const useProductById = (
+  id: string,
+  select?: Record<string, boolean>
+) => {
   return useQuery({
     queryKey: ["product", id],
     queryFn: async () => {
-      const res = await fetch(`/api/products/${id}`);
+      const query = new URLSearchParams({
+        ...(select && { select: JSON.stringify(select) }),
+      });
+
+      const res = await fetch(`/api/products/${id}?${query}`);
       if (!res.ok) throw new Error("Failed to fetch product");
       return res.json();
     },

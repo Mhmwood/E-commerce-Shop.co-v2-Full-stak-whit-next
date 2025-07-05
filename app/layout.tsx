@@ -5,6 +5,7 @@ import { Providers } from "./providers";
 import localFont from "next/font/local";
 import Footer from "@/components/Footer";
 
+export { metadata } from "@/lib/seo";
 const integral = localFont({
   src: "./fonts/Integral_CF/Fontspring-DEMO-integralcf-bold.otf",
   variable: "--font-integral",

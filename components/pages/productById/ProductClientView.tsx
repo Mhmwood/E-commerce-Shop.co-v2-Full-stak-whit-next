@@ -1,3 +1,4 @@
+// componet / pages / productById / ProductClientView.tsx
 "use client";
 
 import { BreadcrumbBar } from "@/components/shadcn";
