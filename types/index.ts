@@ -1,14 +1,16 @@
-export interface Product {
-  id: string;
-  name: string;
-  description?: string;
-  price: number;
-  image?: string;
-  category?: string;
-  stock: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
+// export interface Product {
+//   id: string;
+//   name: string;
+//   description?: string;
+//   price: number;
+//   image?: string;
+//   category?: string;
+//   stock: number;
+//   createdAt: Date;
+//   updatedAt: Date;
+// }
+
+import { Product } from "@prisma/client";
 
 export interface User {
   id: string;
@@ -37,10 +39,22 @@ export interface OrderItem {
   product: Product;
 }
 
+export interface CartState {
+  items: CartItem[];
+  status: "idle" | "loading" | "succeeded" | "failed";
+  error: string | null;
+  promoCode?: string;
+  discount: number;
+  deliveryFee: number;
+}
+
 export interface CartItem {
   id: string;
-  name: string;
+  title: string;
   price: number;
+  discountPercentage: number;
   quantity: number;
+  stock: number;
+  category: string;
   image?: string;
 }

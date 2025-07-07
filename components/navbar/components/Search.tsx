@@ -1,21 +1,21 @@
 "use client";
 
-// import { useCart } from "@/hooks/use-cart";
 import { useClickOutside } from "@/hooks/use-click-outside";
 import { Product } from "@prisma/client";
 
 import { useSearchProducts } from "@/hooks/useProducts";
-import Image from "next/image";
+
 
 import { Plus, ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useCart } from "@/hooks/useCart";
 
 const Search = () => {
   const [query, setQuery] = useState<string>("");
   const [results, setResults] = useState<Product[]>([]);
 
-  // const { addItem } = useCart();
+  const { addItem } = useCart();
 
   const router = useRouter();
   const dropdownRef = useClickOutside<HTMLDivElement>(() => setQuery(""));
@@ -29,17 +29,18 @@ const Search = () => {
 
   const handleAddToCart = (product: Product) => {
     console.log(product);
-    // addItem(
-    //   {
-    //     id: product.id,
-    //     title: product.title,
-    //     price: product.price,
-    //     category: product.category,
-    //     thumbnail: product.thumbnail,
-    //     discountPercentage: product.discountPercentage,
-    //   },
-    //   1
-    // );
+    addItem(
+      {
+        id: String(product.id),
+        title: product.title,
+        price: product.price,
+        category: product.category!,
+        image: product.thumbnail,
+        discountPercentage: product.discountPercentage ?? 0,
+        stock: product.stock,
+      },
+      1
+    );
   };
 
   return (
@@ -66,7 +67,6 @@ const Search = () => {
         className="w-full py-3 pr-4 bg-transparent outline-none placeholder:text-gray-400 text-gray-700"
         onChange={handleSearchChange}
         value={query}
-   
       />
 
       {query && (
@@ -97,14 +97,19 @@ const Search = () => {
                   ${product.price.toFixed(2)}
                 </p>
               </div>
-              <Image
-                src={product.thumbnail}
-                alt={product.title}
-                loading="lazy"
-                className="w-10 h-10 rounded-lg object-cover"
-                width={40}
-                height={40}
-              />
+
+              <button
+                className="hidden md:block relative hover:scale-105 rounded-full hover:bg-secondary transition duration-150 ease-in-out"
+                onClick={() => handleAddToCart(product)}
+              >
+                <ShoppingCart />
+
+                <Plus
+                  className="  absolute  top-0 -right-1 z-50  bg-green-400 rounded-full text-white"
+                  size={12}
+                  strokeWidth={3}
+                />
+              </button>
             </div>
           ))}
         </div>

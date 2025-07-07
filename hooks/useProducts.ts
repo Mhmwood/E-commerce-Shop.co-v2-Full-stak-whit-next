@@ -96,14 +96,15 @@ export const useProductById = (
     staleTime: 1000 * 60 * 5,
   });
 };
-
 export const useSearchProducts = (query: string, limit = 7) => {
   return useQuery({
     queryKey: ["search-products", query, limit],
     queryFn: async () => {
       if (!query) return [];
       const res = await fetch(
-        `/api/products?query=${encodeURIComponent(query)}&limit=${limit}`
+        `/api/products?query=${encodeURIComponent(
+          query
+        )}&limit=${limit}&select=id,title,price,category,thumbnail,discountPercentage,stock`
       );
       if (!res.ok) throw new Error("Failed to fetch products");
       return res.json();

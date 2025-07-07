@@ -1,17 +1,18 @@
 "use client";
 
-// import { useCart } from "@/hooks/use-cart";
-// import formatCurrency from "@/utils/formatCurrency";
+import { useCart } from "@/hooks/useCart";
+import formatCurrency from "@/lib/utils";
 import { LucideArrowRight, Tag } from "lucide-react";
 import { useState } from "react";
 
 const CartSummary = () => {
   const [promoCode, setPromoCode] = useState("");
-  // const { subtotal, discount, deliveryFee, total, applyPromo } = useCart();
+  const [email, setEmail] = useState("");
+  const { subtotal, discount, deliveryFee, total, applyPromo } = useCart();
 
   const handleApplyPromo = () => {
     if (promoCode.trim()) {
-      // applyPromo(promoCode);
+      applyPromo(promoCode);
       setPromoCode("");
     }
   };
@@ -21,23 +22,23 @@ const CartSummary = () => {
       <div className="*:flex *:justify-between border-b py-6  ">
         <div>
           <span className="text-gray-400 ">Subtotal</span>
-          {/* <span className="font-bold">{formatCurrency(subtotal)}</span> */}
+          <span className="font-bold">{formatCurrency(subtotal)}</span>
         </div>
         <div>
           <span className="text-gray-400 ">Discount (-20%)</span>
-          {/* <span className="font-bold text-[#FF3333]">
+          <span className="font-bold text-[#FF3333]">
             -{formatCurrency(discount)}
-          </span> */}
+          </span>
         </div>
         <div>
           <span className="text-gray-400 ">Delivery Fee</span>
-          {/* <span className="font-bold">{formatCurrency(deliveryFee)}</span> */}
+          <span className="font-bold">{formatCurrency(deliveryFee)}</span>
         </div>
       </div>
       <div className="space-y-6">
         <div className="flex justify-between text-lg">
           <span>Total</span>
-          {/* <span className=" font-bold">{formatCurrency(total)}</span> */}
+          <span className=" font-bold">{formatCurrency(total)}</span>
         </div>
 
         <div>
@@ -49,8 +50,8 @@ const CartSummary = () => {
               <Tag className="text-gray-400 mr-3" />
               <input
                 type="email"
-                // value={email}
-                // onChange={(e) => setEmail(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email address"
                 className=" text-primary outline-none bg-secondary w-full"
                 required

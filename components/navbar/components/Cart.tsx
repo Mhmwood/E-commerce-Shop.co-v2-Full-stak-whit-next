@@ -1,10 +1,11 @@
-// import { useCart } from "@/hooks/use-cart";
-
+import { useCart } from "@/hooks/useCart";
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-// import { useNavigate } from "react-router-dom";
+
+
 const Cart = () => {
-  // const { items } = useCart();
+  const { items } = useCart();
 
   const router = useRouter();
 
@@ -13,8 +14,7 @@ const Cart = () => {
       className="relative cursor-pointer"
       onClick={() => router.push("/cart")}
     >
-      {/* items.length  > 0 */}
-      {true && (
+      {items.length > 0 && (
         <motion.div
           initial={{ origin: "bottom", scale: 0 }}
           animate={{ origin: "bottom", scale: 1 }}
@@ -23,10 +23,12 @@ const Cart = () => {
             ease: "easeOut",
           }}
           exit={{ origin: "bottom", scale: 0 }}
-          className="absolute flex items-center justify-center size-4 text-xs rounded-full  -top-1 -right-1      bg-red-500 p-1 text-red-100   "
+          className={cn(
+            "absolute flex items-center justify-center text-xs rounded-full -top-1 -right-1 bg-red-500 text-red-100",
+            items.length > 9 ? " px-1.5  " : " px-1"
+          )}
         >
-          {/* {items.length} */}
-          99+
+          {items.length}
         </motion.div>
       )}
       <svg

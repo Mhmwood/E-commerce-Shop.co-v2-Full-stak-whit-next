@@ -1,21 +1,22 @@
 "use client";
-// import { useCart } from "@/hooks/use-cart";
+import { useCart } from "@/hooks/useCart";
 import { Minus, Plus } from "lucide-react";
+import Image from "next/image";
 
 const CartList = () => {
-  // const { items, removeItem, updateItemQuantity } = useCart();
+  const { items, removeItem, updateItemQuantity } = useCart();
 
   const handleQuantityChange = (id: number, newQuantity: number) => {
-    // if (newQuantity > 0) {
-    //   updateItemQuantity(id, newQuantity);
-    // } else {
-    //   removeItem(id);
-    // }
+    if (newQuantity > 0) {
+      updateItemQuantity(id, newQuantity);
+    } else {
+      removeItem(id);
+    }
   };
 
   return (
     <div className="border  rounded-3xl  md:col-span-3  px-6 md:min-w-[28rem] h-screen overflow-y-scroll  no-scrollbar scroll-smooth ">
-      {/* {!items.length ? (
+      {!items.length ? (
         <div className="flex h-full  items-center justify-center">
           <p className="text-black/60">Your cart is empty</p>
         </div>
@@ -24,11 +25,14 @@ const CartList = () => {
           <div key={product.id} className="flex justify-between border-b py-6 ">
             <div className="flex">
               <figure className=" aspect-square mr-4 overflow-hidden rounded-[1.25rem] bg-neutral-100 w-20  md:max-w-[7.75rem]">
-                <img
-                  src={product.thumbnail}
-                  className="object-cover transition-all duration-300 hover:scale-105"
-                  alt={`Product Image ${product.title}`}
-                />
+                {product.image && (
+                  <Image
+                    src={product.image}
+                    width={80}
+                    height={100}
+                    alt={`Product Image ${product.title}`}
+                  />
+                )}
               </figure>
               <div className="flex flex-col gap-2">
                 <h3 className="text-xl  font-bold">{product.title}</h3>
@@ -44,7 +48,7 @@ const CartList = () => {
             <div className="relative ">
               <button
                 className="absolute top-0 right-0 text-white "
-                onClick={() => removeItem(product.id)}
+                onClick={() => removeItem(Number(product.id))}
               >
                 <svg
                   width={18}
@@ -61,7 +65,10 @@ const CartList = () => {
                 <button
                   type="button"
                   onClick={() =>
-                    handleQuantityChange(product.id, product.quantity - 1)
+                    handleQuantityChange(
+                      Number(product.id),
+                      product.quantity - 1
+                    )
                   }
                   className="active:scale-90 px-2 py-1    "
                 >
@@ -73,7 +80,10 @@ const CartList = () => {
                 <button
                   type="button"
                   onClick={() =>
-                    handleQuantityChange(product.id, product.quantity + 1)
+                    handleQuantityChange(
+                      Number(product.id),
+                      product.quantity + 1
+                    )
                   }
                   className="active:scale-90 px-2 py-1  "
                 >
@@ -83,7 +93,7 @@ const CartList = () => {
             </div>
           </div>
         ))
-      )} */}
+      )}
     </div>
   );
 };

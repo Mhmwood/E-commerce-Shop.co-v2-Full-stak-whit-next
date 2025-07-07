@@ -95,35 +95,35 @@ export interface RoleBasedProps {
   children: React.ReactNode;
 }
 
-// Role-based component wrapper
-export const RoleBasedComponent = ({
-  userRole,
-  requiredRole = "USER",
-  fallback = null,
-  children,
-}: RoleBasedProps) => {
-  const { hasAccess } = checkClientRole(userRole, requiredRole);
+// // Role-based component wrapper
+// export const RoleBasedComponent = ({
+//   userRole,
+//   requiredRole = "USER",
+//   fallback = null,
+//   children,
+// }: RoleBasedProps) => {
+//   const { hasAccess } = checkClientRole(userRole, requiredRole);
 
-  if (!hasAccess) {
-    return <>{fallback}</>;
-  }
+//   if (!hasAccess) {
+//     return <>{fallback}</>;
+//   }
 
-  return <>{children}</>;
-};
+//   return <>{children}</>;
+// };
 
-// Admin-only component wrapper
-export const AdminOnlyComponent = ({
-  userRole,
-  fallback = null,
-  children,
-}: Omit<RoleBasedProps, "requiredRole">) => {
-  return (
-    <RoleBasedComponent
-      userRole={userRole}
-      requiredRole="ADMIN"
-      fallback={fallback}
-    >
-      {children}
-    </RoleBasedComponent>
-  );
-};
+// // Admin-only component wrapper
+// export const AdminOnlyComponent = ({
+//   userRole,
+//   fallback = null,
+//   children,
+// }: Omit<RoleBasedProps, "requiredRole">) => {
+//   return (
+//     <RoleBasedComponent
+//       userRole={userRole}
+//       requiredRole="ADMIN"
+//       fallback={fallback}
+//     >
+//       {children}
+//     </RoleBasedComponent>
+//   );
+// };
