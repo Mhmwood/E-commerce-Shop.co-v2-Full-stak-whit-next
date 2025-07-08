@@ -27,8 +27,8 @@ export const useCart = () => {
     // Actions
     addItem: (item: Omit<CartItem, "quantity">, quantity: number) =>
       dispatch(addToCart({ ...item, quantity })),
-    removeItem: (id: number) => dispatch(removeFromCart(id)),
-    updateItemQuantity: (id: number, quantity: number) =>
+    removeItem: (id: string) => dispatch(removeFromCart(id)),
+    updateItemQuantity: (id: string, quantity: number) =>
       dispatch(updateQuantity({ id, quantity })),
     applyPromo: (code: string) => dispatch(applyPromoCode(code)),
   };

@@ -1,4 +1,4 @@
-// File: app/api/reviews/route.ts (for POST and GET all)
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
@@ -45,7 +45,6 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
     data: {
       rating: validatedData.rating,
       comment: validatedData.comment,
-      date: new Date(),
       reviewerName: validatedData.reviewerName,
       productId: product.id,
       userId: validatedData.userId,

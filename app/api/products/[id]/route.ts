@@ -7,16 +7,13 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const GET = createAsyncRoute(
   async (request: NextRequest, params?: { [key: string]: string }) => {
-    const id = Number(params?.id);
+    const id = params?.id;
 
+    if (!id || typeof id !== "string" || id.trim().length === 0) {
+      return NextResponse.json({ error: "Invalid review ID" }, { status: 400 });
+    }
     const select = getSelectQuerys(request);
     if (select instanceof NextResponse) return select;
-
-    if (isNaN(id))
-      return NextResponse.json(
-        { error: "Invalid product ID" },
-        { status: 400 }
-      );
 
     const product = await prisma.product.findUnique({
       where: { id },
@@ -38,7 +35,6 @@ export const GET = createAsyncRoute(
               reviews: true,
             },
           } as any)),
-          
     });
 
     if (!product)

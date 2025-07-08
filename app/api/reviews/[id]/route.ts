@@ -9,10 +9,11 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const PATCH = createAsyncRoute(
   async (request: NextRequest, params?: { [key: string]: string }) => {
-    const id = Number(params?.id);
-     const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions);
 
-    if (isNaN(id)) {
+    const id = params?.id;
+
+    if (!id || typeof id !== "string" || id.trim().length === 0) {
       return NextResponse.json({ error: "Invalid review ID" }, { status: 400 });
     }
 
@@ -60,9 +61,9 @@ export const DELETE = createAsyncRoute(
   async (request: NextRequest, params?: { [key: string]: string }) => {
     const { user, hasAccess } = await checkServerRole("ADMIN");
 
-    const id = Number(params?.id);
+    const id = params?.id;
 
-    if (isNaN(id)) {
+    if (!id || typeof id !== "string" || id.trim().length === 0) {
       return NextResponse.json({ error: "Invalid review ID" }, { status: 400 });
     }
 

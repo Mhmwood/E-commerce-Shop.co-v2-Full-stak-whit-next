@@ -32,7 +32,7 @@ export const GET = createAsyncRoute(async (request: NextRequest) => {
       image: true,
       emailVerified: true,
       createdAt: true,
-      // updatedAt: true,
+      updatedAt: true,
     },
   });
 

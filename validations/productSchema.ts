@@ -5,6 +5,7 @@ const nonEmptyString = z.string().trim().min(1, "Cannot be empty");
 const positiveNumber = z.number().positive();
 const stringAndOptional = z.string().trim().optional();
 const numberAndOptional = z.number().positive().optional();
+const availabilityStatusEnum = z.enum(["InStock", "OutOfStock", "PreOrder"]);
 
 const BaseProductSchema = z.object({
   title: nonEmptyString
@@ -26,13 +27,11 @@ const BaseProductSchema = z.object({
   sku: stringAndOptional,
   warrantyInformation: stringAndOptional,
   shippingInformation: stringAndOptional,
-  availabilityStatus: stringAndOptional,
+  availabilityStatus: availabilityStatusEnum.optional(),
   returnPolicy: stringAndOptional,
 
   weight: numberAndOptional,
   minimumOrderQuantity: numberAndOptional,
-
-
 });
 export const ProductSchema = BaseProductSchema.refine(
   (data) => {

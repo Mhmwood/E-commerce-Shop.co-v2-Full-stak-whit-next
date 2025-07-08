@@ -1,4 +1,4 @@
-import { Product, ProductDimensions, ProductReview } from "@prisma/client";
+import { Product, ProductDimensions } from "@prisma/client";
 
 const DetailRow = ({
   label,

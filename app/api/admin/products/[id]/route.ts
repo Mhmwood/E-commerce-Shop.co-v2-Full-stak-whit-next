@@ -14,13 +14,11 @@ export const PATCH = createAsyncRoute(
         { status: 403 }
       );
     }
+    const id = params?.id;
 
-    const id = Number(params?.id);
-    if (isNaN(id))
-      return NextResponse.json(
-        { error: "Invalid product ID" },
-        { status: 400 }
-      );
+    if (!id || typeof id !== "string" || id.trim().length === 0) {
+      return NextResponse.json({ error: "Invalid review ID" }, { status: 400 });
+    }
 
     const product = await prisma.product.findUnique({ where: { id } });
     if (!product)
@@ -56,12 +54,11 @@ export const DELETE = createAsyncRoute(
       );
     }
 
-    const id = Number(params?.id);
-    if (isNaN(id))
-      return NextResponse.json(
-        { error: "Invalid product ID" },
-        { status: 400 }
-      );
+    const id = params?.id;
+
+    if (!id || typeof id !== "string" || id.trim().length === 0) {
+      return NextResponse.json({ error: "Invalid review ID" }, { status: 400 });
+    }
 
     const product = await prisma.product.findUnique({
       where: { id },

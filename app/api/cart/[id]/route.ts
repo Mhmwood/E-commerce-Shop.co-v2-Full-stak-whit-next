@@ -13,12 +13,14 @@ export const PUT = createAsyncRoute(
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
-    const cartItemId = Number(params?.id);
-    if (isNaN(cartItemId)) {
-      return NextResponse.json(
-        { error: "Invalid cart item ID" },
-        { status: 400 }
-      );
+    const cartItemId = params?.id;
+
+    if (
+      !cartItemId ||
+      typeof cartItemId !== "string" ||
+      cartItemId.trim().length === 0
+    ) {
+      return NextResponse.json({ error: "Invalid review ID" }, { status: 400 });
     }
 
     const body = await request.json();
@@ -112,12 +114,15 @@ export const DELETE = createAsyncRoute(
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
-    const cartItemId = Number(params?.id);
-    if (isNaN(cartItemId)) {
-      return NextResponse.json(
-        { error: "Invalid cart item ID" },
-        { status: 400 }
-      );
+ 
+    const cartItemId = params?.id;
+
+    if (
+      !cartItemId ||
+      typeof cartItemId !== "string" ||
+      cartItemId.trim().length === 0
+    ) {
+      return NextResponse.json({ error: "Invalid review ID" }, { status: 400 });
     }
 
     // Check if cart item exists and belongs to user

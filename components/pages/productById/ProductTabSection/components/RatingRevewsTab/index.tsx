@@ -6,7 +6,7 @@ import { ReviewForm } from "./ReviewForm";
 
 interface RatingReviewTabsProps {
   reviews: ProductReview[];
-  productId: number;
+  productId: string;
 }
 
 const RatingReviewTabs = ({ reviews, productId }: RatingReviewTabsProps) => {

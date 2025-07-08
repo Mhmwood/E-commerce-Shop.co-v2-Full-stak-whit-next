@@ -15,11 +15,7 @@ const BaseReviewSchema = z.object({
     .max(200, "Comment cannot exceed 500 characters"),
   reviewerName: nonEmptyString.min(1, "Reviewer name cannot be empty"),
 
-  productId: z
-    .number()
-    .int("Product ID must be a whole number")
-    .positive("Product ID must be positive"),
-
+  productId: nonEmptyString.min(1, "Product ID cannot be empty"),
   userId: nonEmptyString.min(1, "User ID cannot be empty"),
 });
 

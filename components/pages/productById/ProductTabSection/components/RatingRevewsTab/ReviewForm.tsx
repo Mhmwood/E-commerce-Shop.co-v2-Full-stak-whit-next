@@ -12,7 +12,7 @@ export const ReviewForm = ({
   onSuccess,
   onCancel,
 }: {
-  productId: number;
+  productId: string;
   userId: string;
   name?: string;
   data?: {
@@ -23,7 +23,7 @@ export const ReviewForm = ({
     userId: string;
   };
   mode?: "create" | "update";
-  reviewId?: number;
+  reviewId?: string;
   onSuccess?: () => void;
   onCancel?: () => void;
 }) => {

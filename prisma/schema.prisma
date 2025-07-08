@@ -13,12 +13,13 @@ enum Role {
 }
 
 model User {
-  id            String          @id @default(cuid())
+  id            String          @id @default(uuid())
   name          String
   email         String          @unique
   password      String
   role          Role            @default(USER)
-  createdAt     DateTime?       @default(now())
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
   emailVerified DateTime?
   image         String?
   accounts      Account[]
@@ -29,7 +30,7 @@ model User {
 }
 
 model Account {
-  id                String  @id @default(cuid())
+  id                String  @id @default(uuid())
   userId            String
   type              String
   provider          String
@@ -48,7 +49,7 @@ model Account {
 }
 
 model Session {
-  id           String   @id @default(cuid())
+  id           String   @id @default(uuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
@@ -65,25 +66,25 @@ model VerificationToken {
 }
 
 model Product {
-  id                   Int      @id @default(autoincrement())
+  id                   String              @id @default(uuid())
   title                String
   description          String
   price                Float
-  discountPercentage   Float    @default(0)
-  rating               Float    @default(0) // remmber build sysstem to calculate rating
-  stock                Int      @default(0)
+  discountPercentage   Float               @default(0)
+  rating               Float               @default(0) 
+  stock                Int                 @default(0)
   thumbnail            String
-  images               String[] @default([])
-  tags                 String[] @default([])
-  brand                String?  @default("Unknown")
-  sku                  String?  @default("")
-  weight               Float?   @default(0)
-  warrantyInformation  String?  @default("")
-  shippingInformation  String?  @default("")
-  availabilityStatus   String?  @default("InStock")
-  returnPolicy         String?  @default("")
-  minimumOrderQuantity Int?     @default(1)
-  category             String?  @default("Uncategorized")
+  images               String[]            @default([])
+  tags                 String[]            @default([])
+  brand                String?             @default("Unknown")
+  sku                  String?             @default("")
+  weight               Float?              @default(0)
+  warrantyInformation  String?             @default("")
+  shippingInformation  String?             @default("")
+  availabilityStatus   AvailabilityStatus? @default(InStock)
+  returnPolicy         String?             @default("")
+  minimumOrderQuantity Int?                @default(1)
+  category             String?             @default("Uncategorized")
 
   dimensions ProductDimensions?
   meta       ProductMeta?
@@ -92,53 +93,59 @@ model Product {
   orderItems OrderItem[]
 }
 
+enum AvailabilityStatus {
+  InStock
+  OutOfStock
+  PreOrder
+}
+
 model ProductDimensions {
-  id        Int     @id @default(autoincrement())
+  id        String  @id @default(uuid())
   width     Float
   height    Float
   depth     Float
-  productId Int     @unique
+  productId String  @unique
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model ProductMeta {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   barcode   String
   qrCode    String
-  productId Int      @unique
+  productId String   @unique
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model ProductReview {
-  id           Int      @id @default(autoincrement())
+  id           String   @id @default(uuid())
   rating       Float
   comment      String
-  date         DateTime
   reviewerName String
-
-  productId Int
-  userId    String
-
-  product Product @relation(fields: [productId], references: [id] , onDelete: Cascade)
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId    String
+  userId       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model CartItem {
-  id        Int    @id @default(autoincrement())
+  id        String   @id @default(uuid())
   userId    String
-  productId Int
-  quantity  Int    @default(1)
-
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  quantity  Int      @default(1)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([userId, productId])
 }
 
 model Order {
-  id              Int         @id @default(autoincrement())
+  id              String      @id @default(uuid())
   userId          String
   totalAmount     Float
   status          OrderStatus @default(PENDING)
@@ -152,14 +159,15 @@ model Order {
 }
 
 model OrderItem {
-  id        Int   @id @default(autoincrement())
-  orderId   Int
-  productId Int
+  id        String   @id @default(uuid())
+  orderId   String
+  productId String
   quantity  Int
   price     Float
-
-  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id] , onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 enum OrderStatus {

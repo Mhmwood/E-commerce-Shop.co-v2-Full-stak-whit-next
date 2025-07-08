@@ -16,7 +16,7 @@ const InfoDisplay: React.FC<InfoDisplayProps> = ({ product }) => {
   const { items, updateItemQuantity, addItem, removeItem } = useCart();
 
   // Ensure both IDs are the same type for comparison
-  const cartItem = items.find((item) => String(item.id) === String(product.id));
+  const cartItem = items.find((item) => item.id === product.id);
   const currentQuantity = cartItem?.quantity ?? quantity;
 
   const handleQuantityChange = (change: number) => {
@@ -33,7 +33,7 @@ const InfoDisplay: React.FC<InfoDisplayProps> = ({ product }) => {
   const handleAddToCart = () => {
     addItem(
       {
-        id: String(product.id),
+        id: product.id,
         title: product.title,
         price: product.price,
         category: product.category!,
