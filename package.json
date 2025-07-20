@@ -40,6 +40,7 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.58.1",
     "react-redux": "^9.2.0",
+    "stripe": "^18.3.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.10",
     "use-debounce": "^10.0.5",

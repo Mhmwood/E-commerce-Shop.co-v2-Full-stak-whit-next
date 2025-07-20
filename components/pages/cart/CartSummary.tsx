@@ -9,11 +9,33 @@ const CartSummary = () => {
   const [promoCode, setPromoCode] = useState("");
   const [email, setEmail] = useState("");
   const { subtotal, discount, deliveryFee, total, applyPromo } = useCart();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleApplyPromo = () => {
     if (promoCode.trim()) {
       applyPromo(promoCode);
       setPromoCode("");
+    }
+  };
+
+  const handleCheckout = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (res.ok && data.url) {
+        window.location.href = data.url;
+      } else {
+        setError(data.error || "Failed to initiate checkout");
+      }
+    } catch (err) {
+      setError("Failed to initiate checkout");
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -66,14 +88,22 @@ const CartSummary = () => {
           </form>
         </div>
         <button
-          // onClick={() => {}}
+          onClick={handleCheckout}
+          disabled={loading}
           className="w-full flex justify-center items-center
            text-white text-md py-4 px-5 md:px-20 lg:px-14 
-           hover:text-primary hover:bg-white border border-primary rounded-full bg-primary transition duration-150"
+           hover:text-primary hover:bg-white border border-primary rounded-full bg-primary transition duration-150 disabled:opacity-50"
         >
-          <span className="mr-3">Go to Checkout</span>
+          {loading ? (
+            <span className="mr-3">Redirecting...</span>
+          ) : (
+            <span className="mr-3">Go to Checkout</span>
+          )}
           <LucideArrowRight className="" />
         </button>
+        {error && (
+          <div className="text-red-500 text-sm mt-2 text-center">{error}</div>
+        )}
       </div>
     </div>
   );

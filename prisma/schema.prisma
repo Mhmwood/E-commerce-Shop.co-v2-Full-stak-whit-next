@@ -13,20 +13,21 @@ enum Role {
 }
 
 model User {
-  id            String          @id @default(uuid())
-  name          String
-  email         String          @unique
-  password      String
-  role          Role            @default(USER)
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  reviews       ProductReview[]
-  cartItems     CartItem[]
-  orders        Order[]
+  id              String           @id @default(uuid())
+  name            String
+  email           String           @unique
+  password        String
+  role            Role             @default(USER)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  emailVerified   DateTime?
+  image           String?
+  accounts        Account[]
+  sessions        Session[]
+  reviews         ProductReview[]
+  cartItems       CartItem[]
+  orders          Order[]
+  paymentCustomer PaymentCustomer?
 }
 
 model Account {
@@ -71,7 +72,7 @@ model Product {
   description          String
   price                Float
   discountPercentage   Float               @default(0)
-  rating               Float               @default(0) 
+  rating               Float               @default(0)
   stock                Int                 @default(0)
   thumbnail            String
   images               String[]            @default([])
@@ -173,7 +174,14 @@ model OrderItem {
 enum OrderStatus {
   PENDING
   PAID
-  SHIPPED
-  DELIVERED
-  CANCELLED
+}
+
+model PaymentCustomer {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  stripeCustomerId String   @unique
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
