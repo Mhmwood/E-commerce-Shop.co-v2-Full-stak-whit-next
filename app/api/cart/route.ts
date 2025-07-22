@@ -1,3 +1,4 @@
+import F from "@/components/F";
 import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
 import { authOptions } from "@/lib/auth/auth";
 
@@ -11,7 +12,6 @@ export const GET = createAsyncRoute(async () => {
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Access denied" }, { status: 403 });
   }
-
 
   const cartItems = await prisma.cartItem.findMany({
     where: {
@@ -80,8 +80,6 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
     );
   }
 
-
-
   // Check if item already exists in cart
   const existingCartItem = await prisma.cartItem.findUnique({
     where: {
@@ -95,7 +93,7 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
   let cartItem;
 
   if (existingCartItem) {
-    const newQuantity = existingCartItem.quantity + quantity;
+    const newQuantity = quantity;
 
     if (product.stock < newQuantity) {
       return NextResponse.json(

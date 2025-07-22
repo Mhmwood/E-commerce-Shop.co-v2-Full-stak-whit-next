@@ -8,14 +8,54 @@ import { useState } from "react";
 const CartSummary = () => {
   const [promoCode, setPromoCode] = useState("");
   const [email, setEmail] = useState("");
-  const { subtotal, discount, deliveryFee, total, applyPromo } = useCart();
+  const { items, subtotal, discount, deliveryFee, total, applyPromo } =
+    useCart();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [checkResult, setCheckResult] = useState<string | null>(null);
+  const [checkLoading, setCheckLoading] = useState(false);
 
   const handleApplyPromo = () => {
     if (promoCode.trim()) {
       applyPromo(promoCode);
       setPromoCode("");
+    }
+  };
+
+  const handleCheckCart = async () => {
+    setCheckLoading(true);
+    setCheckResult(null);
+    setError("");
+    try {
+      // Cart is valid, now add all items to backend cart
+      const addErrors: string[] = [];
+      for (const item of items) {
+        const addRes = await fetch("/api/cart", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            productId: item.id,
+            quantity: item.quantity,
+          }),
+        });
+        if (!addRes.ok) {
+          const addData = await addRes.json();
+          addErrors.push(addData.error || `Failed to add item ${item.id}`);
+        }
+      }
+      if (addErrors.length === 0) {
+        setCheckResult(
+          "Cart is valid and all items have been added to your cart!"
+        );
+      } else {
+        setCheckResult(
+          `Cart is valid, but some items failed to add: ${addErrors.join("; ")}`
+        );
+      }
+    } catch {
+      setCheckResult("Failed to check cart. Please try again.");
+    } finally {
+      setCheckLoading(false);
     }
   };
 
@@ -32,7 +72,7 @@ const CartSummary = () => {
       } else {
         setError(data.error || "Failed to initiate checkout");
       }
-    } catch (err) {
+    } catch {
       setError("Failed to initiate checkout");
     } finally {
       setLoading(false);
@@ -87,6 +127,22 @@ const CartSummary = () => {
             </button>
           </form>
         </div>
+        <button
+          onClick={handleCheckCart}
+          disabled={checkLoading}
+          className="w-full flex justify-center items-center text-white text-md py-2 px-5 mb-2 border border-primary rounded-full bg-primary transition duration-150 disabled:opacity-50"
+        >
+          {checkLoading ? "Checking..." : "Check Cart"}
+        </button>
+        {checkResult && (
+          <div
+            className={`text-center text-sm mt-2 ${
+              checkResult.includes("valid") ? "text-green-600" : "text-red-500"
+            }`}
+          >
+            {checkResult}
+          </div>
+        )}
         <button
           onClick={handleCheckout}
           disabled={loading}

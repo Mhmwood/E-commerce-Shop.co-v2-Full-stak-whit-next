@@ -6,7 +6,7 @@ import Image from "next/image";
 const CartList = () => {
   const { items, removeItem, updateItemQuantity } = useCart();
 
-  const handleQuantityChange = (id: number, newQuantity: number) => {
+  const handleQuantityChange = (id: string, newQuantity: number) => {
     if (newQuantity > 0) {
       updateItemQuantity(id, newQuantity);
     } else {
@@ -48,7 +48,7 @@ const CartList = () => {
             <div className="relative ">
               <button
                 className="absolute top-0 right-0 text-white "
-                onClick={() => removeItem(Number(product.id))}
+                onClick={() => removeItem(product.id)}
               >
                 <svg
                   width={18}
@@ -65,10 +65,7 @@ const CartList = () => {
                 <button
                   type="button"
                   onClick={() =>
-                    handleQuantityChange(
-                      Number(product.id),
-                      product.quantity - 1
-                    )
+                    handleQuantityChange(product.id, product.quantity - 1)
                   }
                   className="active:scale-90 px-2 py-1    "
                 >
@@ -80,10 +77,7 @@ const CartList = () => {
                 <button
                   type="button"
                   onClick={() =>
-                    handleQuantityChange(
-                      Number(product.id),
-                      product.quantity + 1
-                    )
+                    handleQuantityChange(product.id, product.quantity + 1)
                   }
                   className="active:scale-90 px-2 py-1  "
                 >

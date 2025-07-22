@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     );
   }
 
-  let event;
+  let event: Stripe.Event;
   try {
     event = stripe.webhooks.constructEvent(
       rawBody,
@@ -55,7 +55,6 @@ export async function POST(request: Request) {
     }
 
     try {
-      // جلب عناصر السلة الحالية
       const cartItems = await prisma.cartItem.findMany({
         where: { userId },
         include: { product: true },
@@ -66,19 +65,17 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
       }
 
-      // حساب المجموع الكلي
       const totalAmount = cartItems.reduce(
         (acc, item) => acc + item.product.price * item.quantity,
         0
       );
 
-      // إنشاء الطلب مع العناصر المرتبطة
       await prisma.order.create({
         data: {
           userId,
           totalAmount,
           status: "PAID",
-          shippingAddress: "To be implemented", // يمكن تعديلها لاحقًا
+          shippingAddress: "To be implemented",
           paymentMethod: "card",
           orderItems: {
             create: cartItems.map((item) => ({
@@ -90,7 +87,6 @@ export async function POST(request: Request) {
         },
       });
 
-      // مسح عناصر السلة بعد إنشاء الطلب
       await prisma.cartItem.deleteMany({ where: { userId } });
 
       console.log(`Order created and cart cleared for user: ${userId}`);
