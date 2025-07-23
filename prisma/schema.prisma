@@ -7,11 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  ADMIN
-  USER
-}
-
 model User {
   id              String           @id @default(uuid())
   name            String
@@ -23,11 +18,11 @@ model User {
   emailVerified   DateTime?
   image           String?
   accounts        Account[]
-  sessions        Session[]
-  reviews         ProductReview[]
   cartItems       CartItem[]
   orders          Order[]
   paymentCustomer PaymentCustomer?
+  reviews         ProductReview[]
+  sessions        Session[]
 }
 
 model Account {
@@ -43,8 +38,7 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -54,8 +48,7 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
@@ -86,18 +79,11 @@ model Product {
   returnPolicy         String?             @default("")
   minimumOrderQuantity Int?                @default(1)
   category             String?             @default("Uncategorized")
-
-  dimensions ProductDimensions?
-  meta       ProductMeta?
-  reviews    ProductReview[]
-  cartItems  CartItem[]
-  orderItems OrderItem[]
-}
-
-enum AvailabilityStatus {
-  InStock
-  OutOfStock
-  PreOrder
+  cartItems            CartItem[]
+  orderItems           OrderItem[]
+  dimensions           ProductDimensions?
+  meta                 ProductMeta?
+  reviews              ProductReview[]
 }
 
 model ProductDimensions {
@@ -137,10 +123,10 @@ model CartItem {
   userId    String
   productId String
   quantity  Int      @default(1)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
 }
@@ -154,9 +140,8 @@ model Order {
   updatedAt       DateTime    @updatedAt
   shippingAddress String
   paymentMethod   String
-
-  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  orderItems OrderItem[]
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orderItems      OrderItem[]
 }
 
 model OrderItem {
@@ -171,17 +156,30 @@ model OrderItem {
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
-enum OrderStatus {
-  PENDING
-  PAID
-}
-
 model PaymentCustomer {
   id               String   @id @default(uuid())
   userId           String   @unique
   stripeCustomerId String   @unique
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+enum Role {
+  ADMIN
+  USER
+}
+
+enum AvailabilityStatus {
+  InStock
+  OutOfStock
+  PreOrder
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
 }

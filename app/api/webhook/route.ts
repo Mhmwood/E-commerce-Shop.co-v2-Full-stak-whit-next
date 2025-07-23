@@ -35,16 +35,20 @@ export async function POST(request: Request) {
     event = stripe.webhooks.constructEvent(
       rawBody,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET!
+      process.env.STRIPE_WEBHOOK_KEY!
     );
+    console.log("start webHook")
+    console.table(rawBody);
   } catch (err) {
     console.error("Webhook signature verification failed.", err);
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
+  console.log("befoere");
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
     const userId = session?.metadata?.userId;
+    console.log("this in webhook routts:", userId, session);
 
     if (!userId) {
       console.warn("No userId found in session metadata.");

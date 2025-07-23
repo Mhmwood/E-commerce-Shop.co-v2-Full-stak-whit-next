@@ -13,7 +13,6 @@ const CartSummary = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [checkResult, setCheckResult] = useState<string | null>(null);
-  const [checkLoading, setCheckLoading] = useState(false);
 
   const handleApplyPromo = () => {
     if (promoCode.trim()) {
@@ -23,7 +22,7 @@ const CartSummary = () => {
   };
 
   const handleCheckCart = async () => {
-    setCheckLoading(true);
+    setLoading(true);
     setCheckResult(null);
     setError("");
     try {
@@ -47,19 +46,24 @@ const CartSummary = () => {
         setCheckResult(
           "Cart is valid and all items have been added to your cart!"
         );
+        return true;
       } else {
         setCheckResult(
           `Cart is valid, but some items failed to add: ${addErrors.join("; ")}`
         );
+        return false;
       }
     } catch {
       setCheckResult("Failed to check cart. Please try again.");
+      return false;
     } finally {
-      setCheckLoading(false);
+      setLoading(false);
     }
   };
 
   const handleCheckout = async () => {
+    const cartValid = await handleCheckCart();
+    if (!cartValid) return;
     setLoading(true);
     setError("");
     try {
@@ -128,22 +132,6 @@ const CartSummary = () => {
           </form>
         </div>
         <button
-          onClick={handleCheckCart}
-          disabled={checkLoading}
-          className="w-full flex justify-center items-center text-white text-md py-2 px-5 mb-2 border border-primary rounded-full bg-primary transition duration-150 disabled:opacity-50"
-        >
-          {checkLoading ? "Checking..." : "Check Cart"}
-        </button>
-        {checkResult && (
-          <div
-            className={`text-center text-sm mt-2 ${
-              checkResult.includes("valid") ? "text-green-600" : "text-red-500"
-            }`}
-          >
-            {checkResult}
-          </div>
-        )}
-        <button
           onClick={handleCheckout}
           disabled={loading}
           className="w-full flex justify-center items-center
@@ -157,6 +145,15 @@ const CartSummary = () => {
           )}
           <LucideArrowRight className="" />
         </button>
+        {checkResult && !error && (
+          <div
+            className={`text-center text-sm mt-2 ${
+              checkResult.includes("valid") ? "text-green-600" : "text-red-500"
+            }`}
+          >
+            {checkResult}
+          </div>
+        )}
         {error && (
           <div className="text-red-500 text-sm mt-2 text-center">{error}</div>
         )}

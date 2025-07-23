@@ -1,36 +1,46 @@
+"use client";
+
 import { useCart } from "@/hooks/useCart";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
-
+import { useEffect, useState } from "react";
 
 const Cart = () => {
   const { items } = useCart();
-
   const router = useRouter();
+
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null;
 
   return (
     <button
       className="relative cursor-pointer"
       onClick={() => router.push("/cart")}
     >
-      {items.length > 0 && (
-        <motion.div
-          initial={{ origin: "bottom", scale: 0 }}
-          animate={{ origin: "bottom", scale: 1 }}
-          transition={{
-            duration: 0.2,
-            ease: "easeOut",
-          }}
-          exit={{ origin: "bottom", scale: 0 }}
-          className={cn(
-            "absolute flex items-center justify-center text-xs rounded-full -top-1 -right-1 bg-red-500 text-red-100",
-            items.length > 9 ? " px-1.5  " : " px-1"
-          )}
-        >
-          {items.length}
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {items.length > 0 && (
+          <motion.div
+            initial={{ origin: "bottom", scale: 0 }}
+            animate={{ origin: "bottom", scale: 1 }}
+            exit={{ origin: "bottom", scale: 0 }}
+            transition={{
+              duration: 0.2,
+              ease: "easeOut",
+            }}
+            className={cn(
+              "absolute flex items-center justify-center text-xs rounded-full -top-1 -right-1 bg-red-500 text-red-100",
+              items.length > 9 ? " px-1.5  " : " px-1"
+            )}
+          >
+            {items.length}
+          </motion.div>
+        )}
+      </AnimatePresence>
       <svg
         width="24"
         height="24"
