@@ -13,13 +13,13 @@ const CartSummary = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [checkResult, setCheckResult] = useState<string | null>(null);
-
-  const handleApplyPromo = () => {
-    if (promoCode.trim()) {
-      applyPromo(promoCode);
-      setPromoCode("");
-    }
-  };
+const handleApplyPromo = (e: React.FormEvent) => {
+  e.preventDefault();
+  if (promoCode.trim()) {
+    applyPromo(promoCode);
+    setPromoCode("");
+  }
+};
 
   const handleCheckCart = async () => {
     setLoading(true);
@@ -122,6 +122,7 @@ const CartSummary = () => {
                 className=" text-primary outline-none bg-secondary w-full"
                 required
               />
+              
             </div>
             <button
               type="submit"

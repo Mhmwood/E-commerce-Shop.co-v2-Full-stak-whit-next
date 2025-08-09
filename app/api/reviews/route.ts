@@ -1,9 +1,9 @@
-
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
 
 import { CreateReviewSchema } from "@/validations/reviewSchema";
+import { updateProductRating } from "@/lib/api/products-utils/updateProductRating";
 
 export const POST = createAsyncRoute(async (request: NextRequest) => {
   const rawData = await request.json();
@@ -11,7 +11,7 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
   // Validate the request data
   const validation = CreateReviewSchema.safeParse(rawData);
   if (!validation.success) {
-    console.log(validation.error.issues)
+    console.log(validation.error.issues);
     return NextResponse.json(
       { error: "Validation failed", details: validation.error.flatten() },
       { status: 400 }
@@ -66,6 +66,8 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
       },
     },
   });
+
+  await updateProductRating(product.id);
 
   return NextResponse.json(review, { status: 201 });
 });

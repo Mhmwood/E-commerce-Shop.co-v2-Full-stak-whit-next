@@ -3,7 +3,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { loadState } from "../middleware/localStorage";
 import type { CartState, CartItem } from "@/types";
 
-const persistedState = loadState();
+const isBrowser = typeof window !== "undefined";
+
+const persistedState = isBrowser ? loadState() : undefined;
 
 const initialState: CartState = persistedState || {
   items: [],
@@ -116,4 +118,3 @@ export const {
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
-

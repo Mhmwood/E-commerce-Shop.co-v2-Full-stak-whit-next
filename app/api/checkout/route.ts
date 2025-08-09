@@ -1,3 +1,5 @@
+// api/checkout/route.ts
+
 import { stripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
@@ -44,7 +46,7 @@ export async function POST(request: Request) {
       cancel_url: `${process.env.NEXTAUTH_URL}/cart`,
       customer_email: session.user.email || undefined,
       metadata: {
-        userId: session.user.id,
+        userId: session.user.id.toString(),
       },
     });
     console.log(
@@ -52,7 +54,6 @@ export async function POST(request: Request) {
       session.user.id
     );
 
-    
     return NextResponse.json({ url: sessionStripe.url });
   } catch (error) {
     console.error(error);

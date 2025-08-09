@@ -1,4 +1,5 @@
 import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
+import { updateProductRating } from "@/lib/api/products-utils/updateProductRating";
 import { authOptions } from "@/lib/auth/auth";
 import { checkServerRole } from "@/lib/auth/role-utils";
 
@@ -52,6 +53,8 @@ export const PATCH = createAsyncRoute(
       },
     });
 
+    await updateProductRating(updatedReview.productId);
+
     return NextResponse.json(updatedReview);
   }
 );
@@ -84,6 +87,8 @@ export const DELETE = createAsyncRoute(
     await prisma.productReview.delete({
       where: { id },
     });
+
+    await updateProductRating(existingReview.productId);
 
     return NextResponse.json(
       { message: "Review deleted successfully" },
