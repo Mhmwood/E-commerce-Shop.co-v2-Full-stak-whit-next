@@ -12,13 +12,12 @@ import { CategoriesList } from "@/constants";
 import { useAuth } from "@/hooks/useAuth";
 import Cart from "./components/Cart";
 
-
 // import { CategoriesList } from "@/constants";
 
 export const Navbar = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const pathname = usePathname();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, isAdmin } = useAuth();
   useEffect(() => {
     setOpenMenu(false);
   }, [pathname]);
@@ -67,6 +66,13 @@ export const Navbar = () => {
                 className="absolute bg-primary text-secondary top-16   right-0 px-11 w-full z-10 lg:hidden"
               >
                 <ul className="flex flex-col  py-3 gap-6 text-lg">
+                  {isAdmin && (
+                    <li>
+                      <Link className="  hover:text-gray-800 " href={"/admin"}>
+                        Admin Dashboard
+                      </Link>
+                    </li>
+                  )}
                   <li>
                     <NavigationMenuDemo categories={CategoriesList} />
                   </li>
@@ -104,6 +110,16 @@ export const Navbar = () => {
               <div className="mr-6 ">
                 <nav aria-label="Global">
                   <ul className="flex items-center   py-3 gap-6 text-sm">
+                    {isAdmin && (
+                      <li>
+                        <Link
+                          className="  hover:text-gray-800 "
+                          href={"/admin"}
+                        >
+                          Admin Dashboard
+                        </Link>
+                      </li>
+                    )}
                     <li>
                       <NavigationMenuDemo categories={CategoriesList} />
                     </li>
@@ -134,20 +150,18 @@ export const Navbar = () => {
                   </ul>
                 </nav>
               </div>
-              
+
               <Search />
-    
             </div>
           </div>
           <div className=" lg:hidden w-full ">
-            <Search/>
-      
+            <Search />
           </div>
 
           <div className="flex items-center    gap-4">
             <div className=" flex items-center gap-4">
-               <Cart/> 
-         
+              <Cart />
+
               {isAuthenticated ? (
                 <>
                   <Link href={"/profile"}>
@@ -175,7 +189,7 @@ export const Navbar = () => {
                 <>
                   <Link
                     href="/auth/signup"
-                    className="rounded-full py-2 px-3  text-nowrap  border  bg-primary text-secondary hover:bg-white hover:text-primary transition-all duration-150"  
+                    className="rounded-full py-2 px-3  text-nowrap  border  bg-primary text-secondary hover:bg-white hover:text-primary transition-all duration-150"
                   >
                     Sign up
                   </Link>

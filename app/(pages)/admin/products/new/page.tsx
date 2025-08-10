@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ProductForm from "../ProductForm";
 import { ProductInput } from "@/validations/productSchema";
+import { Button } from "@/components/ui";
+import Link from "next/link";
 
 export default function NewProductPage() {
   const router = useRouter();
@@ -38,11 +40,22 @@ export default function NewProductPage() {
   };
 
   return (
-    <main className="dark bg-gray-900 min-h-screen text-white p-4">
-      <h1 className="text-2xl font-bold mb-6">Create New Product</h1>
-      <div className="max-w-4xl mx-auto bg-gray-800 rounded p-6 shadow">
-        {error && <p className="mb-4 text-red-500">{error}</p>}
-        <ProductForm onSubmit={handleSubmit} isLoading={isLoading} />
+    <main className="py-10 md:py-20 px-4 md:px-20 mt-10 space-y-8 text-primary">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+        <h1 className="text-3xl font-extrabold tracking-tight">
+          Create New Product
+        </h1>
+        <Link href="/admin/products">
+          <button className="rounded-full px-6 py-3 border cursor-pointer border-gray-700  hover:bg-primary hover:text-white transition-all duration-300">
+            Back to Products
+          </button>
+        </Link>
+      </div>
+      <div className="max-w-3xl mx-auto">
+        <div className="rounded-2xl bg-background border border-gray-700 shadow-lg p-8">
+          {error && <p className="mb-4 text-red-500">{error}</p>}
+          <ProductForm onSubmit={handleSubmit} isLoading={isLoading} />
+        </div>
       </div>
     </main>
   );
