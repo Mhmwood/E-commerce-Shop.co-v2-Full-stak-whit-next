@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ProductForm from "../ProductForm";
 import { ProductInput } from "@/validations/productSchema";
-import { Button } from "@/components/ui";
 import Link from "next/link";
 
 export default function NewProductPage() {

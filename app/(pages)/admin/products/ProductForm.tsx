@@ -57,27 +57,42 @@ const ProductForm: React.FC<ProductFormProps> = ({
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(
     product?.thumbnail || null
   );
+  const [thumbnailError, setThumbnailError] = useState<string | null>(null);
 
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setThumbnailError(null);
     const file = e.target.files?.[0];
     if (file) {
       setThumbnailFile(file);
       setThumbnailPreview(URL.createObjectURL(file));
+      setValue("thumbnail", URL.createObjectURL(file), { shouldValidate: true });
+    } else {
+      setThumbnailFile(null);
+      setThumbnailPreview(product?.thumbnail || null);
     }
   };
 
   const handleFormSubmit: SubmitHandler<ProductInput> = async (data) => {
+    
+ 
+    setThumbnailError(null);
     if (thumbnailFile) {
       try {
         const imageUrl = await uploadImage(thumbnailFile, "products");
+        setValue("thumbnail", imageUrl, { shouldValidate: true });
+        setThumbnailPreview(imageUrl);
+        setThumbnailFile(null);
         data.thumbnail = imageUrl;
-      } catch (error) {
-        console.error("Failed to upload thumbnail", error);
-        // Optionally, handle upload error in the UI
+      } catch (error: any) {
+        console.error("Thumbnail upload error:", error);  
+        setThumbnailError(error?.message || "Failed to upload thumbnail");
         return;
       }
     }
-    await onSubmit(data);
+    await onSubmit({
+      ...data,
+      thumbnail: data.thumbnail || thumbnailPreview || "",
+    });
   };
 
   // UI/UX upgrade: Card, section titles, Select, Button, optional fields toggle
@@ -122,6 +137,9 @@ const ProductForm: React.FC<ProductFormProps> = ({
               <p className="mt-2 text-sm text-red-500">
                 {errors.thumbnail.message}
               </p>
+            )}
+            {thumbnailError && (
+              <p className="mt-2 text-sm text-red-500">{thumbnailError}</p>
             )}
           </div>
           <div>
@@ -170,8 +188,9 @@ const ProductForm: React.FC<ProductFormProps> = ({
               Price
             </label>
             <input
-              {...register("price", { valueAsNumber: true ,
-                min: { value: 5, message: "Price must be greater than 0" }
+              {...register("price", {
+                valueAsNumber: true,
+                min: { value: 5, message: "Price must be greater than 0" },
               })}
               type="number"
               step="0.01"
