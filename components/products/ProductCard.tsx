@@ -6,10 +6,12 @@ import { Product } from "@prisma/client";
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { th } from "zod/v4/locales";
 
 const ProductCard = ({
   title,
   images,
+  thumbnail,
   price,
   rating,
   discountPercentage,
@@ -24,15 +26,17 @@ const ProductCard = ({
         onClick={() => router.push(`/shop/${id}`)}
       >
         <figure className="block  bg-secondary">
-          {!images || images.length === 0 ? (
+          {(!images || images.length === 0) && !thumbnail ? (
             <div className="rounded-xl bg-warn/10 p-4">
               No product images available
             </div>
           ) : (
             <Image
-              className="transform transition-transform duration-300 hover:scale-105 object-cover"
+              className="transform transition-transform duration-300 hover:scale-105 object-cover "
               src={
-                "https://bkddaewshluqnvphgnqv.supabase.co/storage/v1/object/public/avatars/users/1750361164941-2cjwdmitlro.png"
+                thumbnail && thumbnail.includes("example.com")
+                  ? "https://bkddaewshluqnvphgnqv.supabase.co/storage/v1/object/public/avatars/users/1750361164941-2cjwdmitlro.png"
+                  : thumbnail 
               }
               alt={title}
               loading="lazy"

@@ -18,6 +18,8 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
   const rawData = await request.json();
   const validation = ProductSchema.safeParse(rawData);
 
+
+
   if (!validation.success) {
     return NextResponse.json(
       { error: "Validation failed", details: validation.error.flatten() },

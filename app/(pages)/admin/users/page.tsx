@@ -6,6 +6,7 @@ import Image from "next/image";
 import { User } from "@prisma/client";
 import Link from "next/link";
 import { useDebounce } from "use-debounce";
+import { CircleArrowLeft } from "lucide-react";
 
 type UserWithCounts = User & {
   _count: {
@@ -131,132 +132,146 @@ export default function AdminUsersPage() {
   };
 
   return (
-    <main className="dark bg-gray-900 min-h-screen text-white p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">User Management</h1>
-        <Link
-          href="/admin/users/new"
-          className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Create User
-        </Link>
-      </div>
-
-      <div className="mb-4 flex gap-4">
-        <input
-          type="text"
-          placeholder="Search by name or email..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="bg-gray-700 p-2 rounded w-1/3"
-        />
-        <select
-          value={roleFilter}
-          onChange={(e) => setRoleFilter(e.target.value)}
-          className="bg-gray-700 p-2 rounded"
-        >
-          <option value="">All Roles</option>
-          <option value="USER">User</option>
-          <option value="ADMIN">Admin</option>
-        </select>
-      </div>
-
-      {isLoading && <p>Loading users...</p>}
-      {error && <p className="text-red-500">{error}</p>}
-
-      <div className="bg-gray-800 shadow-md rounded-lg overflow-x-auto">
-        <table className="min-w-full leading-normal">
-          <thead>
-            <tr>
-              <th className="px-5 py-3 border-b-2 border-gray-700 bg-gray-700 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
-                User
-              </th>
-              <th className="px-5 py-3 border-b-2 border-gray-700 bg-gray-700 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
-                Role
-              </th>
-              <th className="px-5 py-3 border-b-2 border-gray-700 bg-gray-700 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
-                Stats
-              </th>
-              <th className="px-5 py-3 border-b-2 border-gray-700 bg-gray-700 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user.id}>
-                <td className="px-5 py-5 border-b border-gray-700 bg-gray-800 text-sm">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0 w-10 h-10">
+    <main className="min-h-screen bg-background text-primary py-10 md:py-20 px-4 md:px-20 mt-10 space-y-8 flex flex-col items-center">
+      <div className="max-w-6xl w-full mx-auto rounded-2xl border border-gray-700 bg-background/80 shadow-lg p-6 md:p-10">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+          <h2 className="text-xl font-bold text-primary">User Management</h2>
+          <div className="flex space-x-2 w-full md:w-auto justify-center md:justify-end">
+            <Link href="/admin">
+              <button className="rounded-full p-1 cursor-pointer border border-gray-700 hover:bg-primary hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/40">
+                <CircleArrowLeft
+                  className="size-8 sm:size-10"
+                  strokeWidth={1.75}
+                />
+              </button>
+            </Link>
+            <Link href="/admin/users/new">
+              <button className="rounded-full px-4 sm:px-6 py-2 sm:py-3 border cursor-pointer border-gray-700 hover:bg-primary hover:text-white transition-all duration-300 font-semibold text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-primary/40">
+                Create New User
+              </button>
+            </Link>
+          </div>
+        </div>
+        <div className="mb-6 flex flex-col md:flex-row gap-4">
+          <input
+            type="text"
+            placeholder="Search by name or email..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="bg-secondary placeholder:text-gray-400 border border-gray-700 rounded-lg shadow-sm text-primary px-4 py-2 focus:ring-2 focus:ring-primary/40 focus:outline-none w-full md:w-1/3"
+          />
+          <select
+            value={roleFilter}
+            onChange={(e) => setRoleFilter(e.target.value)}
+            className="bg-secondary border border-gray-700 rounded-lg shadow-sm text-primary px-4 py-2 focus:ring-2 focus:ring-primary/40 focus:outline-none w-full md:w-1/4"
+          >
+            <option value="">All Roles</option>
+            <option value="USER">User</option>
+            <option value="ADMIN">Admin</option>
+          </select>
+        </div>
+        {isLoading && (
+          <p className="text-center text-muted-foreground py-6">
+            Loading users...
+          </p>
+        )}
+        {error && <p className="text-red-500 text-center py-2">{error}</p>}
+        <div className="overflow-x-auto rounded-lg border border-gray-700 bg-background mt-4">
+          <table className="min-w-full text-sm">
+            <thead>
+              <tr className="bg-secondary">
+                <th className="px-5 py-3 border-b border-gray-700 text-left font-semibold text-muted-foreground uppercase tracking-wider">
+                  User
+                </th>
+                <th className="px-5 py-3 border-b border-gray-700 text-left font-semibold text-muted-foreground uppercase tracking-wider">
+                  Role
+                </th>
+                <th className="px-5 py-3 border-b border-gray-700 text-left font-semibold text-muted-foreground uppercase tracking-wider">
+                  Stats
+                </th>
+                <th className="px-5 py-3 border-b border-gray-700 text-left font-semibold text-muted-foreground uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr
+                  key={user.id}
+                  className="hover:bg-secondary/40 transition-all"
+                >
+                  <td className="px-5 py-5 border-b border-gray-700">
+                    <div className="flex items-center gap-3">
                       <Image
-                        className="w-full h-full rounded-full"
+                        className="rounded-full border"
                         src={user.image || "/defaultProfile.png"}
                         alt={user.name || "User"}
                         width={40}
                         height={40}
                       />
+                      <div>
+                        <div className="font-semibold text-primary">
+                          {user.name}
+                        </div>
+                        <div className="text-muted-foreground text-xs">
+                          {user.email}
+                        </div>
+                      </div>
                     </div>
-                    <div className="ml-3">
-                      <p className="text-white whitespace-no-wrap">
-                        {user.name}
-                      </p>
-                      <p className="text-gray-400 whitespace-no-wrap">
-                        {user.email}
-                      </p>
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-700">
+                    <select
+                      value={user.role}
+                      onChange={(e) =>
+                        handleRoleChange(user.id, e.target.value)
+                      }
+                      className="bg-secondary border border-gray-700 rounded-lg shadow-sm text-primary px-2 py-1 focus:ring-2 focus:ring-primary/40 focus:outline-none"
+                    >
+                      <option value="USER">User</option>
+                      <option value="ADMIN">Admin</option>
+                    </select>
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-700">
+                    <div className="font-medium text-primary">
+                      Orders: {user._count.orders}
                     </div>
-                  </div>
-                </td>
-                <td className="px-5 py-5 border-b border-gray-700 bg-gray-800 text-sm">
-                  <select
-                    value={user.role}
-                    onChange={(e) => handleRoleChange(user.id, e.target.value)}
-                    className="bg-gray-700 text-white rounded p-1"
-                  >
-                    <option value="USER">User</option>
-                    <option value="ADMIN">Admin</option>
-                  </select>
-                </td>
-                <td className="px-5 py-5 border-b border-gray-700 bg-gray-800 text-sm">
-                  <p className="text-white whitespace-no-wrap">
-                    Orders: {user._count.orders}
-                  </p>
-                  <p className="text-gray-400 whitespace-no-wrap">
-                    Reviews: {user._count.reviews}
-                  </p>
-                </td>
-                <td className="px-5 py-5 border-b border-gray-700 bg-gray-800 text-sm">
-                  <button
-                    onClick={() => handleDelete(user.id)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="mt-6 flex justify-between items-center">
-        <span className="text-sm text-gray-400">
-          Showing {users.length} of {pagination.totalCount} users
-        </span>
-        <div className="flex gap-2">
-          <button
-            onClick={() => handlePageChange(pagination.page - 1)}
-            disabled={!pagination.hasPreviousPage || isLoading}
-            className="bg-gray-700 px-4 py-2 rounded disabled:opacity-50"
-          >
-            Previous
-          </button>
-          <button
-            onClick={() => handlePageChange(pagination.page + 1)}
-            disabled={!pagination.hasNextPage || isLoading}
-            className="bg-gray-700 px-4 py-2 rounded disabled:opacity-50"
-          >
-            Next
-          </button>
+                    <div className="text-muted-foreground text-xs">
+                      Reviews: {user._count.reviews}
+                    </div>
+                  </td>
+                  <td className="px-5 py-5 border-b border-gray-700">
+                    <button
+                      onClick={() => handleDelete(user.id)}
+                      className="text-red-500 hover:text-red-700 font-semibold px-3 py-1 rounded"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <span className="text-sm text-muted-foreground">
+            Showing {users.length} of {pagination.totalCount} users
+          </span>
+          <div className="flex gap-2">
+            <button
+              onClick={() => handlePageChange(pagination.page - 1)}
+              disabled={!pagination.hasPreviousPage || isLoading}
+              className="bg-secondary border border-gray-700 px-4 py-2 rounded font-semibold disabled:opacity-50"
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => handlePageChange(pagination.page + 1)}
+              disabled={!pagination.hasNextPage || isLoading}
+              className="bg-secondary border border-gray-700 px-4 py-2 rounded font-semibold disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
     </main>

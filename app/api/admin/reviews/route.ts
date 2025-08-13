@@ -4,6 +4,7 @@ import { checkServerAdmin } from "@/lib/auth/role-utils";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
+// app/api/admin/reviews/route.ts (update)
 export const GET = createAsyncRoute(async (request: NextRequest) => {
   const { hasAccess, error } = await checkServerAdmin();
 
@@ -17,7 +18,7 @@ export const GET = createAsyncRoute(async (request: NextRequest) => {
   const queryParams = parseReviewsQueryParams(request);
   if (queryParams instanceof NextResponse) return queryParams;
 
-  const { limit, productId, rating, sortBy, sortOrder } = queryParams;
+  const { limit, page = 1, productId, rating, sortBy, sortOrder } = queryParams;
 
   const where = buildReviewsWhereClause({ productId, rating });
   const orderBy = buildReviewsOrderBy({ sortBy, sortOrder });
@@ -27,6 +28,7 @@ export const GET = createAsyncRoute(async (request: NextRequest) => {
   const reviews = await prisma.productReview.findMany({
     where,
     orderBy,
+    skip: (page - 1) * limit,
     take: limit,
     include: {
       product: {
@@ -46,11 +48,5 @@ export const GET = createAsyncRoute(async (request: NextRequest) => {
     },
   });
 
-  return NextResponse.json(
-    {
-      totalCount: totalCount,
-      data: reviews,
-    },
-    { status: 200 }
-  );
+  return NextResponse.json({ totalCount, data: reviews }, { status: 200 });
 });
