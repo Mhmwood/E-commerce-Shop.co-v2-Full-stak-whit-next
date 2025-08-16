@@ -25,7 +25,7 @@ const ProductClientView = ({ id }: { id: string }) => {
         <BreadcrumbBar link={`${product?.category}`} name={product.title} />
       </div>
       <section className="grid gap-x-6 max-lg:gap-y-5 lg:grid-cols-[30.125rem_1fr] xl:grid-cols-[38.125rem_1fr]">
-        <ImageDisplay images={product?.images || []} />
+        {product?.images && <ImageDisplay images={product?.images || []} />}
         <InfoDisplay product={product} />
       </section>
       <section>

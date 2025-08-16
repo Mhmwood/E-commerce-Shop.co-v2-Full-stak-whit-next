@@ -1,6 +1,5 @@
 "use client";
 
-
 import { useAuth } from "@/hooks/useAuth";
 import { uploadImage } from "@/lib/upload/imgeUpload";
 import Image from "next/image";
@@ -15,7 +14,7 @@ export default function SignUpPage() {
   const [confirmPassword, setconfirmPassword] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imgaload, setImgaload] = useState(false);
-
+  const [passwordError, setPasswordError] = useState("");
 
   const router = useRouter();
 
@@ -42,23 +41,33 @@ export default function SignUpPage() {
       password,
       confirmPassword,
       image,
+      role: "USER", // Default role added
     });
     if (res.success) {
       router.push("/");
     }
   };
 
+  const validatePassword = (password: string) => {
+    const errors = [];
+    if (!/(?=.*[a-z])/.test(password)) errors.push("one lowercase letter");
+    if (!/(?=.*[A-Z])/.test(password)) errors.push("one uppercase letter");
+    if (!/(?=.*\d)/.test(password)) errors.push("one number");
+    if (!/(?=.*[@$!%*?&])/.test(password)) errors.push("one special character");
+    if (password.length < 8) errors.push("at least 8 characters");
+    return errors;
+  };
+
   return (
-    <main className="dark bg-gray-900 min-h-screen text-white flex items-center justify-center px-4">
+    <main className="dark bg-secondary min-h-screen py-10 md:py-20 px-4 md:px-20 mt-10 text-primary flex items-center justify-center">
       <div className="w-full max-w-md">
         <form
           onSubmit={handleSubmit}
-          className="bg-gray-800 p-10 rounded-2xl shadow-lg w-full"
+          className="border-2 p-8 rounded-2xl shadow w-full"
         >
-          <h1 className="text-3xl font-extrabold mb-8 text-center tracking-tight">
+          <h1 className="text-2xl font-bold mb-6 font-integral">
             Create your account
           </h1>
-
           <div className="mb-5">
             <label className="block mb-2 text-sm font-medium" htmlFor="name">
               Name
@@ -69,11 +78,10 @@ export default function SignUpPage() {
               placeholder="Your name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full mb-4 py-3 px-2 rounded-lg focus:outline-1 focus:outline-gray-700"
               required
             />
           </div>
-
           <div className="mb-5">
             <label className="block mb-2 text-sm font-medium" htmlFor="email">
               Email
@@ -84,11 +92,10 @@ export default function SignUpPage() {
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full mb-4 py-3 px-2 rounded-lg focus:outline-1 focus:outline-gray-700"
               required
             />
           </div>
-
           <div className="mb-5">
             <label
               className="block mb-2 text-sm font-medium"
@@ -102,14 +109,23 @@ export default function SignUpPage() {
               placeholder="Password"
               value={password}
               onChange={(e) => {
-                setPassword(e.target.value);
-                setconfirmPassword(e.target.value);
+                const newPassword = e.target.value;
+                setPassword(newPassword);
+                setconfirmPassword(newPassword);
+                const errors = validatePassword(newPassword);
+                if (errors.length > 0) {
+                  setPasswordError(`${errors.join(", ")}.`);
+                } else {
+                  setPasswordError("");
+                }
               }}
-              className="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full mb-4 py-3 px-2 rounded-lg focus:outline-1 focus:outline-gray-700"
               required
             />
+            {passwordError && (
+              <p className="text-red-500 text-sm mt-1">{passwordError}</p>
+            )}
           </div>
-
           <div className="mb-6">
             <label className="block mb-2 text-sm font-medium" htmlFor="image">
               Profile Image (optional){" "}
@@ -128,7 +144,7 @@ export default function SignUpPage() {
 
                 <label
                   htmlFor="image"
-                  className="inline-block cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded text-xs font-semibold"
+                  className="inline-block cursor-pointer bg-primary text-white hover:bg-primary/95 px-4 py-2 rounded text-xs font-semibold"
                   title="Change the image"
                 >
                   Change Image
@@ -139,7 +155,7 @@ export default function SignUpPage() {
                   type="file"
                   accept="image/*"
                   onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-                  className="hidden"
+                  className="hidden "
                 />
               </div>
             )}
@@ -150,7 +166,7 @@ export default function SignUpPage() {
                 type="file"
                 accept="image/*"
                 onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-                className="w-full text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700"
+                className="w-full text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/95"
               />
             )}
           </div>
@@ -161,36 +177,10 @@ export default function SignUpPage() {
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg font-bold transition-colors duration-200"
+            className="w-full px-4 py-2 font-bold rounded-3xl p-1 cursor-pointer border border-gray-700 hover:bg-primary hover:text-white transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary/40"
             disabled={loading}
           >
-            {loading ? (
-              <span className="flex items-center justify-center">
-                <svg
-                  className="animate-spin h-5 w-5 mr-2 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8v8z"
-                  ></path>
-                </svg>
-                Signing Up...
-              </span>
-            ) : (
-              "Sign Up"
-            )}
+            {loading ? "Signing Up..." : "Sign Up"}
           </button>
         </form>
         <div className="mt-6 text-center text-gray-400 text-sm">

@@ -7,9 +7,9 @@ export default function ErrorPage() {
   const error = searchParams.get("error");
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center space-y-4">
-        <h1 className="text-3xl font-bold text-red-600">
+    <main className="dark bg-secondary min-h-screen py-10 md:py-20 px-4 md:px-20 mt-10 text-primary flex items-center justify-center">
+      <div className="border-2 p-8 rounded-2xl shadow w-full max-w-sm text-center space-y-4">
+        <h1 className="text-2xl font-bold text-red-600 font-integral">
           Authentication Error
         </h1>
         <p>{error || "An unknown error occurred."}</p>
@@ -17,6 +17,6 @@ export default function ErrorPage() {
           Go back to sign in
         </a>
       </div>
-    </div>
+    </main>
   );
 }

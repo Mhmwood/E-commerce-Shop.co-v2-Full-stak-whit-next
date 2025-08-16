@@ -9,6 +9,7 @@ interface ImageDisplayProps {
 }
 
 const ImageDisplay: React.FC<ImageDisplayProps> = ({ images }) => {
+
   const [mainImage, setMainImage] = useState(images?.[0] || "");
 
   if (!images?.length) {
@@ -18,6 +19,8 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ images }) => {
       </div>
     );
   }
+
+
 
   return (
     <div

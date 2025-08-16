@@ -30,18 +30,18 @@ export default function SignInPage() {
   };
 
   return (
-    <main className="dark bg-gray-900 min-h-screen text-white flex items-center justify-center">
+    <main className="dark bg-secondary min-h-screen py-10 md:py-20 px-4 md:px-20 mt-10 text-primary flex items-center justify-center">
       <form
         onSubmit={handleSubmit}
-        className="bg-gray-800 p-8 rounded shadow w-full max-w-sm"
+        className="border-2 p-8 rounded-2xl shadow w-full max-w-sm"
       >
-        <h1 className="text-2xl font-bold mb-6">Sign In</h1>
+        <h1 className="text-2xl font-bold mb-6 font-integral">Sign In</h1>
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-4"
+          className="w-full mb-4 py-3 px-2 rounded-lg focus:outline-1 focus:outline-gray-700"
           required
         />
         <input
@@ -49,15 +49,16 @@ export default function SignInPage() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-6"
+          className="w-full mb-6  py-3 px-2 rounded-lg focus:outline-1 focus:outline-gray-700"
           required
         />
         <button
           type="submit"
-          className="w-full bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded font-bold"
+          className="w-full  px-4 py-2  font-bold rounded-3xl p-1 cursor-pointer border border-gray-700 hover:bg-primary hover:text-white transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary/40"
         >
           {loading ? "Sign In ..." : error ? "Error" : "Sign In "}
         </button>
+        {/* {this just hlpers dont touch them} */}
         <div className="flex gap-2 mt-4">
           <button
             type="button"

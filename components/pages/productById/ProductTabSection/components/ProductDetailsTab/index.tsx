@@ -18,6 +18,8 @@ interface ProductDetailsTabProps {
 }
 
 const ProductDetailsTab: React.FC<ProductDetailsTabProps> = ({ product }) => {
+
+  console.log(product)
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
       <div className="space-y-1">
@@ -27,7 +29,7 @@ const ProductDetailsTab: React.FC<ProductDetailsTabProps> = ({ product }) => {
         <DetailRow label="Weight" value={`${product.weight} kg`} />
         <DetailRow
           label="Dimensions"
-          value={`${product.dimensions.width} × ${product.dimensions.height} × ${product.dimensions.depth} cm`}
+          value={`${product.dimensions.width } × ${product.dimensions.height} × ${product.dimensions.depth} cm`}
         />
       </div>
 
