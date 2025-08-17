@@ -2,7 +2,7 @@
 
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SignInInput, SignUpInput, Role } from "@/validations/authSchema";
 import {
   signUpUser,
@@ -17,34 +17,50 @@ export const useAuth = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isClient, setIsClient] = useState(false);
+  const [cachedSession, setCachedSession] = useState<typeof session>(null);
 
-  const isAuthenticated = status === "authenticated";
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Load cached session from localStorage on client
+  useEffect(() => {
+    if (!isClient) return;
+    const saved = localStorage.getItem("session");
+    if (saved) setCachedSession(JSON.parse(saved));
+  }, [isClient]);
+
+  // Keep localStorage updated when session changes
+  useEffect(() => {
+    if (!isClient) return;
+    if (session) localStorage.setItem("session", JSON.stringify(session));
+    else localStorage.removeItem("session");
+  }, [session, isClient]);
+
+  const effectiveSession = cachedSession ?? session;
+  const isAuthenticated = status === "authenticated" || !!cachedSession;
   const isLoading = status === "loading";
-  const userRole = session?.user?.role as Role | undefined;
+  const userRole = effectiveSession?.user?.role as Role | undefined;
 
-  // Role-based checks
   const isAdmin = checkClientAdmin(userRole).hasAccess;
   const hasRole = (requiredRole: Role) =>
     checkClientRole(userRole, requiredRole).hasAccess;
 
-  // Sign in
   const login = async (credentials: SignInInput) => {
     setLoading(true);
     setError(null);
-
     try {
       const result = await signIn("credentials", {
         email: credentials.email,
         password: credentials.password,
         redirect: false,
       });
-
       if (result?.error) {
         setError(result.error);
         return { success: false, error: result.error };
       }
-
-      await update(); // Update session
+      await update();
       return { success: true };
     } catch (err) {
       const errorMessage =
@@ -56,33 +72,26 @@ export const useAuth = () => {
     }
   };
 
-  // Sign up
   const register = async (userData: SignUpInput) => {
     setLoading(true);
     setError(null);
-
     try {
       const result = await signUpUser(userData);
-
       if (!result.success) {
         setError(result.error || null);
         return result;
       }
-
-      // Auto sign in after successful registration
       const signInResult = await signIn("credentials", {
         email: userData.email,
         password: userData.password,
         redirect: false,
         role: "USER",
       });
-
       if (signInResult?.error) {
         setError(signInResult.error);
         return { success: false, error: signInResult.error };
       }
-
-      await update(); // Update session
+      await update();
       return { success: true };
     } catch (err) {
       const errorMessage =
@@ -93,14 +102,16 @@ export const useAuth = () => {
       setLoading(false);
     }
   };
-  // Sign out
+
   const logout = async () => {
     setLoading(true);
     setError(null);
-
     try {
       await signOut({ redirect: false });
-      router.push("/");
+      localStorage.removeItem("session");
+  setCachedSession(null); // clear cached session for immediate UI update
+  router.replace("/");
+
       return { success: true };
     } catch (err) {
       const errorMessage =
@@ -198,98 +209,6 @@ export const useAuth = () => {
       setLoading(false);
     }
   };
-  // Admin functions
-  const updateUserRole = async (userId: string, role: Role) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch("/api/auth/profile", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId, role }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Role update failed");
-      }
-
-      return { success: true, data };
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Role update failed";
-      setError(errorMessage);
-      return { success: false, error: errorMessage };
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getAllUsers = async (params?: {
-    page?: number;
-    limit?: number;
-    search?: string;
-    role?: string;
-  }) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const searchParams = new URLSearchParams();
-      if (params?.page) searchParams.set("page", params.page.toString());
-      if (params?.limit) searchParams.set("limit", params.limit.toString());
-      if (params?.search) searchParams.set("search", params.search);
-      if (params?.role) searchParams.set("role", params.role);
-
-      const response = await fetch(
-        `/api/admin/users?${searchParams.toString()}`
-      );
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to get users");
-      }
-
-      return { success: true, data };
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Failed to get users";
-      setError(errorMessage);
-      return { success: false, error: errorMessage };
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const deleteUser = async (userId: string) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(`/api/admin/users?userId=${userId}`, {
-        method: "DELETE",
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to delete user");
-      }
-
-      return { success: true, data };
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Failed to delete user";
-      setError(errorMessage);
-      return { success: false, error: errorMessage };
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Clear error
   const clearError = () => {
@@ -317,10 +236,5 @@ export const useAuth = () => {
     changeUserPassword,
     getUserProfileData,
     clearError,
-
-    // Admin actions
-    updateUserRole,
-    getAllUsers,
-    deleteUser,
   };
 };
