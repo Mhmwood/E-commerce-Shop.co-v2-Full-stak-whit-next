@@ -42,8 +42,6 @@ export default function ShowProduct({
   const products = data?.products ?? [];
   const totalPages = Math.ceil(total / limit);
 
-
-
   const selectOptionsMap: Record<string, keyof Product> = {
     "Top Related": "rating",
     Price: "price",
@@ -51,6 +49,7 @@ export default function ShowProduct({
 
   useEffect(() => {
     setCurrentPage(1);
+    setOpenMenu(false);
   }, [
     category,
     sortByState,

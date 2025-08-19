@@ -9,6 +9,7 @@ import ShowError from "../ui/errs/ShowError";
 import { Product } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
+
 interface ProductSectionProps {
   title: string;
   category?: string;
@@ -24,6 +25,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({
   order,
   limit = 10,
 }) => {
+
   const { data, isLoading, isError, error } = useProducts({
     category: category || undefined,
     sortBy,
@@ -51,7 +53,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({
                 onClick={() =>
                   router.push(
                     `/shop/?category=${
-                     category ? encodeURIComponent(category) :""
+                      category ? encodeURIComponent(category) : ""
                     }&sortBy=${sortBy}&order=${order}`
                   )
                 }

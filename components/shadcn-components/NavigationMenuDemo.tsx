@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 
 function NavigationMenuDemo({ categories }: { categories: string[] }) {
   const router = useRouter();
-  // const navigate = useNavigate();
+
 
   return (
     <NavigationMenu>
@@ -18,11 +18,11 @@ function NavigationMenuDemo({ categories }: { categories: string[] }) {
           <NavigationMenuTrigger className="">Shop</NavigationMenuTrigger>
           <NavigationMenuContent>
             <div className="grid  gap-3 py-3 px-4 w-[20rem] grid-cols-2  md:w-[500px] md:grid-cols-3 lg:w-[600px]  ">
-              <ul>
+              <ul className="list-disc  px-2 ">
                 {categories.map((category, index) => (
                   <li
                     key={index}
-                    className=" text-sm md:text-lg font-bold text-primary"
+                    className=" text-sm md:text-lg font-bold text-primary cursor-pointer hover:underline "
                     onClick={() =>
                       router.push(
                         `shop/?category=${encodeURIComponent(category)}`

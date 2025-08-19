@@ -12,7 +12,6 @@ import { CategoriesList } from "@/constants";
 import { useAuth } from "@/hooks/useAuth";
 import Cart from "./components/Cart";
 
-// import { CategoriesList } from "@/constants";
 
 export const Navbar = () => {
   const [openMenu, setOpenMenu] = useState(false);
@@ -25,10 +24,10 @@ export const Navbar = () => {
   return (
     <header className=" fixed w-full  top-0 left-0 z-50 bg-white   ">
       <div className=" px-4 lg:px-20 lg:py-2 border-b  relative ">
-        <div className="flex h-16 items-center justify-between space-x-10    ">
+        <div className="flex h-16 items-center justify-between space-x-10   ">
           {/* mible menu */}
 
-          <div className="flex lg:items-center lg:gap-12">
+          <div className="flex lg:items-center lg:gap-12   ">
             <div className=" lg:hidden">
               <button
                 onClick={() => setOpenMenu((prev) => !prev)}
@@ -63,7 +62,7 @@ export const Navbar = () => {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: "-15vh", opacity: 0 }}
                 transition={{ type: "tween", ease: "easeInOut", duration: 0.3 }}
-                className="absolute bg-primary text-secondary top-16   right-0 px-11 w-full z-10 lg:hidden"
+                className="absolute bg-primary  text-secondary top-16  inset-x-0  px-11 w-full z-10 lg:hidden"
               >
                 <ul className="flex flex-col  py-3 gap-6 text-lg">
                   {isAdmin && (
@@ -154,7 +153,7 @@ export const Navbar = () => {
               <Search />
             </div>
           </div>
-          <div className=" lg:hidden w-full ">
+          <div className=" lg:hidden w-full  ">
             <Search />
           </div>
 

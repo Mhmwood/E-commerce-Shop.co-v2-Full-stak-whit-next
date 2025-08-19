@@ -16,6 +16,7 @@ export const GET = createAsyncRoute(async () => {
     },
   });
 
+ 
   const categoryNames = categories
     .map((item) => item.category)
     .filter((category) => category && category !== "Uncategorized");

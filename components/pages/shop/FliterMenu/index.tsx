@@ -1,3 +1,4 @@
+
 import { CategoriesList } from "@/constants";
 import PriseSelecter from "./components/PriseSelecter";
 import CollapsibleMenu from "./components/CollapsibleMenu";
@@ -22,7 +23,9 @@ const FliterMenu = () => {
           />
         </svg>
       </div>
-      <div>{/* <CollapsibleMenu categories={CategoriesList} /> */}</div>
+      <div>
+        <CollapsibleMenu categories={CategoriesList} />
+      </div>
 
       <PriseSelecter />
     </div>
