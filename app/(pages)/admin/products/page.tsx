@@ -7,30 +7,57 @@ import Link from "next/link";
 import ShowLoader from "@/components/ui/Loaders/ShowLoader";
 import { CircleArrowLeft } from "lucide-react";
 import Image from "next/image";
+import { CategoriesList } from "@/constants";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+} from "@/components/ui/pagination";
+import { useProducts } from "@/hooks/useProducts";
 
 export default function AdminProductsPage() {
-  const [products, setProducts] = useState<Product[]>([]);
 
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    setLoading(true);
-    fetch("/api/products")
-      .then((res) => res.json())
-      .then((data) => setProducts(data.products || []))
-      .finally(() => setLoading(false));
-  }, []);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  // Pass searchTerm to useProducts
+  const { data, isLoading } = useProducts({
+    category: selectedCategory,
+    limit: itemsPerPage,
+    page: currentPage,
+    sortBy: "price",
+    order: (sortOrder as "asc") || "desc",
+
+  });
+
+  const products = data?.products || [];
+  const totalPages = Math.ceil((data?.total || 0) / itemsPerPage);
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this product?")) return;
     const res = await fetch(`/api/admin/products/${id}`, { method: "DELETE" });
     console.log(res);
     if (res.ok) {
-      setProducts(products.filter((p) => p.id !== id));
+
     }
   };
 
+  
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [
+    selectedCategory,
+    sortOrder,  
+  ]);
+
+  
   return (
-    <main className="py-8 md:py-16 px-2 sm:px-4 md:px-10 lg:px-20 mt-6 space-y-8 text-primary min-h-screen">
+    <main className="py-8 md:py-20 px-2 sm:px-4 md:px-10 lg:px-20 mt-6 space-y-8 text-primary min-h-screen">
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
         <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-center md:text-left w-full md:w-auto">
           Manage Products
@@ -53,7 +80,30 @@ export default function AdminProductsPage() {
       </div>
       <div className="max-w-6xl mx-auto w-full">
         <div className="rounded-2xl bg-background border border-gray-700 shadow-lg p-4 sm:p-6">
-          {loading ? (
+          <div className="flex flex-col md:flex-row gap-4 mb-6">
+        
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="w-full md:w-1/3 bg-secondary placeholder:text-gray-400 border border-gray-700 rounded-lg shadow-sm text-primary px-4 py-2 focus:ring-2 focus:ring-primary/40 focus:outline-none"
+            >
+              <option value="">All Categories</option>
+              {CategoriesList.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              className="w-full md:w-1/3 bg-secondary placeholder:text-gray-400 border border-gray-700 rounded-lg shadow-sm text-primary px-4 py-2 focus:ring-2 focus:ring-primary/40 focus:outline-none"
+            >
+              <option value="asc">Sort by Price: Low to High</option>
+              <option value="desc">Sort by Price: High to Low</option>
+            </select>
+          </div>
+          {isLoading ? (
             <div className="flex flex-col items-center justify-center py-16 gap-4">
               <ShowLoader />
               <span className="text-muted-foreground text-sm">
@@ -70,9 +120,7 @@ export default function AdminProductsPage() {
               </Link>
             </div>
           ) : (
-            // Mobile: Card grid, Desktop/Tablet: Old flex-row list
             <React.Fragment>
-              {/* Mobile grid (below md) */}
               <div className="grid grid-cols-2 gap-6 md:hidden">
                 {products.map((product) => (
                   <div
@@ -117,7 +165,6 @@ export default function AdminProductsPage() {
                   </div>
                 ))}
               </div>
-              {/* Desktop/Tablet list (md and up) */}
               <div className="hidden md:grid md:grid-cols-1 md:gap-6">
                 {products.map((product) => (
                   <div
@@ -152,6 +199,40 @@ export default function AdminProductsPage() {
                     </div>
                   </div>
                 ))}
+              </div>
+              <div className="flex justify-center mt-8">
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        onClick={() => {
+                          if (currentPage > 1) {
+                            setCurrentPage((prev) => Math.max(prev - 1, 1));
+                          }
+                        }}
+                      />
+                    </PaginationItem>
+                    {Array.from({ length: totalPages }, (_, index) => (
+                      <PaginationItem key={index}>
+                        <PaginationLink
+                          isActive={currentPage === index + 1}
+                          onClick={() => setCurrentPage(index + 1)}
+                        >
+                          {index + 1}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+                    <PaginationItem>
+                      <PaginationNext
+                        onClick={() => {
+                          if (currentPage < totalPages) {
+                            setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+                          }
+                        }}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
               </div>
             </React.Fragment>
           )}

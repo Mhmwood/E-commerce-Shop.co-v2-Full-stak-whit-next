@@ -65,7 +65,9 @@ const ProductForm: React.FC<ProductFormProps> = ({
     if (file) {
       setThumbnailFile(file);
       setThumbnailPreview(URL.createObjectURL(file));
-      setValue("thumbnail", URL.createObjectURL(file), { shouldValidate: true });
+      setValue("thumbnail", URL.createObjectURL(file), {
+        shouldValidate: true,
+      });
     } else {
       setThumbnailFile(null);
       setThumbnailPreview(product?.thumbnail || null);
@@ -73,8 +75,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
   };
 
   const handleFormSubmit: SubmitHandler<ProductInput> = async (data) => {
-    
- 
     setThumbnailError(null);
     if (thumbnailFile) {
       try {
@@ -84,7 +84,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
         setThumbnailFile(null);
         data.thumbnail = imageUrl;
       } catch (error: any) {
-        console.error("Thumbnail upload error:", error);  
+        console.error("Thumbnail upload error:", error);
         setThumbnailError(error?.message || "Failed to upload thumbnail");
         return;
       }
@@ -235,8 +235,19 @@ const ProductForm: React.FC<ProductFormProps> = ({
               value={isCustom ? "__custom__" : categoryValue}
               onValueChange={(value) => {
                 if (value === "__custom__") {
-                  setCustomCategory("");
-                  setValue("category", "__custom__", { shouldValidate: true });
+                  const confirmCustom = window.confirm(
+                    "Are you sure you want to add a new category?"
+                  );
+                  if (confirmCustom) {
+                    setCustomCategory("");
+                    setValue("category", "__custom__", {
+                      shouldValidate: true,
+                    });
+                  } else {
+                    setValue("category", categoryValue, {
+                      shouldValidate: true,
+                    });
+                  }
                 } else {
                   setCustomCategory("");
                   setValue("category", value, { shouldValidate: true });

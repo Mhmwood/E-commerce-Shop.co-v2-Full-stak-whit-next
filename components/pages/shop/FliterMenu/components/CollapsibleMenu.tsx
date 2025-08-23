@@ -1,8 +1,6 @@
-"use client"
+"use client";
 import { ChevronRight, Dot } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-
-
 
 const CollapsibleMenu = ({ categories }: { categories: string[] }) => {
   // const toggleCollapse = (index: number) => {
@@ -17,8 +15,7 @@ const CollapsibleMenu = ({ categories }: { categories: string[] }) => {
   const router = useRouter();
   const params = useSearchParams();
 
-  const openIndexes = params.get("category") ;
-
+  const openIndexes = params.get("category");
 
   return (
     <div className="w-full space-y-1">
@@ -28,8 +25,9 @@ const CollapsibleMenu = ({ categories }: { categories: string[] }) => {
         return (
           <div
             key={index}
-            className={`rounded-lg  ${
-              isActive && "bg-gray-200 border-l-3 border-primary"
+            className={`rounded-lg  transition-all duration-300${
+              isActive &&
+              "bg-gray-300 border-l-4 border-primary scale-[1.02] shadow"
             }`}
           >
             <button
@@ -46,6 +44,7 @@ const CollapsibleMenu = ({ categories }: { categories: string[] }) => {
                 // }
               />
             </button>
+
             {/* {openIndexes.includes(index) && (
               <ul className="space-y-1 pl-4">
                 {category.list.map((item) => (
