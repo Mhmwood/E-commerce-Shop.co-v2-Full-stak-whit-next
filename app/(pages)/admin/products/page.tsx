@@ -1,7 +1,7 @@
 "use client";
 
-import { Product } from "@prisma/client";
 import React, { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui";
 import Link from "next/link";
 import ShowLoader from "@/components/ui/Loaders/ShowLoader";
@@ -19,6 +19,13 @@ import {
 import { useProducts } from "@/hooks/useProducts";
 
 export default function AdminProductsPage() {
+  type ProductItem = {
+    id: string;
+    title: string;
+    thumbnail?: string;
+    price?: number;
+    category?: string;
+  };
 
   const [selectedCategory, setSelectedCategory] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
@@ -32,30 +39,39 @@ export default function AdminProductsPage() {
     page: currentPage,
     sortBy: "price",
     order: (sortOrder as "asc") || "desc",
-
   });
 
   const products = data?.products || [];
   const totalPages = Math.ceil((data?.total || 0) / itemsPerPage);
+  const queryClient = useQueryClient();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this product?")) return;
-    const res = await fetch(`/api/admin/products/${id}`, { method: "DELETE" });
-    console.log(res);
-    if (res.ok) {
+    try {
+      setDeletingId(id);
+      const res = await fetch(`/api/admin/products/${id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Failed to delete product");
+      }
 
+      // Invalidate products cache so list refreshes
+      await queryClient.invalidateQueries({ queryKey: ["products"] });
+    } catch (err) {
+      console.error("Delete product error:", err);
+      alert((err as Error)?.message || "Failed to delete product");
+    } finally {
+      setDeletingId(null);
     }
   };
 
-  
   useEffect(() => {
     setCurrentPage(1);
-  }, [
-    selectedCategory,
-    sortOrder,  
-  ]);
+  }, [selectedCategory, sortOrder]);
 
-  
   return (
     <main className="py-8 md:py-20 px-2 sm:px-4 md:px-10 lg:px-20 mt-6 space-y-8 text-primary min-h-screen">
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
@@ -81,14 +97,13 @@ export default function AdminProductsPage() {
       <div className="max-w-6xl mx-auto w-full">
         <div className="rounded-2xl bg-background border border-gray-700 shadow-lg p-4 sm:p-6">
           <div className="flex flex-col md:flex-row gap-4 mb-6">
-        
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="w-full md:w-1/3 bg-secondary placeholder:text-gray-400 border border-gray-700 rounded-lg shadow-sm text-primary px-4 py-2 focus:ring-2 focus:ring-primary/40 focus:outline-none"
             >
               <option value="">All Categories</option>
-              {CategoriesList.map((category) => (
+              {CategoriesList.map((category: string) => (
                 <option key={category} value={category}>
                   {category}
                 </option>
@@ -122,13 +137,13 @@ export default function AdminProductsPage() {
           ) : (
             <React.Fragment>
               <div className="grid grid-cols-2 gap-6 md:hidden">
-                {products.map((product) => (
+                {products.map((product: ProductItem) => (
                   <div
                     key={product.id}
                     className="flex flex-col items-center bg-secondary/60 border border-gray-700 rounded-2xl shadow p-4 gap-4 hover:shadow-xl transition-all duration-200"
                   >
                     <Image
-                      src={product.thumbnail}
+                      src={product.thumbnail || ""}
                       alt={product.title}
                       className="object-cover rounded-xl border w-full h-40"
                       width={300}
@@ -149,6 +164,7 @@ export default function AdminProductsPage() {
                       <Link
                         href={`/admin/products/${product.id}/edit`}
                         className="w-1/2"
+                        
                       >
                         <Button variant="outline" className="w-full">
                           Edit
@@ -158,21 +174,22 @@ export default function AdminProductsPage() {
                         variant="destructive"
                         className="w-1/2"
                         onClick={() => handleDelete(product.id)}
+                        disabled={deletingId === product.id}
                       >
-                        Delete
+                        {deletingId === product.id ? "Deleting..." : "Delete"}
                       </Button>
                     </div>
                   </div>
                 ))}
               </div>
               <div className="hidden md:grid md:grid-cols-1 md:gap-6">
-                {products.map((product) => (
+                {products.map((product: ProductItem) => (
                   <div
                     key={product.id}
                     className="flex flex-row items-center gap-6 border-b border-gray-700 pb-6 last:border-b-0 last:pb-0"
                   >
                     <Image
-                      src={product.thumbnail}
+                      src={product.thumbnail || ""}
                       alt={product.title}
                       className="object-cover rounded-xl border"
                       width={80}
@@ -193,8 +210,9 @@ export default function AdminProductsPage() {
                       <Button
                         variant="destructive"
                         onClick={() => handleDelete(product.id)}
+                        disabled={deletingId === product.id}
                       >
-                        Delete
+                        {deletingId === product.id ? "Deleting..." : "Delete"}
                       </Button>
                     </div>
                   </div>
@@ -205,6 +223,7 @@ export default function AdminProductsPage() {
                   <PaginationContent>
                     <PaginationItem>
                       <PaginationPrevious
+                        size="default"
                         onClick={() => {
                           if (currentPage > 1) {
                             setCurrentPage((prev) => Math.max(prev - 1, 1));
@@ -215,6 +234,7 @@ export default function AdminProductsPage() {
                     {Array.from({ length: totalPages }, (_, index) => (
                       <PaginationItem key={index}>
                         <PaginationLink
+                          size="default"
                           isActive={currentPage === index + 1}
                           onClick={() => setCurrentPage(index + 1)}
                         >
@@ -224,9 +244,12 @@ export default function AdminProductsPage() {
                     ))}
                     <PaginationItem>
                       <PaginationNext
+                        size="icon"  
                         onClick={() => {
                           if (currentPage < totalPages) {
-                            setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+                            setCurrentPage((prev) =>
+                              Math.min(prev + 1, totalPages)
+                            );
                           }
                         }}
                       />

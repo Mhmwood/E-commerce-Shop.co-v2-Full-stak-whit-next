@@ -4,9 +4,11 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ProductSchema, ProductInput } from "@/validations/productSchema";
 import { Product } from "@prisma/client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import ShowLoader from "@/components/ui/Loaders/ShowLoader";
 import { uploadImage } from "@/lib/upload/imgeUpload";
+import { updateImage } from "@/lib/upload/updateImg";
 import { Button } from "@/components/ui";
 import {
   Select,
@@ -16,17 +18,28 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CategoriesList } from "@/constants";
+import { CirclePlus } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { Trash, Edit } from "lucide-react";
 
 interface ProductFormProps {
   onSubmit: (data: ProductInput) => Promise<void>;
   product?: Product;
   isLoading: boolean;
+  isEdit?: boolean;
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({
   onSubmit,
   product,
   isLoading,
+  isEdit = false,
 }) => {
   const {
     register,
@@ -74,25 +87,178 @@ const ProductForm: React.FC<ProductFormProps> = ({
     }
   };
 
+  // images holds File objects; imagePreviews holds preview URLs or existing remote urls
+  const [images, setImages] = useState<(File | null)[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [imageErrors, setImageErrors] = useState<string[]>([]);
+
+  // track created blob urls so we can revoke on unmount
+  const createdBlobUrls = useRef<string[]>([]);
+  // track original image urls (from product) so we know when to call updateImage
+  const originalImageUrls = useRef<(string | null)[]>([]);
+
+  // initialize previews from product when editing
+  useEffect(() => {
+    if (product?.images && product.images.length > 0) {
+      setImagePreviews(product.images);
+      // we don't have File objects for existing images, keep placeholders (null)
+      setImages(product.images.map(() => null));
+      setImageErrors(product.images.map(() => ""));
+      // remember originals for update operations
+      originalImageUrls.current = product.images.slice();
+    }
+  }, [product]);
+
+  // programmatically open file picker and append chosen image (up to 3)
+  const handleAddImage = () => {
+    if (images.length >= 3) return;
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      setImages((prev) => [...prev, file]);
+      setImagePreviews((prev) => [...prev, url]);
+      setImageErrors((prev) => [...prev, ""]);
+      // remember for cleanup
+      createdBlobUrls.current.push(url);
+      // new image has no original url
+      originalImageUrls.current.push(null);
+    };
+    input.click();
+  };
+
+  const handleImageDelete = (index: number) => {
+    const updatedImages = [...images];
+    const updatedPreviews = [...imagePreviews];
+    const updatedErrors = [...imageErrors];
+
+    // remove preview and revoke if blob
+    const removedPreview = updatedPreviews.splice(index, 1)[0];
+    if (removedPreview && removedPreview.startsWith("blob:")) {
+      try {
+        URL.revokeObjectURL(removedPreview);
+        // also remove from createdBlobUrls if present
+        createdBlobUrls.current = createdBlobUrls.current.filter(
+          (u) => u !== removedPreview
+        );
+      } catch {}
+    }
+
+    updatedImages.splice(index, 1);
+    updatedErrors.splice(index, 1);
+    // keep original url mapping in sync
+    originalImageUrls.current.splice(index, 1);
+
+    setImages(updatedImages);
+    setImagePreviews(updatedPreviews);
+    setImageErrors(updatedErrors);
+  };
+
+  const handleImageEdit = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0];
+    const updatedImages = [...images];
+    const updatedPreviews = [...imagePreviews];
+    const updatedErrors = [...imageErrors];
+
+    if (file) {
+      updatedImages[index] = file;
+      updatedPreviews[index] = URL.createObjectURL(file);
+      updatedErrors[index] = "";
+    } else {
+      updatedImages[index] = null;
+      updatedPreviews[index] = "";
+      updatedErrors[index] = "Failed to upload image.";
+    }
+
+    setImages(updatedImages);
+    setImagePreviews(updatedPreviews);
+    setImageErrors(updatedErrors);
+  };
+
+  const [submitting, setSubmitting] = useState(false);
+
   const handleFormSubmit: SubmitHandler<ProductInput> = async (data) => {
+    setSubmitting(true);
+    const finalImageUrls: string[] = [];
+
+    // process images in-order, preserving unchanged originals, updating replaced images,
+    // and uploading newly added images
+    for (let i = 0; i < images.length; i++) {
+      const image = images[i];
+      const originalUrl = originalImageUrls.current[i] ?? null;
+
+      if (image instanceof File) {
+        try {
+          if (originalUrl) {
+            // replace existing remote image
+            const updatedUrl = await updateImage(
+              originalUrl,
+              image,
+              "products"
+            );
+            finalImageUrls.push(updatedUrl);
+          } else {
+            // newly added image
+            const uploaded = await uploadImage(image, "products");
+            finalImageUrls.push(uploaded);
+          }
+        } catch (error) {
+          console.error("Image upload/update error:", error);
+          setSubmitting(false);
+          return;
+        }
+      } else {
+        // image is null -> either an unchanged original URL or a placeholder; preserve original if present
+        if (originalUrl) {
+          finalImageUrls.push(originalUrl);
+        }
+        // otherwise this slot was probably emptied/invalid; skip
+      }
+    }
+
     setThumbnailError(null);
     if (thumbnailFile) {
       try {
-        const imageUrl = await uploadImage(thumbnailFile, "products");
-        setValue("thumbnail", imageUrl, { shouldValidate: true });
-        setThumbnailPreview(imageUrl);
+        let thumbnailUrl: string | null = null;
+        if (isEdit && product?.thumbnail) {
+          // replace existing thumbnail
+          thumbnailUrl = await updateImage(
+            product.thumbnail,
+            thumbnailFile,
+            "products"
+          );
+        } else {
+          // new thumbnail
+          thumbnailUrl = await uploadImage(thumbnailFile, "products");
+        }
+
+        setValue("thumbnail", thumbnailUrl!, { shouldValidate: true });
+        setThumbnailPreview(thumbnailUrl);
         setThumbnailFile(null);
-        data.thumbnail = imageUrl;
-      } catch (error: any) {
+        data.thumbnail = thumbnailUrl!;
+      } catch (error: unknown) {
         console.error("Thumbnail upload error:", error);
-        setThumbnailError(error?.message || "Failed to upload thumbnail");
+        const message = error instanceof Error ? error.message : String(error);
+        setThumbnailError(message || "Failed to upload thumbnail");
+        setSubmitting(false);
         return;
       }
     }
-    await onSubmit({
-      ...data,
-      thumbnail: data.thumbnail || thumbnailPreview || "",
-    });
+    try {
+      await onSubmit({
+        ...data,
+        thumbnail: data.thumbnail || thumbnailPreview || "",
+        images: finalImageUrls,
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   // UI/UX upgrade: Card, section titles, Select, Button, optional fields toggle
@@ -104,6 +270,14 @@ const ProductForm: React.FC<ProductFormProps> = ({
     (!CategoriesList.includes(categoryValue) && categoryValue !== "");
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-10">
+      {/* Fullscreen submitting overlay */}
+      {(submitting || isLoading) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/30">
+          <div className="p-6 rounded-lg bg-background/90 border border-gray-700 shadow-lg">
+            <ShowLoader />
+          </div>
+        </div>
+      )}
       <div className="rounded-2xl border border-gray-700 bg-background/80 shadow-lg p-6 md:p-10">
         <h2 className="text-xl font-bold mb-6 text-primary">Product Details</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -142,6 +316,78 @@ const ProductForm: React.FC<ProductFormProps> = ({
               <p className="mt-2 text-sm text-red-500">{thumbnailError}</p>
             )}
           </div>
+
+          {/* Images carousel or empty placeholder */}
+          {imagePreviews.length > 0 ? (
+            <>
+              <Carousel className="relative mx-5 ">
+                <CarouselContent>
+                  {imagePreviews.map((preview, index) => (
+                    <CarouselItem key={index} className="relative">
+                      <Image
+                        src={preview}
+                        alt={`Image Preview ${index + 1}`}
+                        width={800}
+                        height={500}
+                        className="rounded-xl border object-cover shadow w-full h-64"
+                      />
+                      <div className="absolute top-2 right-2 flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleImageDelete(index)}
+                          className="rounded-full p-1 cursor-pointer border border-gray-700 hover:bg-red-500 hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500"
+                          title="Delete image"
+                        >
+                          <Trash className="size-6" strokeWidth={1.75} />
+                        </button>
+                        <label
+                          htmlFor={`edit-image-${index}`}
+                          className="rounded-full p-1 cursor-pointer border border-gray-700 hover:bg-primary hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/40"
+                          title="Change image"
+                        >
+                          <Edit className="size-6" strokeWidth={1.75} />
+                        </label>
+                        <input
+                          type="file"
+                          id={`edit-image-${index}`}
+                          accept="image/*"
+                          onChange={(e) => handleImageEdit(index, e)}
+                          className="hidden"
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious />
+                <CarouselNext />
+              </Carousel>
+
+              {images.length < 3 && (
+                <div className="mt-4">
+                  <button
+                    type="button"
+                    onClick={handleAddImage}
+                    className="rounded-full px-4 py-2 border border-gray-700 hover:bg-primary hover:text-white transition-all duration-300"
+                  >
+                    Add more image
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="flex flex-col items-center justify-center p-8 border border-dashed rounded-lg">
+              <p className="mb-4 text-muted-foreground">No images yet</p>
+              <button
+                type="button"
+                onClick={handleAddImage}
+                className="inline-flex items-center gap-2 rounded-full px-4 py-2 border border-gray-700 hover:bg-primary hover:text-white transition-all duration-300"
+              >
+                <CirclePlus />
+                Add Image
+              </button>
+            </div>
+          )}
+
           <div>
             <label
               htmlFor="title"
@@ -258,7 +504,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent>
-                {CategoriesList.map((cat) => (
+                {CategoriesList.map((cat: string) => (
                   <SelectItem key={cat} value={cat}>
                     {cat}
                   </SelectItem>
@@ -353,10 +599,10 @@ const ProductForm: React.FC<ProductFormProps> = ({
         <div className="mt-10">
           <button
             type="submit"
-            className="w-full text-lg py-4 rounded-full  border font-bold shadow-md  hover:bg-primary hover:text-white transition-all duration-300"
-            disabled={isLoading}
+            className="w-full text-lg py-4 rounded-full  border font-bold shadow-md  hover:bg-primary hover:text-white transition-all duration-300 disabled:opacity-60"
+            disabled={isLoading || submitting}
           >
-            {isLoading
+            {submitting || isLoading
               ? product
                 ? "Updating..."
                 : "Creating..."

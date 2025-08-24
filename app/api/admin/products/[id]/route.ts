@@ -1,6 +1,7 @@
 import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
 import { checkServerAdmin } from "@/lib/auth/role-utils";
 import { prisma } from "@/lib/prisma";
+import { deleteImage } from "@/lib/upload/deleteImg";
 import { UpdateProductSchema } from "@/validations/productSchema";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -33,6 +34,7 @@ export const PATCH = createAsyncRoute(
         { status: 400 }
       );
     }
+  
 
     const updatedProduct = await prisma.product.update({
       where: { id },
@@ -66,6 +68,12 @@ export const DELETE = createAsyncRoute(
     if (!product) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
+    if (product?.images) {
+      for (const image of product?.images) {
+        await deleteImage(image, "products");
+      }
+    }
+    if (product?.thumbnail) await deleteImage(product.thumbnail, "products");
 
     await prisma.product.delete({
       where: { id },

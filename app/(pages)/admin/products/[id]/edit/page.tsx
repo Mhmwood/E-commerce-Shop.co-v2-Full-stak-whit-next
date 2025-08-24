@@ -97,6 +97,7 @@ export default function EditProductPage() {
             onSubmit={handleSubmit}
             product={product}
             isLoading={isLoading}
+            isEdit={true}
           />
         </div>
       </div>

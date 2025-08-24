@@ -4,6 +4,7 @@ import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { uploadImage } from "@/lib/upload/imgeUpload";
 import Image from "next/image";
+import { updateImage } from "@/lib/upload/updateImg";
 
 const ProfilePage = () => {
   const {
@@ -52,7 +53,11 @@ const ProfilePage = () => {
 
     if (image) {
       try {
-        imageUrl = await uploadImage(image, "avatars");
+        if (imageUrl) {
+          imageUrl = await updateImage(imageUrl, image, "avatars");
+        } else {
+          imageUrl = await uploadImage(image, "avatars");
+        }
       } catch (uploadError) {
         console.error("Image upload failed:", uploadError);
         setError("Failed to upload image.");
@@ -66,7 +71,6 @@ const ProfilePage = () => {
       image: imageUrl ?? undefined,
     });
     if (result.success) {
-      
       setMessage("Profile updated successfully!");
     } else {
       setError(result.error || "Failed to update profile.");

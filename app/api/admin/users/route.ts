@@ -5,6 +5,7 @@ import { checkServerAdmin } from "@/lib/auth/role-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/auth";
 import bcrypt from "bcryptjs";
+import { deleteImage } from "@/lib/upload/deleteImg";
 
 // GET all users (admin only)
 export const GET = createAsyncRoute(async (request: NextRequest) => {
@@ -227,7 +228,6 @@ export const PUT = createAsyncRoute(async (request: NextRequest) => {
   return NextResponse.json(updatedUser, { status: 200 });
 });
 
-
 // DELETE user (admin only)
 export const DELETE = createAsyncRoute(async (request: NextRequest) => {
   const { hasAccess, error } = await checkServerAdmin();
@@ -263,6 +263,7 @@ export const DELETE = createAsyncRoute(async (request: NextRequest) => {
       { status: 400 }
     );
   }
+  if (user?.image) await deleteImage(user.image, "avatars");
 
   // Delete user (cascade will handle related data)
   await prisma.user.delete({
@@ -274,4 +275,3 @@ export const DELETE = createAsyncRoute(async (request: NextRequest) => {
     { status: 200 }
   );
 });
-
