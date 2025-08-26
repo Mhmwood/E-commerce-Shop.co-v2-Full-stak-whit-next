@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// Helper schemas
 const nonEmptyString = z.string().trim().min(1, "Cannot be empty");
 
 const BaseReviewSchema = z.object({
@@ -19,10 +18,8 @@ const BaseReviewSchema = z.object({
   userId: nonEmptyString.min(1, "User ID cannot be empty"),
 });
 
-// Schema for creating a new review
 export const CreateReviewSchema = BaseReviewSchema.refine(
   (data) => {
-    // Additional business logic validation
     if (data.rating < 1 || data.rating > 5) {
       return false;
     }
@@ -34,10 +31,8 @@ export const CreateReviewSchema = BaseReviewSchema.refine(
   }
 );
 
-// Schema for updating an existing review
 export const UpdateReviewSchema = BaseReviewSchema.partial().refine(
   (data) => {
-    // If rating is provided in update, validate it
     if (data.rating !== undefined) {
       return data.rating >= 1 && data.rating <= 5;
     }
@@ -49,6 +44,5 @@ export const UpdateReviewSchema = BaseReviewSchema.partial().refine(
   }
 );
 
-// TypeScript types
 export type CreateReviewInput = z.infer<typeof CreateReviewSchema>;
 export type UpdateReviewInput = z.infer<typeof UpdateReviewSchema>;

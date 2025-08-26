@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// Helper schemas
 const nonEmptyString = z.string().trim().min(1, "Cannot be empty");
 const positiveNumber = z.number().positive();
 const stringAndOptional = z.string().trim().optional();
@@ -56,5 +55,4 @@ export const UpdateProductSchema = BaseProductSchema.partial().refine(
   }
 );
 
-// TypeScript type
 export type ProductInput = z.infer<typeof ProductSchema>;

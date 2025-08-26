@@ -20,7 +20,6 @@ export const PATCH = createAsyncRoute(
 
     const rawData = await request.json();
 
-    // Validate the request data
     const validation = UpdateReviewSchema.safeParse(rawData);
     if (!validation.success) {
       return NextResponse.json(
@@ -30,7 +29,6 @@ export const PATCH = createAsyncRoute(
     }
 
     const validatedData = validation.data;
-    // Check if review exists
     const existingReview = await prisma.productReview.findUnique({
       where: { id },
     });
@@ -38,12 +36,10 @@ export const PATCH = createAsyncRoute(
     if (!existingReview) {
       return NextResponse.json({ error: "Review not found" }, { status: 404 });
     }
-    // Check if the user is the owner of the review
     if (existingReview.userId !== session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
-    // Update the review
     const updatedReview = await prisma.productReview.update({
       where: { id },
       data: validatedData,
@@ -59,7 +55,6 @@ export const PATCH = createAsyncRoute(
   }
 );
 
-// DELETE review by ID
 export const DELETE = createAsyncRoute(
   async (request: NextRequest, params?: { [key: string]: string }) => {
     const { user, hasAccess } = await checkServerRole("ADMIN");
@@ -70,7 +65,6 @@ export const DELETE = createAsyncRoute(
       return NextResponse.json({ error: "Invalid review ID" }, { status: 400 });
     }
 
-    // Check if review exists
     const existingReview = await prisma.productReview.findUnique({
       where: { id },
     });
@@ -78,12 +72,10 @@ export const DELETE = createAsyncRoute(
     if (!existingReview) {
       return NextResponse.json({ error: "Review not found" }, { status: 404 });
     }
-    // Check if the user is the owner of the review or an admin
     if (existingReview.userId !== user?.id && !hasAccess) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
-    // Delete the review
     await prisma.productReview.delete({
       where: { id },
     });

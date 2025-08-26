@@ -24,14 +24,12 @@ export const useAuth = () => {
     setIsClient(true);
   }, []);
 
-  // Load cached session from localStorage on client
   useEffect(() => {
     if (!isClient) return;
     const saved = localStorage.getItem("session");
     if (saved) setCachedSession(JSON.parse(saved));
   }, [isClient]);
 
-  // Keep localStorage updated when session changes
   useEffect(() => {
     if (!isClient) return;
     if (session) localStorage.setItem("session", JSON.stringify(session));
@@ -109,7 +107,7 @@ export const useAuth = () => {
     try {
       await signOut({ redirect: false });
       localStorage.removeItem("session");
-  setCachedSession(null); // clear cached session for immediate UI update
+  setCachedSession(null);
   router.replace("/");
 
       return { success: true };
@@ -123,7 +121,6 @@ export const useAuth = () => {
     }
   };
 
-  // Update profile
   const updateUserProfile = async (profileData: {
     name?: string;
     email?: string;
@@ -159,7 +156,6 @@ export const useAuth = () => {
       setLoading(false);
     }
   };
-  // Change password
   const changeUserPassword = async (passwordData: {
     currentPassword: string;
     newPassword: string;
@@ -186,7 +182,6 @@ export const useAuth = () => {
       setLoading(false);
     }
   };
-  // Get user profile
   const getUserProfileData = async () => {
     setLoading(true);
     setError(null);
@@ -210,7 +205,6 @@ export const useAuth = () => {
     }
   };
 
-  // Clear error
   const clearError = () => {
     setError(null);
   };

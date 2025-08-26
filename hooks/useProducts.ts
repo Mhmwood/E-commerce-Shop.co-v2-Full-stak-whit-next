@@ -15,7 +15,7 @@ interface UseProductsParams {
 
 export const useProducts = (params: UseProductsParams) =>
   useQuery({
-    queryKey: ["products", params],
+    queryKey: ["products", JSON.stringify(params)],
     queryFn: async () => {
       const query = new URLSearchParams({
         ...(params.category && { category: params.category }),
@@ -34,7 +34,7 @@ export const useProducts = (params: UseProductsParams) =>
 
       return res.json();
     },
-    // staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 5,
   });
 
 export const useProductById = (

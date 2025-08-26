@@ -4,12 +4,11 @@ import { SignUpSchema } from "@/validations/authSchema";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { checkServerAdmin } from "@/lib/auth/role-utils";
-//import { checkServerAdmin } from "@/lib/role-utils";
 
 export const POST = createAsyncRoute(async (request: NextRequest) => {
   const rawData = await request.json();
 
-  // Validate the request data
+  
   const validation = SignUpSchema.safeParse(rawData);
   if (!validation.success) {
     return NextResponse.json(
@@ -20,7 +19,7 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
 
   const { name, email, password, image, role } = validation.data;
 
-  // Check if user is trying to create an admin account
+
   if (role === "ADMIN") {
     const { hasAccess } = await checkServerAdmin();
     if (!hasAccess) {
@@ -31,7 +30,7 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
     }
   }
 
-  // Check if user already exists
+
   const existingUser = await prisma.user.findUnique({
     where: { email },
   });
@@ -43,10 +42,8 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
     );
   }
 
-  // Hash the password
   const hashedPassword = await bcrypt.hash(password, 12);
 
-  // Create the user
   const user = await prisma.user.create({
     data: {
       name,

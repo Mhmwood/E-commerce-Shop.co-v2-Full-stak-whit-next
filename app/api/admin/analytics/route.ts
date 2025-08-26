@@ -16,12 +16,11 @@ export const GET = createAsyncRoute(async () => {
     prisma.user.count(),
     prisma.productReview.count(),
   ]);
-  // If you have an Order model, add salesCount here
-  // const salesCount = await prisma.order.count();
+ 
   return NextResponse.json({
     productCount,
     userCount,
     reviewCount,
-    // salesCount
+
   });
 });

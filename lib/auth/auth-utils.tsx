@@ -1,7 +1,6 @@
 import { signIn, signOut, getSession } from "next-auth/react";
 import { SignInInput, SignUpInput, Role } from "@/validations/authSchema";
 
-// Sign in function
 export const signInUser = async (credentials: SignInInput) => {
   try {
     const result = await signIn("credentials", {
@@ -23,7 +22,6 @@ export const signInUser = async (credentials: SignInInput) => {
   }
 };
 
-// Sign up function
 export const signUpUser = async (userData: SignUpInput) => {
   try {
     const response = await fetch("/api/auth/signup", {
@@ -49,7 +47,6 @@ export const signUpUser = async (userData: SignUpInput) => {
   }
 };
 
-// Sign out function
 export const signOutUser = async () => {
   try {
     await signOut({ redirect: false });
@@ -62,7 +59,6 @@ export const signOutUser = async () => {
   }
 };
 
-// Get current session
 export const getCurrentSession = async () => {
   try {
     const session = await getSession();
@@ -75,7 +71,6 @@ export const getCurrentSession = async () => {
   }
 };
 
-// Update user profile
 export const updateProfile = async (profileData: {
   name?: string;
   email?: string;
@@ -106,7 +101,6 @@ export const updateProfile = async (profileData: {
   }
 };
 
-// Change password
 export const changePassword = async (passwordData: {
   currentPassword: string;
   newPassword: string;
@@ -136,7 +130,6 @@ export const changePassword = async (passwordData: {
   }
 };
 
-// Get user profile
 export const getUserProfile = async () => {
   try {
     const response = await fetch("/api/auth/profile");
@@ -155,9 +148,7 @@ export const getUserProfile = async () => {
   }
 };
 
-// Admin functions
 
-// Update user role (admin only)
 export const updateUserRole = async (userId: string, role: Role) => {
   try {
     const response = await fetch("/api/auth/profile", {
@@ -183,7 +174,6 @@ export const updateUserRole = async (userId: string, role: Role) => {
   }
 };
 
-// Get all users (admin only)
 export const getAllUsers = async (params?: {
   page?: number;
   limit?: number;
@@ -213,7 +203,6 @@ export const getAllUsers = async (params?: {
   }
 };
 
-// Delete user (admin only)
 export const deleteUser = async (userId: string) => {
   try {
     const response = await fetch(`/api/admin/users?userId=${userId}`, {

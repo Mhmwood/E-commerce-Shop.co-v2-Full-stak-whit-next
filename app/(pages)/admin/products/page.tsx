@@ -32,7 +32,7 @@ export default function AdminProductsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Pass searchTerm to useProducts
+
   const { data, isLoading } = useProducts({
     category: selectedCategory,
     limit: itemsPerPage,

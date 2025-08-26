@@ -5,7 +5,6 @@ import { useRouter, useParams } from "next/navigation";
 import ProductForm from "../../ProductForm";
 import { ProductInput } from "@/validations/productSchema";
 import { Product } from "@prisma/client";
-import { Button } from "@/components/ui";
 import Link from "next/link";
 
 export default function EditProductPage() {

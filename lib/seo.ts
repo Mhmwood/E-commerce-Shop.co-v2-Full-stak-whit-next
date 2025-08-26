@@ -1,4 +1,3 @@
-// lib/seo.ts
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -40,7 +39,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title: product.title,
       description: product.description,
-      images: [product.thumbnail || "/images/website/Browse By Dress/party.png"],
+      images: [
+        product.thumbnail || "/images/website/Browse By Dress/party.png",
+      ],
     },
   };
 }

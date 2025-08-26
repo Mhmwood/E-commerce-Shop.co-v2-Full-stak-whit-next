@@ -1,12 +1,9 @@
 import { z } from "zod";
 
-// Helper schemas
 const nonEmptyString = z.string().trim().min(1, "Cannot be empty");
 
-// Role enum
 export const RoleEnum = z.enum(["ADMIN", "USER"]);
 
-// Sign Up Schema
 export const SignUpSchema = z
   .object({
     name: nonEmptyString
@@ -38,19 +35,16 @@ export const SignUpSchema = z
     path: ["confirmPassword"],
   });
 
-// Sign In Schema
 
 export const SignInSchema = z.object({
   email: z.string().email("Invalid email format").min(1, "Email is required"),
   password: z.string().min(1, "Password is required"),
 });
 
-// Password Reset Request Schema
 export const PasswordResetRequestSchema = z.object({
   email: z.string().email("Invalid email format").min(1, "Email is required"),
 });
 
-// Password Reset Schema
 export const PasswordResetSchema = z
   .object({
     token: z.string().min(1, "Token is required"),
@@ -69,7 +63,6 @@ export const PasswordResetSchema = z
     path: ["confirmPassword"],
   });
 
-// Profile Update Schema
 export const ProfileUpdateSchema = z.object({
   name: nonEmptyString
     .min(2, "Name must be at least 2 characters")
@@ -87,12 +80,10 @@ export const ProfileUpdateSchema = z.object({
   image: z.string().url("Invalid image URL").optional(),
 });
 
-// Admin Profile Update Schema (includes role)
 export const AdminProfileUpdateSchema = ProfileUpdateSchema.extend({
   role: RoleEnum.optional(),
 });
 
-// Change Password Schema
 export const ChangePasswordSchema = z
   .object({
     currentPassword: z.string().min(1, "Current password is required"),
@@ -113,13 +104,11 @@ export const ChangePasswordSchema = z
     path: ["confirmNewPassword"],
   });
 
-// Admin User Management Schema
 export const AdminUserManagementSchema = z.object({
   userId: z.string().min(1, "User ID is required"),
   role: RoleEnum,
 });
 
-// TypeScript types
 export type SignUpInput = z.infer<typeof SignUpSchema>;
 export type SignInInput = z.infer<typeof SignInSchema>;
 export type PasswordResetRequestInput = z.infer<

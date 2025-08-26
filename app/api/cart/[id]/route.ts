@@ -4,7 +4,6 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
-// PUT - Update cart item quantity
 export const PUT = createAsyncRoute(
   async (request: NextRequest, params?: { [key: string]: string }) => {
     const session = await getServerSession(authOptions);
@@ -33,7 +32,6 @@ export const PUT = createAsyncRoute(
       );
     }
 
-    // Check if cart item exists and belongs to user
     const existingCartItem = await prisma.cartItem.findFirst({
       where: {
         id: cartItemId,
@@ -56,7 +54,6 @@ export const PUT = createAsyncRoute(
       );
     }
 
-    // If quantity is 0, delete the cart item
     if (quantity === 0) {
       await prisma.cartItem.delete({
         where: {
@@ -70,7 +67,6 @@ export const PUT = createAsyncRoute(
       );
     }
 
-    // Check stock availability
     if (existingCartItem.product.stock < quantity) {
       return NextResponse.json(
         { error: "Insufficient stock available" },
@@ -78,7 +74,6 @@ export const PUT = createAsyncRoute(
       );
     }
 
-    // Update cart item quantity
     const updatedCartItem = await prisma.cartItem.update({
       where: {
         id: cartItemId,
@@ -105,7 +100,6 @@ export const PUT = createAsyncRoute(
   }
 );
 
-// DELETE - Remove cart item
 export const DELETE = createAsyncRoute(
   async (_request: NextRequest, params?: { [key: string]: string }) => {
     const session = await getServerSession(authOptions);
@@ -125,7 +119,6 @@ export const DELETE = createAsyncRoute(
       return NextResponse.json({ error: "Invalid review ID" }, { status: 400 });
     }
 
-    // Check if cart item exists and belongs to user
     const existingCartItem = await prisma.cartItem.findFirst({
       where: {
         id: cartItemId,
@@ -140,7 +133,6 @@ export const DELETE = createAsyncRoute(
       );
     }
 
-    // Delete the cart item
     await prisma.cartItem.delete({
       where: {
         id: cartItemId,

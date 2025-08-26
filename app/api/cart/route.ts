@@ -1,4 +1,3 @@
-import F from "@/components/F";
 import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
 import { authOptions } from "@/lib/auth/auth";
 
@@ -6,7 +5,6 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
-// GET - Retrieve user's cart items
 export const GET = createAsyncRoute(async () => {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -38,7 +36,6 @@ export const GET = createAsyncRoute(async () => {
   return NextResponse.json(cartItems);
 });
 
-// POST - Add item to cart
 export const POST = createAsyncRoute(async (request: NextRequest) => {
   const session = await getServerSession(authOptions);
 
@@ -63,7 +60,6 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
     );
   }
 
-  // Check if product exists
   const product = await prisma.product.findUnique({
     where: { id: productId },
     select: { id: true, stock: true },
@@ -80,7 +76,6 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
     );
   }
 
-  // Check if item already exists in cart
   const existingCartItem = await prisma.cartItem.findUnique({
     where: {
       userId_productId: {
@@ -124,7 +119,6 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
       },
     });
   } else {
-    // Create new cart item
     cartItem = await prisma.cartItem.create({
       data: {
         userId: session.user.id,

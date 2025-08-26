@@ -1,7 +1,3 @@
-// "use client";
-// import { useEffect } from "react";
-// import { useAppDispatch } from "@/store/hooks";
-// import { fetchCart } from "@/store/features/cart.slice";
 import CartList from "@/components/pages/cart/CartList";
 import CartSummary from "@/components/pages/cart/CartSummary";
 import BreadcrumbBar from "@/components/shadcn-components/BreadcrumbBar";

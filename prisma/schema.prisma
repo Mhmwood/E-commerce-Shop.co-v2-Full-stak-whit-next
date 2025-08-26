@@ -84,6 +84,13 @@ model Product {
   dimensions           ProductDimensions?
   meta                 ProductMeta?
   reviews              ProductReview[]
+
+
+  @@index([title])
+  @@index([price])
+  @@index([rating])
+  @@index([category])
+
 }
 
 model ProductDimensions {
@@ -117,6 +124,10 @@ model ProductReview {
   updatedAt    DateTime @updatedAt
   product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([rating])
+  @@index([reviewerName])
+
 }
 
 model CartItem {

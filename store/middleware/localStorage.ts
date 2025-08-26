@@ -25,12 +25,13 @@ export const localStorageMiddleware: Middleware =
 
 
 export const loadState = (): RootState["cart"] | undefined => {
-  if (typeof window === "undefined") return undefined; // ✅ Prevent usage on server
+  if (typeof window === "undefined") return undefined; 
   try {
     const serializedState = localStorage.getItem("cart");
     if (!serializedState) return undefined;
     return JSON.parse(serializedState);
   } catch (error) {
+    
     return undefined;
   }
 };

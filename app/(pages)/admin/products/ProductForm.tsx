@@ -87,29 +87,24 @@ const ProductForm: React.FC<ProductFormProps> = ({
     }
   };
 
-  // images holds File objects; imagePreviews holds preview URLs or existing remote urls
   const [images, setImages] = useState<(File | null)[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [imageErrors, setImageErrors] = useState<string[]>([]);
 
-  // track created blob urls so we can revoke on unmount
   const createdBlobUrls = useRef<string[]>([]);
-  // track original image urls (from product) so we know when to call updateImage
   const originalImageUrls = useRef<(string | null)[]>([]);
 
-  // initialize previews from product when editing
+ 
   useEffect(() => {
     if (product?.images && product.images.length > 0) {
       setImagePreviews(product.images);
-      // we don't have File objects for existing images, keep placeholders (null)
       setImages(product.images.map(() => null));
       setImageErrors(product.images.map(() => ""));
-      // remember originals for update operations
+   
       originalImageUrls.current = product.images.slice();
     }
   }, [product]);
 
-  // programmatically open file picker and append chosen image (up to 3)
   const handleAddImage = () => {
     if (images.length >= 3) return;
     const input = document.createElement("input");
@@ -122,9 +117,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
       setImages((prev) => [...prev, file]);
       setImagePreviews((prev) => [...prev, url]);
       setImageErrors((prev) => [...prev, ""]);
-      // remember for cleanup
       createdBlobUrls.current.push(url);
-      // new image has no original url
       originalImageUrls.current.push(null);
     };
     input.click();
@@ -135,12 +128,10 @@ const ProductForm: React.FC<ProductFormProps> = ({
     const updatedPreviews = [...imagePreviews];
     const updatedErrors = [...imageErrors];
 
-    // remove preview and revoke if blob
     const removedPreview = updatedPreviews.splice(index, 1)[0];
     if (removedPreview && removedPreview.startsWith("blob:")) {
       try {
         URL.revokeObjectURL(removedPreview);
-        // also remove from createdBlobUrls if present
         createdBlobUrls.current = createdBlobUrls.current.filter(
           (u) => u !== removedPreview
         );
@@ -149,7 +140,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
 
     updatedImages.splice(index, 1);
     updatedErrors.splice(index, 1);
-    // keep original url mapping in sync
     originalImageUrls.current.splice(index, 1);
 
     setImages(updatedImages);
@@ -187,8 +177,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
     setSubmitting(true);
     const finalImageUrls: string[] = [];
 
-    // process images in-order, preserving unchanged originals, updating replaced images,
-    // and uploading newly added images
+
     for (let i = 0; i < images.length; i++) {
       const image = images[i];
       const originalUrl = originalImageUrls.current[i] ?? null;
@@ -227,14 +216,12 @@ const ProductForm: React.FC<ProductFormProps> = ({
       try {
         let thumbnailUrl: string | null = null;
         if (isEdit && product?.thumbnail) {
-          // replace existing thumbnail
           thumbnailUrl = await updateImage(
             product.thumbnail,
             thumbnailFile,
             "products"
           );
         } else {
-          // new thumbnail
           thumbnailUrl = await uploadImage(thumbnailFile, "products");
         }
 
@@ -261,7 +248,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
     }
   };
 
-  // UI/UX upgrade: Card, section titles, Select, Button, optional fields toggle
   const [showOptional, setShowOptional] = useState(false);
   const [customCategory, setCustomCategory] = useState("");
   const categoryValue = watch("category") || "";
@@ -281,7 +267,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
       <div className="rounded-2xl border border-gray-700 bg-background/80 shadow-lg p-6 md:p-10">
         <h2 className="text-xl font-bold mb-6 text-primary">Product Details</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Thumbnail Upload */}
           <div className="md:col-span-2 flex flex-col gap-2">
             <label
               htmlFor="thumbnail"
@@ -317,7 +302,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
             )}
           </div>
 
-          {/* Images carousel or empty placeholder */}
           {imagePreviews.length > 0 ? (
             <>
               <Carousel className="relative mx-5 ">
@@ -593,7 +577,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
                 </p>
               )}
             </div>
-            {/* Add more optional fields here as needed */}
           </div>
         )}
         <div className="mt-10">

@@ -1,4 +1,3 @@
-// API Error Handling Utilities
 
 export interface ApiError {
   message: string;
@@ -32,7 +31,6 @@ export class ApiException extends Error {
   }
 }
 
-// Create standardized API error
 export function createApiError(
   message: string,
   status: number = 500,
@@ -47,7 +45,6 @@ export function createApiError(
   };
 }
 
-// Create standardized API response
 export function createApiResponse<T>(
   data?: T,
   error?: ApiError
@@ -59,7 +56,6 @@ export function createApiResponse<T>(
   };
 }
 
-// Handle fetch errors
 export async function handleApiRequest<T>(
   url: string,
   options?: RequestInit
@@ -95,7 +91,6 @@ export async function handleApiRequest<T>(
       });
     }
 
-    // Network or other errors
     return createApiResponse<T>(undefined, {
       message:
         error instanceof Error ? error.message : "An unexpected error occurred",
@@ -105,7 +100,6 @@ export async function handleApiRequest<T>(
   }
 }
 
-// Handle Prisma errors
 export function handlePrismaError(error: unknown): ApiError {
   if (typeof error === "object" && error !== null) {
     const prismaError = error as { code: string; message: string };
@@ -114,10 +108,7 @@ export function handlePrismaError(error: unknown): ApiError {
         "Invalid data provided for database operation",
         400,
         "VALIDATION_ERROR",
-        // {
-        //   originalError: (error as any).message || "Validation failed",
-        //   clientVersion: (error as any).clientVersion,
-        // }
+
       );
     }
 
@@ -151,7 +142,6 @@ export function handlePrismaError(error: unknown): ApiError {
       }
     }
 
-    // Default Prisma error
     return createApiError("Database operation failed", 500, "DATABASE_ERROR", {
       originalError: prismaError.message,
     });
@@ -160,7 +150,6 @@ export function handlePrismaError(error: unknown): ApiError {
   return createApiError("Database operation failed", 500, "DATABASE_ERROR");
 }
 
-// Validate required fields
 export function validateRequiredFields(
   data: Record<string, unknown>,
   requiredFields: string[]
@@ -182,7 +171,6 @@ export function validateRequiredFields(
   return null;
 }
 
-// Validate email format
 export function validateEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);

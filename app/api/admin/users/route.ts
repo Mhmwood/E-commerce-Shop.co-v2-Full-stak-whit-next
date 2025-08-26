@@ -7,7 +7,7 @@ import { authOptions } from "@/lib/auth/auth";
 import bcrypt from "bcryptjs";
 import { deleteImage } from "@/lib/upload/deleteImg";
 
-// GET all users (admin only)
+
 export const GET = createAsyncRoute(async (request: NextRequest) => {
   const { hasAccess, error } = await checkServerAdmin();
 
@@ -26,7 +26,6 @@ export const GET = createAsyncRoute(async (request: NextRequest) => {
 
   const skip = (page - 1) * limit;
 
-  // Build where clause
   const where: any = {};
 
   if (search) {
@@ -40,10 +39,8 @@ export const GET = createAsyncRoute(async (request: NextRequest) => {
     where.role = role;
   }
 
-  // Get total count
   const totalCount = await prisma.user.count({ where });
 
-  // Get users with pagination
   const users = await prisma.user.findMany({
     where,
     select: {
@@ -85,7 +82,7 @@ export const GET = createAsyncRoute(async (request: NextRequest) => {
     },
   });
 });
-// POST for creating a user (admin only)
+
 export const POST = createAsyncRoute(async (request: NextRequest) => {
   const { hasAccess, error } = await checkServerAdmin();
 
@@ -106,10 +103,9 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
     );
   }
 
-  // Basic validation
-  if (password.length < 6) {
+  if (password.length < 8) {
     return NextResponse.json(
-      { error: "Password must be at least 6 characters long" },
+      { error: "Password must be at least 8 characters long" },
       { status: 400 }
     );
   }
@@ -121,7 +117,7 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
     );
   }
 
-  // Check if user already exists
+
   const existingUser = await prisma.user.findUnique({
     where: { email },
   });
@@ -160,12 +156,12 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
     },
   });
 
-  // Don't return the hashed password
+
 
   return NextResponse.json(newUser, { status: 201 });
 });
 
-// PUT for updating a user (admin only)
+
 export const PUT = createAsyncRoute(async (request: NextRequest) => {
   const { hasAccess, error } = await checkServerAdmin();
 
@@ -228,7 +224,7 @@ export const PUT = createAsyncRoute(async (request: NextRequest) => {
   return NextResponse.json(updatedUser, { status: 200 });
 });
 
-// DELETE user (admin only)
+
 export const DELETE = createAsyncRoute(async (request: NextRequest) => {
   const { hasAccess, error } = await checkServerAdmin();
 
@@ -246,7 +242,7 @@ export const DELETE = createAsyncRoute(async (request: NextRequest) => {
     return NextResponse.json({ error: "User ID is required" }, { status: 400 });
   }
 
-  // Check if user exists
+
   const user = await prisma.user.findUnique({
     where: { id: userId },
   });
@@ -255,7 +251,7 @@ export const DELETE = createAsyncRoute(async (request: NextRequest) => {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
-  // Prevent admin from deleting themselves
+  
   const session = await getServerSession(authOptions);
   if (session?.user?.id === userId) {
     return NextResponse.json(
@@ -265,7 +261,7 @@ export const DELETE = createAsyncRoute(async (request: NextRequest) => {
   }
   if (user?.image) await deleteImage(user.image, "avatars");
 
-  // Delete user (cascade will handle related data)
+ 
   await prisma.user.delete({
     where: { id: userId },
   });

@@ -10,9 +10,9 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/auth";
 import bcrypt from "bcryptjs";
 import { checkServerAdmin } from "@/lib/auth/role-utils";
-//import { checkServerAdmin } from "@/lib/role-utils";
 
-// GET user profile
+
+
 export const GET = createAsyncRoute(async (request: NextRequest) => {
   const session = await getServerSession(authOptions);
 
@@ -43,7 +43,6 @@ export const GET = createAsyncRoute(async (request: NextRequest) => {
   return NextResponse.json(user);
 });
 
-// UPDATE user profile
 export const PATCH = createAsyncRoute(async (request: NextRequest) => {
   const session = await getServerSession(authOptions);
 
@@ -53,12 +52,12 @@ export const PATCH = createAsyncRoute(async (request: NextRequest) => {
 
   const rawData = await request.json();
 
-  // Check if this is an admin operation (includes role field)
+  
   const isAdminOperation = "role" in rawData;
 
   let validation;
   if (isAdminOperation) {
-    // Admin can update roles
+
     const { hasAccess } = await checkServerAdmin();
     if (!hasAccess) {
       return NextResponse.json(
@@ -68,7 +67,7 @@ export const PATCH = createAsyncRoute(async (request: NextRequest) => {
     }
     validation = AdminProfileUpdateSchema.safeParse(rawData);
   } else {
-    // Regular user profile update
+
     validation = ProfileUpdateSchema.safeParse(rawData);
   }
 
@@ -81,7 +80,7 @@ export const PATCH = createAsyncRoute(async (request: NextRequest) => {
 
   const validatedData = validation.data;
 
-  // Check if email is being updated and if it's already taken
+
   if (validatedData.email) {
     const existingUser = await prisma.user.findFirst({
       where: {
@@ -98,7 +97,7 @@ export const PATCH = createAsyncRoute(async (request: NextRequest) => {
     }
   }
 
-  // Update the user
+
   const updatedUser = await prisma.user.update({
     where: { id: session.user.id },
     data: validatedData,
@@ -116,7 +115,6 @@ export const PATCH = createAsyncRoute(async (request: NextRequest) => {
   return NextResponse.json(updatedUser);
 });
 
-// Change password
 export const PUT = createAsyncRoute(async (request: NextRequest) => {
   const session = await getServerSession(authOptions);
 
@@ -136,7 +134,7 @@ export const PUT = createAsyncRoute(async (request: NextRequest) => {
 
   const { currentPassword, newPassword } = validation.data;
 
-  // Get current user with password
+
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
     select: { password: true },
@@ -149,7 +147,7 @@ export const PUT = createAsyncRoute(async (request: NextRequest) => {
     );
   }
 
-  // Verify current password
+
   const isCurrentPasswordValid = await bcrypt.compare(
     currentPassword,
     user.password
@@ -162,10 +160,10 @@ export const PUT = createAsyncRoute(async (request: NextRequest) => {
     );
   }
 
-  // Hash new password
+
   const hashedNewPassword = await bcrypt.hash(newPassword, 12);
 
-  // Update password
+
   await prisma.user.update({
     where: { id: session.user.id },
     data: { password: hashedNewPassword },

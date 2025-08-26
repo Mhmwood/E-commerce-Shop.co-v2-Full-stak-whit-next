@@ -1,4 +1,4 @@
-// store/cartSlice.ts
+
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { loadState } from "../middleware/localStorage";
 import type { CartState, CartItem } from "@/types";
@@ -22,9 +22,8 @@ const cartSlice = createSlice({
     addToCart: (state, action: PayloadAction<CartItem>) => {
       const { stock, quantity } = action.payload;
       if (typeof stock === "number" && quantity > stock) {
-        // Optionally, you could set an error or return early
-        // For now, just prevent adding more than stock
-        alert("u vca");
+      
+        alert("Cannot add more items than available in stock.");
 
         return;
       }
@@ -87,7 +86,6 @@ const cartSlice = createSlice({
   },
 });
 
-// Selectors
 export const selectCartItems = (state: { cart: CartState }) => state.cart.items;
 
 export const selectCartSubtotal = (state: { cart: CartState }) =>

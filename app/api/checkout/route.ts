@@ -12,7 +12,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Get cart items for the user
   const cartItems = await prisma.cartItem.findMany({
     where: { userId: session.user.id },
     include: {
@@ -24,7 +23,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
   }
 
-  // Build Stripe line items
   const line_items = cartItems.map((item) => ({
     price_data: {
       currency: "usd",

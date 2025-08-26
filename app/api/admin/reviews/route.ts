@@ -4,7 +4,6 @@ import { checkServerAdmin } from "@/lib/auth/role-utils";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-// app/api/admin/reviews/route.ts (update)
 export const GET = createAsyncRoute(async (request: NextRequest) => {
   const { hasAccess, error } = await checkServerAdmin();
 

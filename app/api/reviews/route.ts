@@ -8,7 +8,6 @@ import { updateProductRating } from "@/lib/api/products-utils/updateProductRatin
 export const POST = createAsyncRoute(async (request: NextRequest) => {
   const rawData = await request.json();
 
-  // Validate the request data
   const validation = CreateReviewSchema.safeParse(rawData);
   if (!validation.success) {
     console.log(validation.error.issues);

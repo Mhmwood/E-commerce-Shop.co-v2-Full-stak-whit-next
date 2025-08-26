@@ -1,4 +1,3 @@
-// hooks/useCart.ts
 import {
   selectCartItems,
   selectCartTotal,
