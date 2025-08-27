@@ -19,7 +19,7 @@ export const ReviewForm = ({
     rating: number;
     comment: string;
     reviewerName: string;
-    productId: number;
+    productId: string;
     userId: string;
   };
   mode?: "create" | "update";

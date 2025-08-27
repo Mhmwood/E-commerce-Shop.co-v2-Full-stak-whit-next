@@ -1,20 +1,29 @@
 "use client";
 import ScrollButtons from "@/components/ui/ScrollButtons";
 import CustomersReviewsList from "@/components/Users/CustomersReviewsList";
-// import { useProducts } from "@/hooks/use-products";
-// import { Product } from "@/types/products";
+import { ProductReview } from "@prisma/client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const OurHappyCustomers = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // const { products } = useProducts({
-  //   sortBy: "rating",
-  //   order: "desc",
-  //   limit: 20,
-  //   select: ["reviews"],
-  // });
+  const [reviews, setReviews] = useState<ProductReview[]>([]);
+
+  useEffect(() => {
+    fetch("/api/reviews")
+      .then((res) => res.json())
+      .then((data) => setReviews(data));
+  }, []);
+
+  
+  // const reviews = fetch("/api/reviews?limit=10&sortBy=rating&order=desc").then(
+  //   async (res) => {
+  //     const data = await res.json();
+  //     console.log();
+  //     return data;
+  //   }
+  // );
 
   return (
     <section className="  py-10 md:py-20    ">
@@ -24,21 +33,16 @@ const OurHappyCustomers = () => {
             OUR HAPPY CUSTOMERS
           </h2>
 
-          {/* <ScrollButtons targetRef={scrollContainerRef} /> */}
+          <ScrollButtons targetRef={scrollContainerRef} />
         </div>
 
         <div className="relative">
           <div className=" absolute backdrop-blur-sm   w-4 md:w-20 h-full"></div>
           <div className=" absolute backdrop-blur-sm right-0  w-4 md:w-20 h-full"></div>
 
-          {/* <CustomersReviewsList
-            ref={scrollContainerRef}
-            reviews={products
-              .map((product: Product) =>
-                product.reviews.filter((review) => review.rating > 4)
-              )
-              .flat()}
-          /> */}
+          {reviews && (
+            <CustomersReviewsList ref={scrollContainerRef} reviews={reviews} />
+          )}
         </div>
       </div>
     </section>

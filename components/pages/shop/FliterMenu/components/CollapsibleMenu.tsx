@@ -3,14 +3,7 @@ import { ChevronRight, Dot } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const CollapsibleMenu = ({ categories }: { categories: string[] }) => {
-  // const toggleCollapse = (index: number) => {
-  //   setOpenIndexes((prev) =>
-  //     prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
-  //   );
-  // };
 
-  // console.log(categories);
-  // categories.map((c) => console.log("<=>", c));
 
   const router = useRouter();
   const params = useSearchParams();

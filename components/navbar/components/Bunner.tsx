@@ -1,7 +1,17 @@
-import { useState } from "react";
+"use client";
+import { useEffect, useState } from "react";
 
 const Bunner = () => {
-  const [close, setClose] = useState(false);
+  const [close, setClose] = useState(true);
+  useEffect(() => {
+    const isClosed = localStorage.getItem("bunnerClosed");
+    setClose(isClosed === "true");
+  }, []);
+  const closeBunner = () => {
+    localStorage.setItem("bunnerClosed", "true");
+    setClose(true);
+  };
+
   return (
     <>
       {!close && (
@@ -10,10 +20,7 @@ const Bunner = () => {
             Sign up and get 20% off to your first order.{" "}
             <a href="#"> Sign Up Now</a>
           </span>
-          <button
-            className="  absolute right-24"
-            onClick={() => setClose(true)}
-          >
+          <button className="  absolute right-24" onClick={closeBunner}>
             <svg
               width="20"
               height="20"

@@ -1,7 +1,6 @@
 "use client";
 
 import { useProducts } from "@/hooks/useProducts";
-//import { useProducts } from "@/hooks/use-products";
 import ProductList from "./ProductList";
 
 import ShowLoader from "../ui/Loaders/ShowLoader";

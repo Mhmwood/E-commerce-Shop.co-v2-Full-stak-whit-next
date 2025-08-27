@@ -10,7 +10,6 @@ const Circle = () => {
   const stars = [
     { id: 1, offsetX: -50, offsetY: -30 },
     { id: 2, offsetX: 40, offsetY: -50 },
-
     { id: 3, offsetX: 50, offsetY: 30 },
   ];
 

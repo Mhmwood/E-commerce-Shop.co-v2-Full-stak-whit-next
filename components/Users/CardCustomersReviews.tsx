@@ -43,7 +43,7 @@ const CardCustomersReviews = ({
   });
 
   return (
-    <div className="px-8 py-7 border-2 rounded-3xl h-full  md:w-full min-w-[250px] ">
+    <div className="px-8 py-7 border-2 rounded-3xl h-full  md:w-full min-w-[350px] ">
       <div className="mb-4">
         <StarsRating rating={rating} />
       </div>

@@ -5,6 +5,27 @@ import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
 import { CreateReviewSchema } from "@/validations/reviewSchema";
 import { updateProductRating } from "@/lib/api/products-utils/updateProductRating";
 
+export const GET = createAsyncRoute(async (request: NextRequest) => {
+  const reviews = await prisma.productReview.findMany({
+    // Limit to reviews with a specific userId , productId for testing, since there aren't many users
+    where: {
+      reviewerName: {
+        not: "Seeder",
+      },
+      userId: {
+        equals: "aa55bb5c-e771-44fd-b3a8-7f1df7c43e77",
+      },
+      productId: {
+        equals: "c0dbc3d0-ab46-4528-9ebe-c35433119366",
+      },
+    },
+    orderBy: {
+      rating: "desc",
+    },
+    take: 10,
+  });
+  return NextResponse.json(reviews, { status: 201 });
+});
 export const POST = createAsyncRoute(async (request: NextRequest) => {
   const rawData = await request.json();
 
