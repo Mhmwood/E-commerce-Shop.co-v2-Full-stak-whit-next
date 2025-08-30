@@ -8,14 +8,7 @@ import ShowLoader from "@/components/ui/Loaders/ShowLoader";
 import { CircleArrowLeft } from "lucide-react";
 import Image from "next/image";
 import { CategoriesList } from "@/constants";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationPrevious,
-  PaginationNext,
-} from "@/components/ui/pagination";
+import PaginationCustom from "@/components/shadcn-components/PaginationCustom";
 import { useProducts } from "@/hooks/useProducts";
 
 export default function AdminProductsPage() {
@@ -31,7 +24,6 @@ export default function AdminProductsPage() {
   const [sortOrder, setSortOrder] = useState("asc");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-
 
   const { data, isLoading } = useProducts({
     category: selectedCategory,
@@ -164,7 +156,6 @@ export default function AdminProductsPage() {
                       <Link
                         href={`/admin/products/${product.id}/edit`}
                         className="w-1/2"
-                        
                       >
                         <Button variant="outline" className="w-full">
                           Edit
@@ -219,43 +210,11 @@ export default function AdminProductsPage() {
                 ))}
               </div>
               <div className="flex justify-center mt-8">
-                <Pagination>
-                  <PaginationContent>
-                    <PaginationItem>
-                      <PaginationPrevious
-                        size="default"
-                        onClick={() => {
-                          if (currentPage > 1) {
-                            setCurrentPage((prev) => Math.max(prev - 1, 1));
-                          }
-                        }}
-                      />
-                    </PaginationItem>
-                    {Array.from({ length: totalPages }, (_, index) => (
-                      <PaginationItem key={index}>
-                        <PaginationLink
-                          size="default"
-                          isActive={currentPage === index + 1}
-                          onClick={() => setCurrentPage(index + 1)}
-                        >
-                          {index + 1}
-                        </PaginationLink>
-                      </PaginationItem>
-                    ))}
-                    <PaginationItem>
-                      <PaginationNext
-                        size="icon"  
-                        onClick={() => {
-                          if (currentPage < totalPages) {
-                            setCurrentPage((prev) =>
-                              Math.min(prev + 1, totalPages)
-                            );
-                          }
-                        }}
-                      />
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
+                <PaginationCustom
+                  totalPages={totalPages}
+                  currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
+                />
               </div>
             </React.Fragment>
           )}

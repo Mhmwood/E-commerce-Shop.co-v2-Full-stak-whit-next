@@ -7,7 +7,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-export function PaginationDemo({
+export function PaginationCustom({
   totalPages,
   currentPage,
   setCurrentPage,
@@ -99,4 +99,4 @@ export function PaginationDemo({
   );
 }
 
-export default PaginationDemo;
+export default PaginationCustom;

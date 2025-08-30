@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import FliterMenu from "./FliterMenu";
 import { useClickOutside } from "@/hooks/use-click-outside";
-import { PaginationDemo } from "@/components/shadcn-components/PaginationDemo";
+import { PaginationCustom } from "@/components/shadcn-components/PaginationCustom";
 import { SelectDemo } from "@/components/shadcn-components/SelectDemo";
 import { Product } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
@@ -25,7 +25,7 @@ export default function ShowProduct({
   const [openMenu, setOpenMenu] = useState(false);
   const ref = useClickOutside<HTMLDivElement>(() => setOpenMenu(false));
   const searchParams = useSearchParams();
-  const limit = 4;
+  const limit = 9;
 
   const { data, isLoading, isError } = useProducts({
     category,
@@ -131,7 +131,7 @@ export default function ShowProduct({
 
       {totalPages > 1 && (
         <div className="mt-5 flex justify-center">
-          <PaginationDemo
+          <PaginationCustom
             totalPages={totalPages}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}

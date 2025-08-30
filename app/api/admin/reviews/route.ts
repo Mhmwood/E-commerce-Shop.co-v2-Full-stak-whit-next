@@ -21,8 +21,8 @@ export const GET = createAsyncRoute(async (request: NextRequest) => {
 
   const where = buildReviewsWhereClause({ productId, rating });
   const orderBy = buildReviewsOrderBy({ sortBy, sortOrder });
-
   const totalCount = await prisma.productReview.count({ where });
+  
 
   const reviews = await prisma.productReview.findMany({
     where,

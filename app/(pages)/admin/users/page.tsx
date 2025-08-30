@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import PaginationCustom from "@/components/shadcn-components/PaginationCustom";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { User } from "@prisma/client";
@@ -70,6 +71,7 @@ export default function AdminUsersPage() {
         page: searchParams.get("page") || "1",
         search: searchParams.get("search") || "",
         role: searchParams.get("role") || "",
+        limit: "3",  
       });
 
       try {
@@ -95,6 +97,8 @@ export default function AdminUsersPage() {
   }, [pagination.page, debouncedSearchTerm, roleFilter, updateURL]);
 
   const handleRoleChange = async (userId: string, newRole: string) => {
+    if (!confirm("Are you sure you want to change this user's role?")) return;
+    
     const res = await fetch("/api/admin/users", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -252,25 +256,19 @@ export default function AdminUsersPage() {
             </tbody>
           </table>
         </div>
-        <div className="mt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <span className="text-sm text-muted-foreground">
-            Showing {users.length} of {pagination.totalCount} users
-          </span>
-          <div className="flex gap-2">
-            <button
-              onClick={() => handlePageChange(pagination.page - 1)}
-              disabled={!pagination.hasPreviousPage || isLoading}
-              className="bg-secondary border border-gray-700 px-4 py-2 rounded font-semibold disabled:opacity-50"
-            >
-              Previous
-            </button>
-            <button
-              onClick={() => handlePageChange(pagination.page + 1)}
-              disabled={!pagination.hasNextPage || isLoading}
-              className="bg-secondary border border-gray-700 px-4 py-2 rounded font-semibold disabled:opacity-50"
-            >
-              Next
-            </button>
+        <div className="space-y-2.5">
+          <div className=" mt-4">
+            <span className="text-sm text-muted-foreground">
+              Showing {users.length} of {pagination.totalCount} users
+            </span>
+          </div>
+
+          <div className="">
+            <PaginationCustom
+              totalPages={pagination.totalPages}
+              currentPage={pagination.page}
+              setCurrentPage={handlePageChange}
+            />
           </div>
         </div>
       </div>

@@ -15,7 +15,7 @@ const BrowseByDress = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5  ">
           <div
-            onClick={() => router.push("/shop/mens-shirts")}
+            onClick={() => router.push("/shop?category=clothing")}
             className="cursor-pointer relative overflow-hidden rounded-3xl md:col-span-1  h-[190px] md:h-[289px]"
           >
             <h4 className="absolute z-10 font-bold text-5xl top-0 left-0 transform translate-y-6 translate-x-9">
@@ -32,7 +32,7 @@ const BrowseByDress = () => {
           </div>
 
           <div
-            onClick={() => router.push("/shop/mens-watches")}
+            onClick={() => router.push("/shop?category=clothing")}
             className="cursor-pointer relative overflow-hidden rounded-3xl md:col-span-2 h-[190px] md:h-[289px] "
           >
             <h4 className="absolute z-10 font-bold text-5xl top-0 left-0 transform translate-y-6 translate-x-9">
@@ -49,7 +49,7 @@ const BrowseByDress = () => {
           </div>
 
           <div
-            onClick={() => router.push("/shop/womens-dresses")}
+            onClick={() => router.push("/shop?category=clothing")}
             className="cursor-pointer relative overflow-hidden rounded-3xl md:col-span-2 h-[190px] md:h-[289px]"
           >
             <h4 className="absolute z-10 font-bold text-5xl top-0 left-0 transform translate-y-6 translate-x-9">
@@ -66,7 +66,7 @@ const BrowseByDress = () => {
           </div>
 
           <div
-            onClick={() => router.push("/shop/sports-accessories")}
+            onClick={() => router.push("/shop?category=Sports")}
             className="cursor-pointer relative overflow-hidden rounded-3xl md:col-span-1 h-[190px] md:h-[289px] "
           >
             <h4 className="absolute z-10 font-bold text-5xl top-0 left-0 transform translate-y-6 translate-x-9">
