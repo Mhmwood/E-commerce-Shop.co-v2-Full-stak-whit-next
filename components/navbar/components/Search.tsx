@@ -6,7 +6,7 @@ import { Product } from "@prisma/client";
 import { useSearchProducts } from "@/hooks/useProducts";
 
 import { Plus, ShoppingCart } from "lucide-react";
-import Image from "next/image";
+
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useCart } from "@/hooks/useCart";

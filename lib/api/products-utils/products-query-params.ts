@@ -37,7 +37,7 @@ export const parseQueryParams = (
     page,
     limit,
     category: searchParams.get("category") || undefined,
-    search: searchParams.get("q") || undefined,
+    search: searchParams.get("query") || undefined,
     selectFields: searchParams.get("select") || undefined,
     sortBy: searchParams.get("sortBy") || undefined,
     sortOrder: searchParams.get("sortOrder") === "desc" ? "desc" : "asc",
