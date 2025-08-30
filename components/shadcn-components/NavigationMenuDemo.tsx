@@ -18,7 +18,7 @@ function NavigationMenuDemo({ categories }: { categories: string[] }) {
           <NavigationMenuContent>
             <div className="grid  gap-3 py-3 px-4 w-[20rem] grid-cols-2  md:w-[500px] md:grid-cols-3 lg:w-[600px]  ">
               <ul className="list-disc  px-2 ">
-                {categories &&
+                {categories.length > 0 &&
                   categories.map((category, index) => (
                     <li
                       key={index}

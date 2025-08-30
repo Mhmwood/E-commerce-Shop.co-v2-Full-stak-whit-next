@@ -5,8 +5,8 @@ import { Product } from "@prisma/client";
 
 import { useSearchProducts } from "@/hooks/useProducts";
 
-
 import { Plus, ShoppingCart } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useCart } from "@/hooks/useCart";
@@ -72,7 +72,7 @@ const Search = () => {
       {query && (
         <div
           ref={dropdownRef}
-          className="absolute  max-md:w-[50vw]  max-md:-translate-x-1/4  h-80 overflow-y-scroll no-scrollbar scroll-smooth top-12 left-0 right-0 bg-white rounded-xl shadow-lg z-50 border border-gray-100"
+          className="absolute w-full max-lg:fixed max-lg:inset-x-0 max-lg:bottom-0 max-lg:rounded-t-xl max-lg:shadow-xl lg:h-80 overflow-y-auto no-scrollbar scroll-smooth top-40 lg:top-12 left-0 right-0 bg-white rounded-xl shadow-lg z-50 border border-gray-100"
         >
           {isPending && <div className="p-4 text-center">Loading...</div>}
           {!isPending && results.length === 0 && (
@@ -83,7 +83,7 @@ const Search = () => {
           {results.map((product: Product) => (
             <div
               key={product.id}
-              className="flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer border-b border-gray-100 last:border-0"
+              className="flex items-center justify-between px-3 py-3 hover:bg-gray-50 transition-colors cursor-pointer border-b border-gray-100 last:border-0"
               onClick={() => {
                 setQuery("");
                 router.push(`/shop/${product.id}`);

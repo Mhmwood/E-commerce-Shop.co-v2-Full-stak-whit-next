@@ -58,7 +58,7 @@ export const useProductById = (
 };
 export const useSearchProducts = (query: string, limit = 7) => {
   return useQuery({
-    queryKey: ["search-products", query, limit],
+    queryKey: ["search-products", query],
     queryFn: async () => {
       if (!query) return [];
       const res = await fetch(

@@ -1,13 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Search from "../Navbar/components/Search";
-import { Drawer, DrawerContent, DrawerTrigger } from "../ui/drawer";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerTrigger,
+  DrawerTitle,
+  DrawerClose,
+} from "../ui/drawer";
+import { useParams } from "next/navigation";
 
 function SearchDrawer() {
   const [open, setOpen] = useState(false);
+  const param = useParams();
+
+
+  useEffect(() => {
+    setOpen(false);
+  }, [param]);
+
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <button className=" flex">
+        <button className=" flex cursor-pointer">
           <svg
             width="24"
             height="24"
@@ -21,8 +35,34 @@ function SearchDrawer() {
           </svg>
         </button>
       </DrawerTrigger>
-      <DrawerContent>
-        <div className="mx-auto w-full  h-[screen]  px-4 ">
+      <DrawerContent className="h-5/6 rounded-t-xl p-0  ">
+        <div className="flex items-center justify-between px-4 py-3 border-b">
+          <DrawerTitle className="text-base">Search</DrawerTitle>
+          <DrawerClose asChild>
+            <button
+              aria-label="Close search"
+              className="p-2 rounded-md hover:bg-gray-100"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M6 6L18 18M6 18L18 6"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+          </DrawerClose>
+        </div>
+
+        <div className="mx-auto w-full h-[calc(92vh-56px)] overflow-auto px-4 py-3 sm:h-auto sm:max-h-[70vh]">
           <Search />
         </div>
       </DrawerContent>

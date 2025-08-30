@@ -12,6 +12,7 @@ import { CategoriesList } from "@/constants";
 import { useAuth } from "@/hooks/useAuth";
 import Cart from "./components/Cart";
 import Bunner from "./components/Bunner";
+import { SearchDrawer } from "../shadcn";
 
 export const Navbar = () => {
   const { isAuthenticated, logout, isAdmin } = useAuth();
@@ -163,11 +164,11 @@ export const Navbar = () => {
                 <Search />
               </div>
             </div>
-            <div className=" lg:hidden w-full  ">
-              <Search />
-            </div>
 
             <div className="flex items-center    gap-4">
+              <div className=" lg:hidden   ">
+                <SearchDrawer />
+              </div>
               <div className=" flex items-center gap-4">
                 <Cart />
 
