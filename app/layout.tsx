@@ -4,6 +4,7 @@ import { Providers } from "./providers";
 
 import localFont from "next/font/local";
 import Footer from "@/components/Footer";
+import GithubLink from "@/components/GithubLink";
 
 export { metadata } from "@/lib/seo";
 const integral = localFont({
@@ -24,12 +25,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${integral.variable} ${satoshi.variable}`}>
-      <body className="font-satoshi bg-background text-primary ">
+      <body className="font-satoshi bg-background text-primary relative ">
         <Providers>
           <Navbar />
           {children}
           <Footer />
         </Providers>
+        <GithubLink linkProfile="https://github.com/Mhmwood" />
       </body>
     </html>
   );
