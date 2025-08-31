@@ -10,13 +10,13 @@ export const GET = createAsyncRoute(async () => {
     },
     distinct: ["category"],
     where: {
-      category: {
-        not: null,
-      },
+      AND: [
+        { category: { not: "Uncategorized" } },
+        { category: { not: null } },
+      ],
     },
   });
 
- 
   const categoryNames = categories
     .map((item) => item.category)
     .filter((category) => category && category !== "Uncategorized");

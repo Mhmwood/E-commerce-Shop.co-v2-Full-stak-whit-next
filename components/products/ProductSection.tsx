@@ -8,7 +8,6 @@ import ShowError from "../ui/errs/ShowError";
 import { Product } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
-
 interface ProductSectionProps {
   title: string;
   category?: string;
@@ -24,12 +23,20 @@ const ProductSection: React.FC<ProductSectionProps> = ({
   order,
   limit = 10,
 }) => {
-
-  const { data, isLoading, isError, error } = useProducts({
+  const { data, isPending, isError, error } = useProducts({
     category: category || undefined,
     sortBy,
     order,
     limit,
+    select: {
+      title: true,
+      images: true,
+      thumbnail: true,
+      price: true,
+      rating: true,
+      discountPercentage: true,
+      id: true,
+    },
   });
 
   const router = useRouter();
@@ -37,7 +44,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({
   return (
     <section className="py-10 md:py-20 transition-all duration-300">
       <div className="flex flex-col items-center justify-center space-y-14">
-        {isLoading ? (
+        {isPending ? (
           <ShowLoader />
         ) : isError ? (
           <div className="">

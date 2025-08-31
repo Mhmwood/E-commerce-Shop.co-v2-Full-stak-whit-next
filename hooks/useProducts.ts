@@ -25,10 +25,13 @@ export const useProducts = (params: UseProductsParams) =>
         ...(params.minPrice && { minPrice: params.minPrice }),
         ...(params.maxPrice && { maxPrice: params.maxPrice }),
         ...(params.order && { sortOrder: params.order }),
-        ...(params.select && { select: JSON.stringify(params.select) }),
       });
 
-      const res = await fetch(`/api/products?${query}`);
+      const select = params.select
+        ? `select=${Object.keys(params.select).join(",")}`
+        : "";
+
+      const res = await fetch(`/api/products?${query}&${select}`);
 
       if (!res.ok) throw new Error("Failed to fetch products");
 
@@ -39,16 +42,16 @@ export const useProducts = (params: UseProductsParams) =>
 
 export const useProductById = (
   id: string,
-  select?: Record<string, boolean>
+  selectParam?: Record<string, boolean>
 ) => {
   return useQuery({
     queryKey: ["product", id],
     queryFn: async () => {
-      const query = new URLSearchParams({
-        ...(select && { select: JSON.stringify(select) }),
-      });
+      const select = selectParam
+        ? `select=${Object.keys(selectParam).join(",")}`
+        : "";
 
-      const res = await fetch(`/api/products/${id}?${query}`);
+      const res = await fetch(`/api/products/${id}?${select}`);
       if (!res.ok) throw new Error("Failed to fetch product");
       return res.json();
     },

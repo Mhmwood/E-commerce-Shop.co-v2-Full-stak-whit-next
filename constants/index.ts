@@ -1,5 +1,9 @@
 export const CategoriesList = await fetch(
   "http://localhost:3000/api/categories",
+
+  {
+    cache:"reload"
+  }
 ).then(async (res) => res.json());
 
 export const MAX_REVIEWS = 10;
