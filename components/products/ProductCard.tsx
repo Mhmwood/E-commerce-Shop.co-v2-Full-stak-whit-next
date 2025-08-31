@@ -46,7 +46,7 @@ const ProductCard = ({
         </figure>
       </div>
       <div className="px-5 pb-5 mt-4">
-        <h5 className="text-xl font-bold">{title}</h5>
+        <h3 className="text-xl font-bold">{title}</h3>
         <StarsRating rating={rating} showNumber />
         <PriceDisplay price={price} discount={discountPercentage} />
       </div>

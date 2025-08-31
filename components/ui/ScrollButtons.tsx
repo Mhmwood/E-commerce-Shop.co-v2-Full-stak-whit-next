@@ -21,10 +21,10 @@ const ScrollButtons = ({
 
   return (
     <div className="flex gap-4 ">
-      <button onClick={scrollLeft} className="">
+      <button onClick={scrollLeft} aria-label="previous coutstomer button">
         <ArrowLeft strokeWidth={1.75} />
       </button>
-      <button onClick={scrollRight} className="">
+      <button onClick={scrollRight} aria-label="next coutstomer button">
         <ArrowRight strokeWidth={1.75} />
       </button>
     </div>

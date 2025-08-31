@@ -20,6 +20,7 @@ const Cart = () => {
   return (
     <button
       className="relative cursor-pointer"
+      aria-label="cart button"
       onClick={() => router.push("/cart")}
     >
       <AnimatePresence>

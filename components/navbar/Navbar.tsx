@@ -36,6 +36,7 @@ export const Navbar = () => {
                 <button
                   onClick={() => setOpenMenu((prev) => !prev)}
                   className=" p-2 text-gray-600 transition mr-2 hover:text-gray-600/75"
+                  aria-label="Toggle menu"
                 >
                   <svg
                     width="24"

@@ -101,6 +101,7 @@ const Search = () => {
               <button
                 className="hidden md:block relative hover:scale-105 rounded-full hover:bg-secondary transition duration-150 ease-in-out"
                 onClick={() => handleAddToCart(product)}
+                aria-label="add to cart button"
               >
                 <ShoppingCart />
 

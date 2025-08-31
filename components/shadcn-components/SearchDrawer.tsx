@@ -13,7 +13,6 @@ function SearchDrawer() {
   const [open, setOpen] = useState(false);
   const param = useParams();
 
-
   useEffect(() => {
     setOpen(false);
   }, [param]);
@@ -21,7 +20,7 @@ function SearchDrawer() {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <button className=" flex cursor-pointer">
+        <button className=" flex cursor-pointer" aria-label="search button">
           <svg
             width="24"
             height="24"
