@@ -1,4 +1,3 @@
-
 "use client";
 import FliterMenu from "@/components/pages/shop/FliterMenu";
 import { useSearchParams } from "next/navigation";
@@ -13,7 +12,7 @@ export default function ShopPage() {
   const order = (searchParams.get("order") as "asc" | "desc") ?? undefined;
 
   return (
-    <div className="py-10 md:py-20 px-4 md:px-20 mt-10">
+    <>
       <BreadcrumbBar name={category || ""} />
       <div className="lg:grid grid-cols-12 gap-5 mt-6">
         <div className="col-span-3 hidden lg:block">
@@ -23,6 +22,6 @@ export default function ShopPage() {
           <ShowProduct category={category} sortBy={sortBy} order={order} />
         </div>
       </div>
-    </div>
+    </>
   );
 }

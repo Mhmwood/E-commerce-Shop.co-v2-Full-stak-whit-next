@@ -5,6 +5,7 @@ import { Providers } from "./providers";
 import localFont from "next/font/local";
 import Footer from "@/components/Footer";
 import GithubLink from "@/components/GithubLink";
+import LoadingBar from "@/components/ui/Loaders/Barload";
 
 export { metadata } from "@/lib/seo";
 const integral = localFont({
@@ -28,6 +29,7 @@ export default function RootLayout({
       <body className="font-satoshi bg-background text-primary relative ">
         <Providers>
           <Navbar />
+          <LoadingBar />
           {children}
           <Footer />
         </Providers>

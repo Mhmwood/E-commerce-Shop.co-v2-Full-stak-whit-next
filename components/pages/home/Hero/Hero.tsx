@@ -38,7 +38,7 @@ const Hero = () => {
               </p>
               <button
                 className=" text-white w-full md:w-auto  py-4 px-16 
-                 rounded-full bg-primary"
+                 rounded-full bg-primary cursor-pointer"
                 onClick={() => router.push("shop/?sortBy=meta&order=desc")}
               >
                 Shop Now

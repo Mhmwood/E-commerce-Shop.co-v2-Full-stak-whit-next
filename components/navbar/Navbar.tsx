@@ -14,6 +14,8 @@ import Cart from "./components/Cart";
 import Bunner from "./components/Bunner";
 import { SearchDrawer } from "../shadcn";
 
+
+
 export const Navbar = () => {
   const { isAuthenticated, logout, isAdmin } = useAuth();
 
@@ -217,6 +219,7 @@ export const Navbar = () => {
           </div>
         </div>
       </header>
+   
     </>
   );
 };
