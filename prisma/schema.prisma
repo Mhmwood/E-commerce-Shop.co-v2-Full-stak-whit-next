@@ -86,6 +86,12 @@ model Product {
   reviews              ProductReview[]
 
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+ 
+
+  @@index([createdAt])
   @@index([title])
   @@index([price])
   @@index([rating])
