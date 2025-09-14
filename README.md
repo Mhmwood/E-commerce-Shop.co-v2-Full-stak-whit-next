@@ -132,6 +132,18 @@ Notes:
   - Run `npm run db:generate` if needed
   - Optionally run `npm run db:studio` to inspect data
 
+### Database Seeding
+
+This project uses DummyJSON to populate the database with realistic fake products.
+All product images are uploaded to Supabase Storage for easy access.
+
+The seeder automatically adds:
+
+- Product details (title, description, price, brand, stock)
+- Product images (thumbnail + gallery)
+- Categories
+- Dimensions and metadata
+
 ## Deployment notes
 
 - Vercel (recommended) or any Node-compatible host that supports Next.js App Router works.
