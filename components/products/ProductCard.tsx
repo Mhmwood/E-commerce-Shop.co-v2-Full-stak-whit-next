@@ -32,11 +32,7 @@ const ProductCard = ({
           ) : (
             <Image
               className="transform transition-transform duration-300 hover:scale-105 object-cover w-full h-[298px]"
-              src={
-                thumbnail && thumbnail.includes("example.com")
-                  ? "https://bkddaewshluqnvphgnqv.supabase.co/storage/v1/object/public/avatars/users/1750361164941-2cjwdmitlro.png"
-                  : thumbnail
-              }
+              src={thumbnail || images[0]}
               alt={title}
               loading="lazy"
               width={295}
