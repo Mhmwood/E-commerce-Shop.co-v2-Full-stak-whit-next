@@ -23,17 +23,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
   }
 
-  const line_items = cartItems.map((item) => ({
-    price_data: {
-      currency: "usd",
-      product_data: {
-        name: item.product.title,
-        description: item.product.description,
+  const line_items = cartItems.map((item) => {
+    const discountedPrice =
+      item.product.price * (1 - (item.product.discountPercentage || 0) / 100);
+    return {
+      price_data: {
+        currency: "usd",
+        product_data: {
+          name: item.product.title,
+          description: item.product.description,
+        },
+        unit_amount: Math.round(discountedPrice * 100),
       },
-      unit_amount: Math.round(item.product.price * 100),
-    },
-    quantity: item.quantity,
-  }));
+      quantity: item.quantity,
+    };
+  });
 
   try {
     const sessionStripe = await stripe.checkout.sessions.create({
