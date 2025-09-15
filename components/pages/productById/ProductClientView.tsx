@@ -1,4 +1,3 @@
-
 "use client";
 
 import { BreadcrumbBar } from "@/components/shadcn";
@@ -24,8 +23,14 @@ const ProductClientView = ({ id }: { id: string }) => {
       <div className="mt-6 mb-9">
         <BreadcrumbBar link={`${product?.category}`} name={product.title} />
       </div>
-      <section className="grid gap-x-6 max-lg:gap-y-5 lg:grid-cols-[30.125rem_1fr] xl:grid-cols-[38.125rem_1fr]">
-        {product?.images && <ImageDisplay images={product?.images || []} />}
+      <section
+        className={`grid gap-x-6 max-lg:gap-y-5 ${
+          product?.image > 1
+            ? "lg:grid-cols-[30.125rem_1fr]"
+            : "md:grid-cols-[30.125rem_1fr]"
+        } xl:grid-cols-[38.125rem_1fr]`}
+      >
+        <ImageDisplay images={product?.images} />
         <InfoDisplay product={product} />
       </section>
       <section>

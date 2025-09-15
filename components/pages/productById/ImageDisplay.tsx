@@ -9,7 +9,6 @@ interface ImageDisplayProps {
 }
 
 const ImageDisplay: React.FC<ImageDisplayProps> = ({ images }) => {
-
   const [mainImage, setMainImage] = useState(images?.[0] || "");
 
   if (!images?.length) {
@@ -19,8 +18,6 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ images }) => {
       </div>
     );
   }
-
-
 
   return (
     <div
@@ -34,13 +31,15 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ images }) => {
             <figure
               key={index}
               onClick={() => setMainImage(image)}
+              onMouseEnter={() => setMainImage(image)}
               className=" relative aspect-square w-full overflow-hidden rounded-[1.25rem] bg-neutral-100 md:aspect-[19/21] md:max-w-[9.5rem]"
             >
               <Image
                 src={image}
                 className="object-cover transition-all duration-300 hover:scale-105"
                 alt={`Product Image ${index + 1}`}
-                fill
+                height={150}
+                width={150}
               />
             </figure>
           ))}
@@ -48,15 +47,20 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ images }) => {
       )}
 
       <div
-        className={`relative w-full overflow-hidden rounded-[1.25rem] bg-neutral-200 max-md:row-start-1 ${
-          images.length > 1 ? "lg:aspect-[222/265]" : "lg:aspect-square"
-        } `}
+        className={`relative w-full overflow-hidden rounded-[1.25rem] bg-neutral-200 max-md:row-start-1 
+          flex justify-center items-center
+    ${
+      images.length > 1
+        ? "lg:aspect-[222/265]   "
+        : "  md:h-[444px] md:w-[444px]"
+    }`}
       >
         <Image
           src={mainImage}
-          className="  object-cover transition-all duration-300 hover:scale-105"
+          className="object-contain transition-all duration-300"
           alt="Product Main Image"
-          fill
+          width={images.length > 1 ? 444 : 300}
+          height={images.length > 1 ? 444 : 300}
         />
       </div>
     </div>
