@@ -23,7 +23,9 @@ export const GET = createAsyncRoute(
               ...select,
               dimensions: true,
               meta: true,
-              reviews: true,
+              reviews: {
+                orderBy: [{ rating: "desc" }, { createdAt: "desc" }],
+              },
               cartItems: true,
             },
           }
@@ -32,7 +34,9 @@ export const GET = createAsyncRoute(
               cartItems: true,
               dimensions: true,
               meta: true,
-              reviews: true,
+              reviews: {
+                orderBy: [{ rating: "desc" }, { createdAt: "desc" }],
+              },
             },
           } as any)),
     });

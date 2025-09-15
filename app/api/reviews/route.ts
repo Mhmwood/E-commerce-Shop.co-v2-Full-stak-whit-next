@@ -9,18 +9,15 @@ export const GET = createAsyncRoute(async (request: NextRequest) => {
   const reviews = await prisma.productReview.findMany({
     // Limit to reviews with a specific userId , productId for testing, since there aren't many users
     where: {
-      reviewerName: {
-        not: "Seeder",
-      },
       userId: {
         equals: "aa55bb5c-e771-44fd-b3a8-7f1df7c43e77",
       },
-      productId: {
-        equals: "c0dbc3d0-ab46-4528-9ebe-c35433119366",
+      rating: {
+        gt: 3,
       },
     },
     orderBy: {
-      rating: "desc",
+      createdAt: "desc",
     },
     take: 10,
   });

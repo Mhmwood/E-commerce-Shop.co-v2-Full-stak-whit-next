@@ -93,7 +93,7 @@ export const Navbar = () => {
                     <li>
                       <Link
                         className="  hover:text-gray-800 "
-                        href={"shop/?sortBy=meta&order=desc"}
+                        href={"/shop/?sortBy=rating&order=desc"}
                       >
                         On Sale
                       </Link>
@@ -102,17 +102,17 @@ export const Navbar = () => {
                     <li>
                       <Link
                         className="  hover:text-gray-800 "
-                        href={"shop/?sortBy=rating&order=desc"}
+                        href={"/shop/?sortBy=meta&order=desc"}
                       >
                         New Arrivals
                       </Link>
                     </li>
 
-                    <li>
+                    {/* <li>
                       <a className="hover:text-gray-800" href="#brands">
                         Brands
                       </a>
-                    </li>
+                    </li> */}
                   </ul>
                 </motion.div>
               )}
@@ -140,7 +140,7 @@ export const Navbar = () => {
                       <li>
                         <Link
                           className="  hover:text-gray-800 "
-                          href={"/shop/?sortBy=meta&order=desc"}
+                          href={"/shop/?sortBy=rating&order=desc"}
                         >
                           On Sale
                         </Link>
@@ -149,17 +149,17 @@ export const Navbar = () => {
                       <li>
                         <Link
                           className="  hover:text-gray-800 "
-                          href={"/shop/?sortBy=rating&order=desc"}
+                          href={"/shop/?sortBy=meta&order=desc"}
                         >
                           New Arrivals
                         </Link>
                       </li>
 
-                      <li>
+                      {/* <li>
                         <a className="hover:text-gray-800" href="#brands">
                           Brands
                         </a>
-                      </li>
+                      </li> */}
                     </ul>
                   </nav>
                 </div>
@@ -219,7 +219,6 @@ export const Navbar = () => {
           </div>
         </div>
       </header>
-   
     </>
   );
 };

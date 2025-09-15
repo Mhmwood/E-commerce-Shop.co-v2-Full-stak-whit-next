@@ -25,7 +25,7 @@ function NavigationMenuDemo({ categories }: { categories: string[] }) {
                     className=" text-sm md:text-lg font-bold text-primary cursor-pointer hover:underline "
                     onClick={() =>
                       router.push(
-                        `shop/?category=${encodeURIComponent(category)}`
+                        `/shop/?category=${encodeURIComponent(category)}`
                       )
                     }
                   >
