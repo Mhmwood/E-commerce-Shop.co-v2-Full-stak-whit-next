@@ -1,5 +1,7 @@
 "use client";
 import { useCart } from "@/hooks/useCart";
+import formatCurrency from "@/lib/utils";
+import { getDiscountedPrice } from "@/store/features/cart.slice";
 import { Minus, Plus } from "lucide-react";
 import Image from "next/image";
 
@@ -36,12 +38,11 @@ const CartList = () => {
               </figure>
               <div className="flex flex-col gap-2">
                 <h3 className="text-xl  font-bold">{product.title}</h3>
-
                 <span className="block text-gray-400 ">
                   Category:{product.category}
                 </span>
                 <h3 className="text-xl font-bold">
-                  ${Math.round(product.price)}
+                  {formatCurrency(getDiscountedPrice(product))}
                 </h3>
               </div>
             </div>

@@ -1,4 +1,3 @@
-
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { loadState } from "../middleware/localStorage";
 import type { CartState, CartItem } from "@/types";
@@ -15,6 +14,11 @@ const initialState: CartState = persistedState || {
   deliveryFee: 15,
   promoCode: undefined,
 };
+
+
+export const getDiscountedPrice = (item: CartItem) =>
+  item.price * (1 - (item.discountPercentage || 0) / 100);
+
 const cartSlice = createSlice({
   name: "cart",
   initialState,
@@ -22,9 +26,7 @@ const cartSlice = createSlice({
     addToCart: (state, action: PayloadAction<CartItem>) => {
       const { stock, quantity } = action.payload;
       if (typeof stock === "number" && quantity > stock) {
-      
         alert("Cannot add more items than available in stock.");
-
         return;
       }
 
@@ -40,9 +42,11 @@ const cartSlice = createSlice({
         });
       }
     },
+
     removeFromCart: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter((item) => item.id !== action.payload);
     },
+
     updateQuantity: (
       state,
       action: PayloadAction<{ id: string; quantity: number }>
@@ -52,6 +56,7 @@ const cartSlice = createSlice({
         item.quantity = Math.max(1, action.payload.quantity);
       }
     },
+
     applyPromoCode: (state, action: PayloadAction<string>) => {
       const validCodes: Record<string, number> = {
         SAVE10: 10,
@@ -68,7 +73,7 @@ const cartSlice = createSlice({
           state.discount = 0;
         } else {
           const subtotal = state.items.reduce(
-            (acc, item) => acc + item.price * item.quantity,
+            (acc, item) => acc + getDiscountedPrice(item) * item.quantity,
             0
           );
           state.discount = subtotal * (validCodes[code] / 100);
@@ -78,6 +83,7 @@ const cartSlice = createSlice({
         state.discount = 0;
       }
     },
+
     clearCart: (state) => {
       state.items = [];
       state.promoCode = undefined;
@@ -86,10 +92,13 @@ const cartSlice = createSlice({
   },
 });
 
-export const selectCartItems = (state: { cart: CartState }) => state.cart.items;
 
+export const selectCartItems = (state: { cart: CartState }) => state.cart.items;
 export const selectCartSubtotal = (state: { cart: CartState }) =>
-  state.cart.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  state.cart.items.reduce(
+    (acc, item) => acc + getDiscountedPrice(item) * item.quantity,
+    0
+  );
 
 export const selectCartDiscount = (state: { cart: CartState }) =>
   state.cart.discount;
