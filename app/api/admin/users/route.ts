@@ -1,11 +1,11 @@
-import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
-import { prisma } from "@/lib/prisma";
+import { createAsyncRoute } from "@lib/api/asyncRoute.ts";
+import { prisma } from "@lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { checkServerAdmin } from "@/lib/auth/role-utils";
+import { checkServerAdmin } from "@lib/auth/role-utils";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth/auth";
+import { authOptions } from "@lib/auth/auth";
 import bcrypt from "bcryptjs";
-import { deleteImage } from "@/lib/upload/deleteImg";
+import { deleteImage } from "@lib/upload/deleteImg";
 
 
 export const GET = createAsyncRoute(async (request: NextRequest) => {

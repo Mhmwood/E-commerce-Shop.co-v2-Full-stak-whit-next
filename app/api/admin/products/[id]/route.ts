@@ -1,8 +1,8 @@
-import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
-import { checkServerAdmin } from "@/lib/auth/role-utils";
-import { prisma } from "@/lib/prisma";
-import { deleteImage } from "@/lib/upload/deleteImg";
-import { UpdateProductSchema } from "@/validations/productSchema";
+import { createAsyncRoute } from "@lib/api/asyncRoute.ts";
+import { checkServerAdmin } from "@lib/auth/role-utils";
+import { prisma } from "@lib/prisma";
+import { deleteImage } from "@lib/upload/deleteImg";
+import { UpdateProductSchema } from "@validations/productSchema";
 import { NextRequest, NextResponse } from "next/server";
 
 export const PATCH = createAsyncRoute(

@@ -1,6 +1,6 @@
-import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
-import { prisma } from "@/lib/prisma";
-import { getSelectQuerys } from "@/lib/api/products-utils/products-query-params";
+import { createAsyncRoute } from "@lib/api/asyncRoute.ts";
+import { prisma } from "@lib/prisma";
+import { getSelectQuerys } from "@lib/api/products-utils/products-query-params";
 
 import { NextRequest, NextResponse } from "next/server";
 // assuming you have this

@@ -1,6 +1,6 @@
 "use client";
-import ScrollButtons from "@/components/ui/ScrollButtons";
-import CustomersReviewsList from "@/components/Users/CustomersReviewsList";
+import ScrollButtons from "@components/ui/ScrollButtons";
+import CustomersReviewsList from "@components/Users/CustomersReviewsList";
 import { ProductReview } from "@prisma/client";
 
 import { useEffect, useRef, useState } from "react";

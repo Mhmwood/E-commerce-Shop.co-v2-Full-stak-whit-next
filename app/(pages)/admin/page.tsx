@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import ShowLoader from "@/components/ui/Loaders/ShowLoader";
+import ShowLoader from "@components/ui/Loaders/ShowLoader";
 import Link from "next/link";
 
 export default function AdminDashboardPage() {

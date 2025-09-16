@@ -1,6 +1,28 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { loadState } from "../middleware/localStorage";
-import type { CartState, CartItem } from "@/types";
+// import type { CartState, CartItem } from "@/types";
+
+
+export interface CartState {
+  items: CartItem[];
+  status: "idle" | "loading" | "succeeded" | "failed";
+  error: string | null;
+  promoCode?: string;
+  discount: number;
+  deliveryFee: number;
+}
+
+export interface CartItem {
+  id: string;
+  title: string;
+  price: number;
+  discountPercentage: number;
+  quantity: number;
+  stock: number;
+  category: string;
+  image?: string;
+}
+
 
 const isBrowser = typeof window !== "undefined";
 

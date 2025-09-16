@@ -1,15 +1,15 @@
 "use client";
-import Card from "@/components/products/ProductCard";
-import ShowLoader from "@/components/ui/Loaders/ShowLoader";
+import Card from "@components/products/ProductCard";
+import ShowLoader from "@components/ui/Loaders/ShowLoader";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import FliterMenu from "./FliterMenu";
-import { useClickOutside } from "@/hooks/use-click-outside";
-import { PaginationCustom } from "@/components/shadcn-components/PaginationCustom";
-import { SelectDemo } from "@/components/shadcn-components/SelectDemo";
+import { useClickOutside } from "@hooks/use-click-outside";
+import { PaginationCustom } from "@components/shadcn-components/PaginationCustom";
+import { SelectDemo } from "@components/shadcn-components/SelectDemo";
 import { Product } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
-import { useProducts } from "@/hooks/useProducts";
+import { useProducts } from "@hooks/useProducts";
 
 export default function ShowProduct({
   category,

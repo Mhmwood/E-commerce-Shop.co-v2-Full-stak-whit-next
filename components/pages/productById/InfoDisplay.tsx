@@ -2,10 +2,10 @@
 import { useState } from "react";
 import { Minus, Plus } from "lucide-react";
 
-import StarsRating from "@/components/ui/StarsRating";
-import PriceDisplay from "@/components/products/PriceDisplay";
+import StarsRating from "@components/ui/StarsRating";
+import PriceDisplay from "@components/products/PriceDisplay";
 import { Product } from "@prisma/client";
-import { useCart } from "@/hooks/useCart";
+import { useCart } from "@hooks/useCart";
 
 interface InfoDisplayProps {
   product: Product;

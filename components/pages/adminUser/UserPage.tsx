@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import PaginationCustom from "@/components/shadcn-components/PaginationCustom";
+import PaginationCustom from "@components/shadcn-components/PaginationCustom";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { User } from "@prisma/client";

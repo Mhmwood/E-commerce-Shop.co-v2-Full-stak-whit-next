@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { updateProductRating } from "@/lib/api/products-utils/updateProductRating";
-import { prisma } from "@/lib/prisma";
-import { supabase } from "@/lib/supabase";
+import { updateProductRating } from "@lib/api/products-utils/updateProductRating";
+import { prisma } from "@lib/prisma";
+import { supabase } from "@lib/supabase";
 
 async function uploadImageFromUrl(
   url: string,

@@ -1,5 +1,5 @@
 export const CategoriesList = await fetch(
-  "http://localhost:3000/api/categories",
+  `${process.env.NEXTAUTH_URL}/api/categories`,
 
   {
     cache: "reload",

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Suspense } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs";
 import { Product, ProductDimensions, ProductReview } from "@prisma/client";
 import { ProductDetailsTab, RatingRevewsTab } from "./components";
 

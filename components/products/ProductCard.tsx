@@ -1,5 +1,5 @@
 "use client";
-import StarsRating from "@/components/ui/StarsRating";
+import StarsRating from "@components/ui/StarsRating";
 
 import PriceDisplay from "./PriceDisplay";
 import { Product } from "@prisma/client";

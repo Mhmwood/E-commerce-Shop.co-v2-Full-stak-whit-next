@@ -1,6 +1,6 @@
-import CustomersReviewsList from "@/components/Users/CustomersReviewsList";
+import CustomersReviewsList from "@components/Users/CustomersReviewsList";
 import { ProductReview } from "@prisma/client";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@hooks/useAuth";
 import { ReviewForm } from "./ReviewForm";
 
 

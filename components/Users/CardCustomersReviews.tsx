@@ -3,9 +3,9 @@ import StarsRating from "../ui/StarsRating";
 import { Trash2 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { ReviewForm } from "@/components/pages/productById/ProductTabSection/components/RatingRevewsTab/ReviewForm";
+import { ReviewForm } from "@components/pages/productById/ProductTabSection/components/RatingRevewsTab/ReviewForm";
 
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@hooks/useAuth";
 
 const CardCustomersReviews = ({
   rating,

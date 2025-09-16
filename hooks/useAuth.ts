@@ -3,14 +3,14 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { SignInInput, SignUpInput, Role } from "@/validations/authSchema";
+import { SignInInput, SignUpInput, Role } from "@validations/authSchema";
 import {
   signUpUser,
   updateProfile,
   changePassword,
   getUserProfile,
-} from "@/lib/auth/auth-utils";
-import { checkClientAdmin, checkClientRole } from "@/lib/auth/role-utils";
+} from "@lib/auth/auth-utils";
+import { checkClientAdmin, checkClientRole } from "@lib/auth/role-utils";
 
 export const useAuth = () => {
   const { data: session, status, update } = useSession();

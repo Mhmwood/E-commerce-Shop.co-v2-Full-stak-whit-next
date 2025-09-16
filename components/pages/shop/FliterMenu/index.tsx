@@ -1,5 +1,5 @@
 
-import { CategoriesList } from "@/constants";
+import { CategoriesList } from "@constants/index";
 import PriseSelecter from "./components/PriseSelecter";
 import CollapsibleMenu from "./components/CollapsibleMenu";
 

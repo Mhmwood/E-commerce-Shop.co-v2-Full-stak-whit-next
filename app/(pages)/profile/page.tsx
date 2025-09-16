@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect, ChangeEvent, FormEvent } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { uploadImage } from "@/lib/upload/imgeUpload";
+import { useAuth } from "@hooks/useAuth";
+import { uploadImage } from "@lib/upload/imgeUpload";
 import Image from "next/image";
-import { updateImage } from "@/lib/upload/updateImg";
+import { updateImage } from "@lib/upload/updateImg";
 
 const ProfilePage = () => {
   const {

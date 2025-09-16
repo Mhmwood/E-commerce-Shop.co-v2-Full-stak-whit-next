@@ -1,6 +1,6 @@
-import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
+import { createAsyncRoute } from "@lib/api/asyncRoute.ts";
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@lib/prisma";
 import { NextResponse } from "next/server";
 
 export const GET = createAsyncRoute(async () => {

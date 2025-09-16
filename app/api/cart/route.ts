@@ -1,7 +1,7 @@
-import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
-import { authOptions } from "@/lib/auth/auth";
+import { createAsyncRoute } from "@lib/api/asyncRoute.ts";
+import { authOptions } from "@lib/auth/auth";
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 

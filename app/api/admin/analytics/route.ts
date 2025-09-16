@@ -1,7 +1,7 @@
-import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
-import { prisma } from "@/lib/prisma";
+import { createAsyncRoute } from "@lib/api/asyncRoute.ts";
+import { prisma } from "@lib/prisma";
 import { NextResponse } from "next/server";
-import { checkServerAdmin } from "@/lib/auth/role-utils";
+import { checkServerAdmin } from "@lib/auth/role-utils";
 
 export const GET = createAsyncRoute(async () => {
   const { hasAccess, error } = await checkServerAdmin();

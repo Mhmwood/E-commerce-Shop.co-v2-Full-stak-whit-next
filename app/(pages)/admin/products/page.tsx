@@ -2,14 +2,15 @@
 
 import React, { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button } from "@/components/ui";
+import { Button } from "@components/ui";
 import Link from "next/link";
-import ShowLoader from "@/components/ui/Loaders/ShowLoader";
+import ShowLoader from "@components/ui/Loaders/ShowLoader";
 import { CircleArrowLeft } from "lucide-react";
 import Image from "next/image";
-import { CategoriesList } from "@/constants";
-import PaginationCustom from "@/components/shadcn-components/PaginationCustom";
-import { useProducts } from "@/hooks/useProducts";
+
+import PaginationCustom from "@components/shadcn-components/PaginationCustom";
+import { useProducts } from "@hooks/useProducts";
+import { CategoriesList } from "@constants/index";
 
 export default function AdminProductsPage() {
   type ProductItem = {

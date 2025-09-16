@@ -7,7 +7,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
-import { NavLinks } from "@/types/navlink";
+import { NavLinks } from "../../types/navlink";
+
 
 function BreadcrumbBar({ secondLink = "", link = "", name }: NavLinks) {
   return (
@@ -52,45 +53,3 @@ function BreadcrumbBar({ secondLink = "", link = "", name }: NavLinks) {
 
 export default BreadcrumbBar;
 
-// import { useRouter } from "next/navigation";
-// import {
-//   Breadcrumb,
-//   BreadcrumbItem,
-//   BreadcrumbLink,
-//   BreadcrumbList,
-//   BreadcrumbPage,
-//   BreadcrumbSeparator,
-// } from "../ui/breadcrumb";
-// import { NavLinks } from "@/types/navlink";
-
-// function BreadcrumbBar({ secondLink = "", link = "", name }: NavLinks) {
-//   const router = useRouter();
-//   return (
-//     <Breadcrumb>
-//       <BreadcrumbList>
-//         <BreadcrumbItem>
-//           <BreadcrumbLink href="/">Home</BreadcrumbLink>
-//         </BreadcrumbItem>
-//         <BreadcrumbSeparator />
-//         <BreadcrumbItem>
-//           <BreadcrumbLink href={!secondLink ? "/shop" : `/${link}`}>
-//             {!secondLink ? "Shop" : secondLink}
-//           </BreadcrumbLink>
-//         </BreadcrumbItem>
-//         {link && <BreadcrumbSeparator />}
-//         <BreadcrumbItem
-//           className="cursor-pointer"
-//           onClick={() => router.push(`/shop/${link}`)}
-//         >
-//           <BreadcrumbLink>{link}</BreadcrumbLink>
-//         </BreadcrumbItem>
-//         {name && <BreadcrumbSeparator />}
-//         <BreadcrumbItem>
-//           <BreadcrumbPage>{name}</BreadcrumbPage>
-//         </BreadcrumbItem>
-//       </BreadcrumbList>
-//     </Breadcrumb>
-//   );
-// }
-
-// export default BreadcrumbBar;

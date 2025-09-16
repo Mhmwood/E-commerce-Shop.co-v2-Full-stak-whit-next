@@ -2,22 +2,22 @@
 
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ProductSchema, ProductInput } from "@/validations/productSchema";
+import { ProductSchema, ProductInput } from "@validations/productSchema";
 import { Product } from "@prisma/client";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import ShowLoader from "@/components/ui/Loaders/ShowLoader";
-import { uploadImage } from "@/lib/upload/imgeUpload";
-import { updateImage } from "@/lib/upload/updateImg";
-import { Button } from "@/components/ui";
+import ShowLoader from "@components/ui/Loaders/ShowLoader";
+import { uploadImage } from "@lib/upload/imgeUpload";
+import { updateImage } from "@lib/upload/updateImg";
+import { Button } from "@components/ui";
 import {
   Select,
   SelectTrigger,
   SelectContent,
   SelectItem,
   SelectValue,
-} from "@/components/ui/select";
-import { CategoriesList } from "@/constants";
+} from "@components/ui/select";
+import { CategoriesList } from "@constants/index";
 import { CirclePlus } from "lucide-react";
 import {
   Carousel,
@@ -25,7 +25,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel";
+} from "@components/ui/carousel";
 import { Trash, Edit } from "lucide-react";
 
 interface ProductFormProps {

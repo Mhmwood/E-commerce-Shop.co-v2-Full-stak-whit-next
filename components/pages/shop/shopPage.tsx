@@ -1,8 +1,8 @@
 "use client";
-import FliterMenu from "@/components/pages/shop/FliterMenu";
+import FliterMenu from "@components/pages/shop/FliterMenu";
 import { useSearchParams } from "next/navigation";
-import ShowProduct from "@/components/pages/shop/ShowProduct";
-import BreadcrumbBar from "@/components/shadcn-components/BreadcrumbBar";
+import ShowProduct from "@components/pages/shop/ShowProduct";
+import BreadcrumbBar from "@components/shadcn-components/BreadcrumbBar";
 
 export default function ShopPage() {
   const searchParams = useSearchParams();

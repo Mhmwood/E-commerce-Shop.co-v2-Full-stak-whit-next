@@ -1,7 +1,7 @@
-import BrowseByDress from "@/components/pages/home/BrowseByDress";
-import Hero from "@/components/pages/home/Hero/Hero";
-import OurHappyCustomers from "@/components/pages/home/OurHappyCustomers";
-import { ProductSection } from "@/components/products";
+import BrowseByDress from "@components/pages/home/BrowseByDress";
+import Hero from "@components/pages/home/Hero/Hero";
+import OurHappyCustomers from "@components/pages/home/OurHappyCustomers";
+import { ProductSection } from "@components/products";
 
 
 const HomePage = () => {

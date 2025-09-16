@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import ProductForm from "../../ProductForm";
-import { ProductInput } from "@/validations/productSchema";
+import { ProductInput } from "@validations/productSchema";
 import { Product } from "@prisma/client";
 import Link from "next/link";
 

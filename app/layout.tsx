@@ -1,13 +1,13 @@
-import { Navbar } from "@/components/Navbar";
+import { Navbar } from "@components/Navbar";
 import "./globals.css";
 import { Providers } from "./providers";
 
 import localFont from "next/font/local";
-import Footer from "@/components/Footer";
-import GithubLink from "@/components/GithubLink";
-import LoadingBar from "@/components/ui/Loaders/Barload";
+import Footer from "@components/Footer";
+import GithubLink from "@components/GithubLink";
+import LoadingBar from "@components/ui/Loaders/Barload";
 
-export { metadata } from "@/lib/seo";
+export { metadata } from "@lib/seo";
 const integral = localFont({
   src: "./fonts/Integral_CF/Fontspring-DEMO-integralcf-bold.otf",
   variable: "--font-integral",

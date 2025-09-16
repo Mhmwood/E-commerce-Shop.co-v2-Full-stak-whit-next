@@ -1,12 +1,12 @@
 "use client";
 
-import { BreadcrumbBar } from "@/components/shadcn";
-import ShowLoader from "@/components/ui/Loaders/ShowLoader";
-import { useProductById } from "@/hooks/useProducts";
+import { BreadcrumbBar } from "@components/shadcn";
+import ShowLoader from "@components/ui/Loaders/ShowLoader";
+import { useProductById } from "@hooks/useProducts";
 import ImageDisplay from "./ImageDisplay";
 import InfoDisplay from "./InfoDisplay";
 import ProductTabSection from "./ProductTabSection";
-import { ProductSection } from "@/components/products";
+import { ProductSection } from "@components/products";
 
 const ProductClientView = ({ id }: { id: string }) => {
   const { data: product, isPending } = useProductById(id);

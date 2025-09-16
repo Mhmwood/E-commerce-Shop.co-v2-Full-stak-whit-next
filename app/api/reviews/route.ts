@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
+import { prisma } from "@lib/prisma";
+import { createAsyncRoute } from "@lib/api/asyncRoute.ts";
 
-import { CreateReviewSchema } from "@/validations/reviewSchema";
-import { updateProductRating } from "@/lib/api/products-utils/updateProductRating";
+import { CreateReviewSchema } from "@validations/reviewSchema";
+import { updateProductRating } from "@lib/api/products-utils/updateProductRating";
 
 export const GET = createAsyncRoute(async (request: NextRequest) => {
   const reviews = await prisma.productReview.findMany({

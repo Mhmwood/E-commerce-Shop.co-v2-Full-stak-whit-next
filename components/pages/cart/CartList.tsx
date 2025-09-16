@@ -1,7 +1,7 @@
 "use client";
-import { useCart } from "@/hooks/useCart";
-import formatCurrency from "@/lib/utils";
-import { getDiscountedPrice } from "@/store/features/cart.slice";
+import { useCart } from "@hooks/useCart";
+import formatCurrency from "@lib/utils";
+import { getDiscountedPrice } from "@store/features/cart.slice";
 import { Minus, Plus } from "lucide-react";
 import Image from "next/image";
 

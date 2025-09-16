@@ -3,13 +3,13 @@
 import { useEffect, useState } from "react";
 
 import { motion, AnimatePresence } from "framer-motion";
-import Search from "@/components/Navbar/components/Search";
+import Search from "@components/Navbar/components/Search";
 
-import NavigationMenuDemo from "@/components/shadcn-components/NavigationMenuDemo";
+import NavigationMenuDemo from "@components/shadcn-components/NavigationMenuDemo";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { CategoriesList } from "@/constants";
-import { useAuth } from "@/hooks/useAuth";
+import { CategoriesList } from "@constants/index";
+import { useAuth } from "@hooks/useAuth";
 import Cart from "./components/Cart";
 import Bunner from "./components/Bunner";
 import { SearchDrawer } from "../shadcn";

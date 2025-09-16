@@ -1,10 +1,10 @@
-import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
-import { updateProductRating } from "@/lib/api/products-utils/updateProductRating";
-import { authOptions } from "@/lib/auth/auth";
-import { checkServerRole } from "@/lib/auth/role-utils";
+import { createAsyncRoute } from "@lib/api/asyncRoute.ts";
+import { updateProductRating } from "@lib/api/products-utils/updateProductRating";
+import { authOptions } from "@lib/auth/auth";
+import { checkServerRole } from "@lib/auth/role-utils";
 
-import { prisma } from "@/lib/prisma";
-import { UpdateReviewSchema } from "@/validations/reviewSchema";
+import { prisma } from "@lib/prisma";
+import { UpdateReviewSchema } from "@validations/reviewSchema";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 

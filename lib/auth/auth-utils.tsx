@@ -1,5 +1,5 @@
 import { signIn, signOut, getSession } from "next-auth/react";
-import { SignInInput, SignUpInput, Role } from "@/validations/authSchema";
+import { SignInInput, SignUpInput, Role } from "@validations/authSchema";
 
 export const signInUser = async (credentials: SignInInput) => {
   try {

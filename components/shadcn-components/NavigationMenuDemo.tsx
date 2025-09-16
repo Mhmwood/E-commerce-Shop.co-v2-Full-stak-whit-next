@@ -4,7 +4,7 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
+} from "@components/ui/navigation-menu";
 import { useRouter } from "next/navigation";
 
 function NavigationMenuDemo({ categories }: { categories: string[] }) {

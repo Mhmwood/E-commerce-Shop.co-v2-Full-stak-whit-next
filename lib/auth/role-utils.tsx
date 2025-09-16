@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "./auth";
-import { Role } from "@/validations/authSchema";
+import { Role } from "@validations/authSchema";
 
 export const ROLE_HIERARCHY = {
   USER: 1,

@@ -1,7 +1,7 @@
-import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
-import { checkServerAdmin } from "@/lib/auth/role-utils";
-import { prisma } from "@/lib/prisma";
-import { ProductSchema } from "@/validations/productSchema";
+import { createAsyncRoute } from "@lib/api/asyncRoute.ts";
+import { checkServerAdmin } from "@lib/auth/role-utils";
+import { prisma } from "@lib/prisma";
+import { ProductSchema } from "@validations/productSchema";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = createAsyncRoute(async (request: NextRequest) => {

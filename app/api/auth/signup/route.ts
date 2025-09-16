@@ -1,9 +1,9 @@
-import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
-import { prisma } from "@/lib/prisma";
-import { SignUpSchema } from "@/validations/authSchema";
+import { createAsyncRoute } from "@lib/api/asyncRoute.ts";
+import { prisma } from "@lib/prisma";
+import { SignUpSchema } from "@validations/authSchema";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { checkServerAdmin } from "@/lib/auth/role-utils";
+import { checkServerAdmin } from "@lib/auth/role-utils";
 
 export const POST = createAsyncRoute(async (request: NextRequest) => {
   const rawData = await request.json();

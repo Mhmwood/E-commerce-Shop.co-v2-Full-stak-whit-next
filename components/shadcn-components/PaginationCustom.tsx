@@ -5,7 +5,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
+} from "@components/ui/pagination";
 
 export function PaginationCustom({
   totalPages,

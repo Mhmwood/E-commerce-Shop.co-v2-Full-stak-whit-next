@@ -4,7 +4,7 @@ import { ProductReview } from "@prisma/client";
 import { CircleArrowLeft } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState, useCallback } from "react";
-import PaginationCustom from "@/components/shadcn-components/PaginationCustom";
+import PaginationCustom from "@components/shadcn-components/PaginationCustom";
 
 // Define Review interface
 

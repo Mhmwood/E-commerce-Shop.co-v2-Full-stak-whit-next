@@ -1,15 +1,15 @@
-import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
-import { prisma } from "@/lib/prisma";
+import { createAsyncRoute } from "@lib/api/asyncRoute.ts";
+import { prisma } from "@lib/prisma";
 import {
   ProfileUpdateSchema,
   ChangePasswordSchema,
   AdminProfileUpdateSchema,
-} from "@/validations/authSchema";
+} from "@validations/authSchema";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth/auth";
+import { authOptions } from "@lib/auth/auth";
 import bcrypt from "bcryptjs";
-import { checkServerAdmin } from "@/lib/auth/role-utils";
+import { checkServerAdmin } from "@lib/auth/role-utils";
 
 
 

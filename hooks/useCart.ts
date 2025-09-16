@@ -8,9 +8,9 @@ import {
   removeFromCart,
   updateQuantity,
   applyPromoCode,
-} from "@/store/features/cart.slice";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import type { CartItem } from "@/types";
+} from "@store/features/cart.slice";
+import { useAppDispatch, useAppSelector } from "@store/hooks";
+import type { CartItem } from "../types";
 
 export const useCart = () => {
   const dispatch = useAppDispatch();

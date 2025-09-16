@@ -1,4 +1,4 @@
-import { StarsRating } from "@/components/ui";
+import { StarsRating } from "@components/ui";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 

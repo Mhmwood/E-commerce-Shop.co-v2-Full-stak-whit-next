@@ -1,9 +1,9 @@
 // api/checkout/route.ts
 
-import { stripe } from "@/lib/stripe";
-import { prisma } from "@/lib/prisma";
+import { stripe } from "@lib/stripe";
+import { prisma } from "@lib/prisma";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth/auth";
+import { authOptions } from "@lib/auth/auth";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {

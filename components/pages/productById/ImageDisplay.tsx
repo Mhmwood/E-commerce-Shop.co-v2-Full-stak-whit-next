@@ -1,5 +1,5 @@
 "use client";
-import ShowError from "@/components/ui/errs/ShowError";
+import ShowError from "@components/ui/errs/ShowError";
 import Image from "next/image";
 
 import { useState } from "react";

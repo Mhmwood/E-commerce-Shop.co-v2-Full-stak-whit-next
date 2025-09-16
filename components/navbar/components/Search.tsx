@@ -1,15 +1,15 @@
 "use client";
 
-import { useClickOutside } from "@/hooks/use-click-outside";
+import { useClickOutside } from "@hooks/use-click-outside";
 import { Product } from "@prisma/client";
 
-import { useSearchProducts } from "@/hooks/useProducts";
+import { useSearchProducts } from "@hooks/useProducts";
 
 import { Plus, ShoppingCart } from "lucide-react";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useCart } from "@/hooks/useCart";
+import { useCart } from "@hooks/useCart";
 
 const Search = () => {
   const [query, setQuery] = useState<string>("");

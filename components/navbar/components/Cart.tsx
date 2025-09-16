@@ -1,7 +1,7 @@
 "use client";
 
-import { useCart } from "@/hooks/useCart";
-import { cn } from "@/lib/utils";
+import { useCart } from "@hooks/useCart";
+import { cn } from "@lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
