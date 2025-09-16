@@ -71,7 +71,7 @@ export default function AdminUsersPage() {
         page: searchParams.get("page") || "1",
         search: searchParams.get("search") || "",
         role: searchParams.get("role") || "",
-        limit: "3",
+        limit: "10",
       });
 
       try {

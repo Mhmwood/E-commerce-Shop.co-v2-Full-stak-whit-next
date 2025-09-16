@@ -4,6 +4,7 @@ import { ProductReview } from "@prisma/client";
 import { CircleArrowLeft } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState, useCallback } from "react";
+import PaginationCustom from "@/components/shadcn-components/PaginationCustom";
 
 // Define Review interface
 
@@ -13,6 +14,8 @@ export default function AdminReviewsPage() {
   const [error, setError] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<string>("date");
   const [sortOrder, setSortOrder] = useState<string>("desc");
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
 
   // Fetch reviews from API with sort parameter, wrapped in useCallback to avoid dependency warnings
   const fetchReviews = useCallback(async () => {
@@ -20,14 +23,24 @@ export default function AdminReviewsPage() {
     setError(null);
     try {
       // Fetch reviews based on current sort order and sort direction
+      const limit = 10;
       const res = await fetch(
-        `/api/admin/reviews?sortBy=${sortBy}&sortOrder=${sortOrder}`
+        `/api/admin/reviews?sortBy=${sortBy}&sortOrder=${sortOrder}&limit=${limit}&page=${page}`
       );
-      if (!res.ok) throw new Error("Error fetching reviews");
-      let data = await res.json();
-      data = data.data;
 
-      setReviews(Array.isArray(data) ? data : []); // Ensure reviews is always an array
+      if (!res.ok) throw new Error("Error fetching reviews");
+
+      const data = await res.json();
+      // Prefer `data.pagination`, fallback to `totalCount` if present
+      const reviewsData = data?.data ?? [];
+      const pagination =
+        data?.pagination ??
+        (typeof data?.totalCount === "number"
+          ? { page, totalPages: Math.max(1, Math.ceil(data.totalCount / limit)), totalCount: data.totalCount }
+          : null);
+
+      setReviews(Array.isArray(reviewsData) ? reviewsData : []);
+      if (pagination) setTotalPages(pagination.totalPages || 1);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -37,11 +50,15 @@ export default function AdminReviewsPage() {
     } finally {
       setLoading(false);
     }
-  }, [sortBy, sortOrder]);
+  }, [sortBy, sortOrder, page]);
 
   useEffect(() => {
     fetchReviews();
   }, [fetchReviews]);
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
 
   // Delete review function
   const handleDelete = async (id: string) => {
@@ -146,6 +163,14 @@ export default function AdminReviewsPage() {
             ))}
           </div>
         )}
+        {/* Pagination */}
+        <div className="mt-6 flex justify-center">
+          <PaginationCustom
+            totalPages={totalPages}
+            currentPage={page}
+            setCurrentPage={handlePageChange}
+          />
+        </div>
       </div>
     </main>
   );

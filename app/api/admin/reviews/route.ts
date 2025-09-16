@@ -1,5 +1,9 @@
 import { createAsyncRoute } from "@/lib/api/asyncRoute.ts";
-import { buildReviewsOrderBy, buildReviewsWhereClause, parseReviewsQueryParams } from "@/lib/api/products-utils/reviews-query-params";
+import {
+  buildReviewsOrderBy,
+  buildReviewsWhereClause,
+  parseReviewsQueryParams,
+} from "@/lib/api/products-utils/reviews-query-params";
 import { checkServerAdmin } from "@/lib/auth/role-utils";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -17,13 +21,11 @@ export const GET = createAsyncRoute(async (request: NextRequest) => {
   const queryParams = parseReviewsQueryParams(request);
   if (queryParams instanceof NextResponse) return queryParams;
 
-  const { limit, page = 1, productId, rating, sortBy, sortOrder } = queryParams;
+  const { limit, page, productId, rating, sortBy, sortOrder } = queryParams;
 
   const where = buildReviewsWhereClause({ productId, rating });
   const orderBy = buildReviewsOrderBy({ sortBy, sortOrder });
   const totalCount = await prisma.productReview.count({ where });
-  
-
   const reviews = await prisma.productReview.findMany({
     where,
     orderBy,
@@ -46,6 +48,11 @@ export const GET = createAsyncRoute(async (request: NextRequest) => {
       },
     },
   });
+  // Compute pagination metadata
+  const totalPages = Math.max(1, Math.ceil(totalCount / limit));
 
-  return NextResponse.json({ totalCount, data: reviews }, { status: 200 });
+  return NextResponse.json(
+    { data: reviews, pagination: { page, totalPages, totalCount } },
+    { status: 200 }
+  );
 });

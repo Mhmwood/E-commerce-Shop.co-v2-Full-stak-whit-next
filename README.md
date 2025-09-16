@@ -123,6 +123,21 @@ Notes:
 
 - The project includes an admin UI under `app/(pages)/admin` (routes for products, users, reviews). Admin pages assume the authenticated user has the `ADMIN` role.
 
+### Create the first Admin
+
+If you need to promote an existing user to admin (for your first admin account):
+
+1. Run Prisma Studio:
+
+   npm run db:studio
+
+2. In Studio open the `User` model and find the user you want to promote.
+3. Change the user's `role` field from `USER` (or whatever default) to `ADMIN` and save.
+
+Once a user has the `ADMIN` role you can visit the admin UI at `/admin/users` (or the relevant admin routes) to manage users and make further changes.
+
+Tip: If you don't yet have a user in the database, register one through the app, then promote it via Studio.
+
 ## Prisma & database
 
 - The schema is in `prisma/schema.prisma`. Use the provided Prisma scripts to generate the client, run migrations and open Studio.
