@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Search from "../Navbar/components/Search";
+
 import {
   Drawer,
   DrawerContent,
@@ -8,6 +8,7 @@ import {
   DrawerClose,
 } from "../ui/drawer";
 import { useParams } from "next/navigation";
+import Search from "@/components/Navbar/components/Search";
 
 function SearchDrawer() {
   const [open, setOpen] = useState(false);
