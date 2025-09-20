@@ -14,9 +14,7 @@ import Cart from "./components/Cart";
 import Bunner from "./components/Bunner";
 import { SearchDrawer } from "../shadcn";
 
-
-
-export const Navbar = () => {
+const Navbar = () => {
   const { isAuthenticated, logout, isAdmin } = useAuth();
 
   const [openMenu, setOpenMenu] = useState(false);
@@ -222,3 +220,5 @@ export const Navbar = () => {
     </>
   );
 };
+
+export default Navbar;

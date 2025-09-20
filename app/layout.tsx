@@ -1,4 +1,4 @@
-import { Navbar } from "@components/Navbar";
+
 import "./globals.css";
 import { Providers } from "./providers";
 
@@ -6,6 +6,7 @@ import localFont from "next/font/local";
 import Footer from "@components/Footer";
 import GithubLink from "@components/GithubLink";
 import LoadingBar from "@components/ui/Loaders/Barload";
+import Navbar from "@components/Navbar";
 
 export { metadata } from "@lib/seo";
 const integral = localFont({
