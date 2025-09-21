@@ -6,10 +6,7 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const baseUrl =
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:3000"
-      : process.env.NEXTAUTH_URL;
+  const baseUrl = process.env.NEXTAUTH_URL;
 
   const product = await fetch(
     `${baseUrl}/api/products/${params.id}?select=title,description,thumbnail`

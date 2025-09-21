@@ -12,8 +12,7 @@
     "db:studio": "prisma studio",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev --name init",
-    "db:reset": "prisma migrate reset",
-    "stripe:listen": "stripe listen --forward-to localhost:3000/api/webhook"
+    "db:reset": "prisma migrate reset"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.9.1",
