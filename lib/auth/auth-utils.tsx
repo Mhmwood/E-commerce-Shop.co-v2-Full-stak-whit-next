@@ -24,13 +24,16 @@ export const signInUser = async (credentials: SignInInput) => {
 
 export const signUpUser = async (userData: SignUpInput) => {
   try {
-    const response = await fetch("/api/auth/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
+    const response = await fetch(
+      `${process.env.NEXTAUTH_URL}/api/auth/signup`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      }
+    );
 
     const data = await response.json();
 
@@ -78,13 +81,16 @@ export const updateProfile = async (profileData: {
   role?: Role;
 }) => {
   try {
-    const response = await fetch("/api/auth/profile", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(profileData),
-    });
+    const response = await fetch(
+      `${process.env.NEXTAUTH_URL}/api/auth/profile`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(profileData),
+      }
+    );
 
     const data = await response.json();
 
@@ -107,13 +113,16 @@ export const changePassword = async (passwordData: {
   confirmNewPassword: string;
 }) => {
   try {
-    const response = await fetch("/api/auth/profile", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(passwordData),
-    });
+    const response = await fetch(
+      `${process.env.NEXTAUTH_URL}/api/auth/profile`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(passwordData),
+      }
+    );
 
     const data = await response.json();
 
@@ -132,7 +141,9 @@ export const changePassword = async (passwordData: {
 
 export const getUserProfile = async () => {
   try {
-    const response = await fetch("/api/auth/profile");
+    const response = await fetch(
+      `${process.env.NEXTAUTH_URL}/api/auth/profile`
+    );
     const data = await response.json();
 
     if (!response.ok) {
@@ -151,13 +162,16 @@ export const getUserProfile = async () => {
 
 export const updateUserRole = async (userId: string, role: Role) => {
   try {
-    const response = await fetch("/api/auth/profile", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId, role }),
-    });
+    const response = await fetch(
+      `${process.env.NEXTAUTH_URL}/api/auth/profile`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId, role }),
+      }
+    );
 
     const data = await response.json();
 
@@ -187,7 +201,9 @@ export const getAllUsers = async (params?: {
     if (params?.search) searchParams.set("search", params.search);
     if (params?.role) searchParams.set("role", params.role);
 
-    const response = await fetch(`/api/admin/users?${searchParams.toString()}`);
+    const response = await fetch(
+      `${process.env.NEXTAUTH_URL}/api/admin/users?${searchParams.toString()}`
+    );
     const data = await response.json();
 
     if (!response.ok) {
@@ -205,9 +221,12 @@ export const getAllUsers = async (params?: {
 
 export const deleteUser = async (userId: string) => {
   try {
-    const response = await fetch(`/api/admin/users?userId=${userId}`, {
-      method: "DELETE",
-    });
+    const response = await fetch(
+      `${process.env.NEXTAUTH_URL}/api/admin/users?userId=${userId}`,
+      {
+        method: "DELETE",
+      }
+    );
 
     const data = await response.json();
 

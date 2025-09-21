@@ -7,7 +7,7 @@ export default function SuccessPage() {
   useEffect(() => {
     const checkCart = async () => {
       try {
-        const res = await fetch("/api/cart");
+        const res = await fetch(`${process.env.NEXTAUTH_URL}/api/cart`);
         if (!res.ok) throw new Error("Failed to fetch cart");
 
         const cartItems = await res.json();

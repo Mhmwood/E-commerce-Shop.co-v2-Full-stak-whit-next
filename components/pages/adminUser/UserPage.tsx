@@ -75,7 +75,9 @@ export default function AdminUsersPage() {
       });
 
       try {
-        const res = await fetch(`/api/admin/users?${params.toString()}`);
+        const res = await fetch(
+          `${process.env.NEXTAUTH_URL}/api/admin/users?${params.toString()}`
+        );
         if (!res.ok) throw new Error("Failed to fetch users");
         const data = await res.json();
         setUsers(data.users);
@@ -99,7 +101,7 @@ export default function AdminUsersPage() {
   const handleRoleChange = async (userId: string, newRole: string) => {
     if (!confirm("Are you sure you want to change this user's role?")) return;
 
-    const res = await fetch("/api/admin/users", {
+    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/admin/users`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId, role: newRole }),
@@ -119,9 +121,12 @@ export default function AdminUsersPage() {
   const handleDelete = async (userId: string) => {
     if (!confirm("Are you sure you want to delete this user?")) return;
 
-    const res = await fetch(`/api/admin/users?userId=${userId}`, {
-      method: "DELETE",
-    });
+    const res = await fetch(
+      `${process.env.NEXTAUTH_URL}/api/admin/users?userId=${userId}`,
+      {
+        method: "DELETE",
+      }
+    );
 
     if (res.ok) {
       setUsers((prevUsers) => prevUsers.filter((u) => u.id !== userId));

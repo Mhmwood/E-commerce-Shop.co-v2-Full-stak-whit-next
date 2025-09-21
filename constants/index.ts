@@ -1,6 +1,5 @@
 export const CategoriesList = await fetch(
   `${process.env.NEXTAUTH_URL}/api/categories`,
-
   {
     cache: "reload",
   }

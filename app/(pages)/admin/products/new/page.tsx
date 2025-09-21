@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ProductForm from "../ProductForm";
-import { ProductInput } from "@/validations/productSchema";
+import { ProductInput } from "@validations/productSchema";
 import Link from "next/link";
 
 export default function NewProductPage() {
@@ -16,11 +16,14 @@ export default function NewProductPage() {
     setError(null);
 
     try {
-      const res = await fetch("/api/admin/products", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      const res = await fetch(
+        `${process.env.NEXTAUTH_URL}/api/admin/products`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (res.ok) {
         router.push("/admin/products");

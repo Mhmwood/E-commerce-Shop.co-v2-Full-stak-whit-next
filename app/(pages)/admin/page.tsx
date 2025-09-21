@@ -15,7 +15,9 @@ export default function AdminDashboardPage() {
   const { data, isPending } = useQuery({
     queryKey: ["admin-analytics"],
     queryFn: async () => {
-      const res = await fetch("/api/admin/analytics");
+      const res = await fetch(
+        `${process.env.NEXTAUTH_URL}/api/admin/analytics`
+      );
       if (!res.ok) throw new Error("Failed to fetch analytics");
       return res.json();
     },

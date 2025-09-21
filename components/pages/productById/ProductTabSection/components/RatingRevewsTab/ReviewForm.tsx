@@ -37,24 +37,27 @@ export const ReviewForm = ({
   const mutation = useMutation({
     mutationFn: async () => {
       if (mode === "update" && reviewId) {
-        const res = await fetch(`/api/reviews/${reviewId}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            rating,
-            comment,
-            reviewerName: name,
-            productId,
-            userId,
-          }),
-        });
+        const res = await fetch(
+          `${process.env.NEXTAUTH_URL}/api/reviews/${reviewId}`,
+          {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              rating,
+              comment,
+              reviewerName: name,
+              productId,
+              userId,
+            }),
+          }
+        );
         if (!res.ok) {
           const data = await res.json();
           throw new Error(data.error || "Failed to update review");
         }
         return res.json();
       } else {
-        const res = await fetch("/api/reviews", {
+        const res = await fetch(`${process.env.NEXTAUTH_URL}/api/reviews`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

@@ -31,7 +31,9 @@ export const useProducts = (params: UseProductsParams) =>
         ? `select=${Object.keys(params.select).join(",")}`
         : "";
 
-      const res = await fetch(`/api/products?${query}&${select}`);
+      const res = await fetch(
+        `${process.env.NEXTAUTH_URL}/api/products?${query}&${select}`
+      );
 
       if (!res.ok) throw new Error("Failed to fetch products");
 
@@ -51,7 +53,7 @@ export const useProductById = (
         ? `select=${Object.keys(selectParam).join(",")}`
         : "";
 
-      const res = await fetch(`/api/products/${id}?${select}`);
+      const res = await fetch(`${process.env.NEXTAUTH_URL}/api/products/${id}?${select}`);
       if (!res.ok) throw new Error("Failed to fetch product");
       return res.json();
     },
@@ -65,7 +67,7 @@ export const useSearchProducts = (query: string, limit = 7) => {
     queryFn: async () => {
       if (!query) return [];
       const res = await fetch(
-        `/api/products?query=${encodeURIComponent(
+        `${process.env.NEXTAUTH_URL}/api/products?query=${encodeURIComponent(
           query
         )}&limit=${limit}&select=id,title,price,category,thumbnail,discountPercentage,stock`
       );

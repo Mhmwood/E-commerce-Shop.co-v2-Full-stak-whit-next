@@ -11,19 +11,12 @@ const OurHappyCustomers = () => {
   const [reviews, setReviews] = useState<ProductReview[]>([]);
 
   useEffect(() => {
-    fetch("/api/reviews")
+    fetch(`${process.env.NEXTAUTH_URL}/api/reviews`)
       .then((res) => res.json())
       .then((data) => setReviews(data));
   }, []);
 
-  
-  // const reviews = fetch("/api/reviews?limit=10&sortBy=rating&order=desc").then(
-  //   async (res) => {
-  //     const data = await res.json();
-  //     console.log();
-  //     return data;
-  //   }
-  // );
+
 
   return (
     <section className="  py-10 md:py-20    ">

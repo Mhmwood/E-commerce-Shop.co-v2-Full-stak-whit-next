@@ -29,7 +29,7 @@ const handleApplyPromo = (e: React.FormEvent) => {
       // Cart is valid, now add all items to backend cart
       const addErrors: string[] = [];
       for (const item of items) {
-        const addRes = await fetch("/api/cart", {
+        const addRes = await fetch(`${process.env.NEXTAUTH_URL}/api/cart`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -67,7 +67,7 @@ const handleApplyPromo = (e: React.FormEvent) => {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("/api/checkout", {
+      const res = await fetch(`${process.env.NEXTAUTH_URL}/api/checkout`, {
         method: "POST",
       });
       const data = await res.json();

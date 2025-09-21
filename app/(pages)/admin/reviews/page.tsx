@@ -25,7 +25,7 @@ export default function AdminReviewsPage() {
       // Fetch reviews based on current sort order and sort direction
       const limit = 10;
       const res = await fetch(
-        `/api/admin/reviews?sortBy=${sortBy}&sortOrder=${sortOrder}&limit=${limit}&page=${page}`
+        `${process.env.NEXTAUTH_URL}/api/admin/reviews?sortBy=${sortBy}&sortOrder=${sortOrder}&limit=${limit}&page=${page}`
       );
 
       if (!res.ok) throw new Error("Error fetching reviews");
@@ -64,7 +64,7 @@ export default function AdminReviewsPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this review?")) return;
     try {
-      const res = await fetch(`/api/reviews/${id}`, {
+      const res = await fetch(`${process.env.NEXTAUTH_URL}/api/reviews/${id}`, {
         method: "DELETE",
       });
 

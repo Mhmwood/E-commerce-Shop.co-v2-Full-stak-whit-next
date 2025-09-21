@@ -43,9 +43,12 @@ export default function AdminProductsPage() {
     if (!confirm("Delete this product?")) return;
     try {
       setDeletingId(id);
-      const res = await fetch(`/api/admin/products/${id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `${process.env.NEXTAUTH_URL}/api/admin/products/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (!res.ok) {
         const text = await res.text();
         throw new Error(text || "Failed to delete product");
