@@ -44,7 +44,7 @@ export default function AdminProductsPage() {
     try {
       setDeletingId(id);
       const res = await fetch(
-        `${process.env.NEXTAUTH_URL}/api/admin/products/${id}`,
+        `/api/admin/products/${id}`,
         {
           method: "DELETE",
         }

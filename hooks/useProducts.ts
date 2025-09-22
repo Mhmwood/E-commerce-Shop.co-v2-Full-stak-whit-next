@@ -32,7 +32,7 @@ export const useProducts = (params: UseProductsParams) =>
         : "";
 
       const res = await fetch(
-        `${process.env.NEXTAUTH_URL}/api/products?${query}&${select}`
+        `/api/products?${query}&${select}`
       );
 
       if (!res.ok) throw new Error("Failed to fetch products");
