@@ -1,7 +1,7 @@
 "use client";
 
 import { useCart } from "@hooks/useCart";
-import formatCurrency from "@lib/utils";
+import {formatCurrency} from "@lib/utils";
 import { LucideArrowRight, Tag } from "lucide-react";
 import { useState } from "react";
 

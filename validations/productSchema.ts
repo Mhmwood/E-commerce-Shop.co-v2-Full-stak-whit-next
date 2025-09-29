@@ -11,8 +11,8 @@ const BaseProductSchema = z.object({
     .min(3, "Title must be at least 3 characters")
     .max(20, "Title cannot exceed 20 characters"),
   description: nonEmptyString.max(
-    50,
-    "Description cannot exceed 50 characters"
+    230,
+    "Description cannot exceed 230 characters"
   ),
   price: positiveNumber,
   stock: z.number().int().nonnegative("Stock cannot be negative"),

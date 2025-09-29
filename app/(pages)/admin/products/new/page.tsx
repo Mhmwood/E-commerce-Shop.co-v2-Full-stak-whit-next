@@ -17,7 +17,7 @@ export default function NewProductPage() {
 
     try {
       const res = await fetch(
-        `${process.env.NEXTAUTH_URL}/api/admin/products`,
+        `/api/admin/products`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

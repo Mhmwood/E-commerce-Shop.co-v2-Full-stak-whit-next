@@ -33,7 +33,7 @@ export default function NewUserPage() {
     setIsLoading(true);
     setError(null);
 
-    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/admin/users`, {
+    const res = await fetch(`/api/admin/users`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),

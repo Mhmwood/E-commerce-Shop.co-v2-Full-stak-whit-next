@@ -11,7 +11,7 @@ const OurHappyCustomers = () => {
   const [reviews, setReviews] = useState<ProductReview[]>([]);
 
   useEffect(() => {
-    fetch(`${process.env.NEXTAUTH_URL}/api/reviews`)
+    fetch(`/api/reviews`)
       .then((res) => res.json())
       .then((data) => setReviews(data));
   }, []);

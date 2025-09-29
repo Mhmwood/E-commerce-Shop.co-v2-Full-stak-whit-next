@@ -38,7 +38,7 @@ export const ReviewForm = ({
     mutationFn: async () => {
       if (mode === "update" && reviewId) {
         const res = await fetch(
-          `${process.env.NEXTAUTH_URL}/api/reviews/${reviewId}`,
+          `/api/reviews/${reviewId}`,
           {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
@@ -57,7 +57,7 @@ export const ReviewForm = ({
         }
         return res.json();
       } else {
-        const res = await fetch(`${process.env.NEXTAUTH_URL}/api/reviews`, {
+        const res = await fetch(`/api/reviews`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

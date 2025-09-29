@@ -5,6 +5,11 @@ interface Props {
   params: { id: string };
 }
 
-export default function ProductDetailPage({ params }: Props) {
-  return <ProductClientView id={params.id} />;
+interface Props {
+  params: Promise<{ id: string }>;
+}
+
+export default async function ProductDetailPage({ params }: Props) {
+  const { id } = await params;
+  return <ProductClientView id={id} />;
 }

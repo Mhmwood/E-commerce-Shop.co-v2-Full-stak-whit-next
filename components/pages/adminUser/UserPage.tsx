@@ -76,7 +76,7 @@ export default function AdminUsersPage() {
 
       try {
         const res = await fetch(
-          `${process.env.NEXTAUTH_URL}/api/admin/users?${params.toString()}`
+          `/api/admin/users?${params.toString()}`
         );
         if (!res.ok) throw new Error("Failed to fetch users");
         const data = await res.json();

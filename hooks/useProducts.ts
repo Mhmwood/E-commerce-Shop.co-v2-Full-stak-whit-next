@@ -53,7 +53,7 @@ export const useProductById = (
         ? `select=${Object.keys(selectParam).join(",")}`
         : "";
 
-      const res = await fetch(`${process.env.NEXTAUTH_URL}/api/products/${id}?${select}`);
+      const res = await fetch(`/api/products/${id}?${select}`);
       if (!res.ok) throw new Error("Failed to fetch product");
       return res.json();
     },

@@ -25,7 +25,7 @@ const CardCustomersReviews = ({
 
   const deleteMutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch(`${process.env.NEXTAUTH_URL}/api/reviews/${id}`, {
+      const res = await fetch(`/api/reviews/${id}`, {
         method: "DELETE",
       });
       if (!res.ok) {

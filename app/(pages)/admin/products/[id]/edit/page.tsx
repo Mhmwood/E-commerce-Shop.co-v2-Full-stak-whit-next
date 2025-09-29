@@ -19,7 +19,7 @@ export default function EditProductPage() {
   useEffect(() => {
     const fetchProduct = async () => {
       setIsLoading(true);
-      const res = await fetch(`${process.env.NEXTAUTH_URL}/api/products/${id}`);
+      const res = await fetch(`/api/products/${id}`);
       if (res.ok) {
         const data = await res.json();
         setProduct(data);
@@ -38,7 +38,7 @@ export default function EditProductPage() {
 
     try {
       const res = await fetch(
-        `${process.env.NEXTAUTH_URL}/api/admin/products/${id}`,
+        `/api/admin/products/${id}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },

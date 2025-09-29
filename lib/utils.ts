@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { string } from "zod";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -10,8 +11,14 @@ const CURRENCY_FORMATTER = new Intl.NumberFormat("en-US", {
   style: "currency",
 });
 
-const formatCurrency = (number: number) => {
+export const formatCurrency = (number: number) => {
   return CURRENCY_FORMATTER.format(number);
 };
 
-export default formatCurrency;
+// export async function getCategories() {
+//   const res = await fetch("/api/categories", {
+//     cache: "reload",
+//   });
+//   if (!res.ok) throw new Error("Failed to fetch categories");
+//   return res.json();
+// }

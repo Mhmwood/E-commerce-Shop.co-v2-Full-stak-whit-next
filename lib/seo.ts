@@ -6,10 +6,11 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
   const baseUrl = process.env.NEXTAUTH_URL;
 
   const product = await fetch(
-    `${baseUrl}/api/products/${params.id}?select=title,description,thumbnail`
+    `${baseUrl}/api/products/${id}?select=title,description,thumbnail`
   ).then((res) => (res.ok ? res.json() : null));
 
   if (!product) return notFound();
@@ -22,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: product.title,
       description: product.description,
-      url: `${baseUrl}/product/${params.id}`,
+      url: `${baseUrl}/product/${id}`,
       images: [
         {
           url: product.thumbnail || "/default-og.png",
