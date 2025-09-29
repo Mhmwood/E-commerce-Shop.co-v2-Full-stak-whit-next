@@ -8,6 +8,7 @@ import { User } from "@prisma/client";
 import Link from "next/link";
 import { useDebounce } from "use-debounce";
 import { CircleArrowLeft } from "lucide-react";
+import { BASE_URL } from "@constants/index";
 
 type UserWithCounts = User & {
   _count: {
@@ -75,9 +76,7 @@ export default function AdminUsersPage() {
       });
 
       try {
-        const res = await fetch(
-          `/api/admin/users?${params.toString()}`
-        );
+        const res = await fetch(`/api/admin/users?${params.toString()}`);
         if (!res.ok) throw new Error("Failed to fetch users");
         const data = await res.json();
         setUsers(data.users);
@@ -101,7 +100,7 @@ export default function AdminUsersPage() {
   const handleRoleChange = async (userId: string, newRole: string) => {
     if (!confirm("Are you sure you want to change this user's role?")) return;
 
-    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/admin/users`, {
+    const res = await fetch(`${BASE_URL}/api/admin/users`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId, role: newRole }),
@@ -122,7 +121,7 @@ export default function AdminUsersPage() {
     if (!confirm("Are you sure you want to delete this user?")) return;
 
     const res = await fetch(
-      `${process.env.NEXTAUTH_URL}/api/admin/users?userId=${userId}`,
+      `${BASE_URL}/api/admin/users?BuserId=${userId}`,
       {
         method: "DELETE",
       }

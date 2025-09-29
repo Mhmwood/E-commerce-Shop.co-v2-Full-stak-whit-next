@@ -1,9 +1,9 @@
-export const CategoriesList = await fetch(
-  `https://e-commerce-shop-co-v2-full-stak-whi.vercel.app/api/categories`,
-  {
-    cache: "reload",
-  }
-).then(async (res) => res.json());
+export const BASE_URL =
+  process.env.NODE_ENV == "production" ? process.env.NEXTAUTH_URL : "";
+
+export const CategoriesList = await fetch(`${BASE_URL}/api/categories`, {
+  cache: "reload",
+}).then(async (res) => res.json());
 
 // import { getCategories } from "@lib/utils";
 
