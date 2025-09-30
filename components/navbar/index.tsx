@@ -8,7 +8,6 @@ import Search from "@components/Navbar/components/Search";
 import NavigationMenuDemo from "@components/shadcn-components/NavigationMenuDemo";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-//import { CategoriesList } from "@constants/index";
 import { useAuth } from "@hooks/useAuth";
 import Cart from "./components/Cart";
 import Bunner from "./components/Bunner";
@@ -18,12 +17,11 @@ import { getCategories } from "@lib/utils";
 const Navbar = () => {
   const { isAuthenticated, logout, isAdmin } = useAuth();
 
-
   const [openMenu, setOpenMenu] = useState(false);
-    const [category, setCategory] = useState<string[]>([]);
+  const [category, setCategory] = useState<string[]>([]);
   const pathname = usePathname();
   useEffect(() => {
-    getCategories().then(setCategory)
+    getCategories().then(setCategory);
     setOpenMenu(false);
   }, [pathname]);
 
