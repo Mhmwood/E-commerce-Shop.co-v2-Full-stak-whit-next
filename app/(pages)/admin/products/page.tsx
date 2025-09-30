@@ -36,6 +36,7 @@ export default function AdminProductsPage() {
 
   const products = data?.products || [];
   const totalPages = Math.ceil((data?.total || 0) / itemsPerPage);
+  console.log(totalPages);
   const queryClient = useQueryClient();
   const [deletingId, setDeletingId] = useState<string | null>(null);
 

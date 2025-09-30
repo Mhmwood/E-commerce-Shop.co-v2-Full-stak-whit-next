@@ -1,7 +1,7 @@
-export const BASE_URL =
-  process.env.NODE_ENV == "production" ? process.env.NEXTAUTH_URL : "";
 
-export const CategoriesList = await fetch(`${BASE_URL}/api/categories`, {
+
+// http://localhost:3000/undefined/api/products?limit=10&sortBy=price&sortOrder=desc&select=title,images,thumbnail,price,rating,discountPercentage,id
+export const CategoriesList = await fetch(`http://localhost:3000/api/categories`, {
   cache: "reload",
 }).then(async (res) => res.json());
 
