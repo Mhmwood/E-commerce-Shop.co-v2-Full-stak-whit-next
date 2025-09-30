@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { motion, AnimatePresence } from "framer-motion";
-import Search from "@components/Navbar/components/Search";
+// import Search from "@components/Navbar/components/Search";
 
 import NavigationMenuDemo from "@components/shadcn-components/NavigationMenuDemo";
 import { usePathname } from "next/navigation";
@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useAuth } from "@hooks/useAuth";
 import Cart from "./components/Cart";
 import Bunner from "./components/Bunner";
-import { SearchDrawer } from "../shadcn";
+//import { SearchDrawer } from "../shadcn";
 import { getCategories } from "@lib/utils";
 
 const Navbar = () => {
@@ -164,13 +164,13 @@ const Navbar = () => {
                   </nav>
                 </div>
 
-                <Search />
+                {/* <Search /> */}
               </div>
             </div>
 
             <div className="flex items-center    gap-4">
               <div className=" lg:hidden   ">
-                <SearchDrawer />
+                {/* <SearchDrawer /> */}
               </div>
               <div className=" flex items-center gap-4">
                 <Cart />
