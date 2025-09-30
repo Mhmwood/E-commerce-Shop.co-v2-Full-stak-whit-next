@@ -17,7 +17,8 @@ export const formatCurrency = (number: number) => {
 export const BASE_URL =
   typeof window !== "undefined"
     ? "" // client-side relative URL
-    : process.env.NEXTAUTH_URL || "http://localhost:3000";
+    : process.env.NEXTAUTH_URL ||
+      "https://e-commerce-shop-co-v2-full-stak-whi.vercel.app";
 
 
 export const getCategories = async () => {
