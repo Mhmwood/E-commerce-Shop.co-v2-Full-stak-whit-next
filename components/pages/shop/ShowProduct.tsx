@@ -10,6 +10,7 @@ import { SelectDemo } from "@components/shadcn-components/SelectDemo";
 import { Product } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
 import { useProducts } from "@hooks/useProducts";
+import { set } from "zod";
 
 export default function ShowProduct({
   category,
@@ -50,9 +51,10 @@ export default function ShowProduct({
   useEffect(() => {
     setCurrentPage(1);
     setOpenMenu(false);
+    setSortBy(sortBy);
   }, [
     category,
-    sortByState,
+    sortBy,
     order,
     searchParams.get("minPrice"),
     searchParams.get("maxPrice"),
