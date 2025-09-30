@@ -17,7 +17,7 @@ import {
   SelectItem,
   SelectValue,
 } from "@components/ui/select";
-import { CategoriesList } from "@constants/index";
+//import { CategoriesList } from "@constants/index";
 import { CirclePlus } from "lucide-react";
 import {
   Carousel,
@@ -27,6 +27,7 @@ import {
   CarouselPrevious,
 } from "@components/ui/carousel";
 import { Trash, Edit } from "lucide-react";
+import { getCategories } from "@lib/utils";
 
 interface ProductFormProps {
   onSubmit: (data: ProductInput) => Promise<void>;
@@ -90,17 +91,18 @@ const ProductForm: React.FC<ProductFormProps> = ({
   const [images, setImages] = useState<(File | null)[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [imageErrors, setImageErrors] = useState<string[]>([]);
+  const [category, setCategory] = useState<string[]>([]);
 
   const createdBlobUrls = useRef<string[]>([]);
   const originalImageUrls = useRef<(string | null)[]>([]);
 
- 
   useEffect(() => {
+    getCategories().then(setCategory);
     if (product?.images && product.images.length > 0) {
       setImagePreviews(product.images);
       setImages(product.images.map(() => null));
       setImageErrors(product.images.map(() => ""));
-   
+
       originalImageUrls.current = product.images.slice();
     }
   }, [product]);
@@ -177,7 +179,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
     setSubmitting(true);
     const finalImageUrls: string[] = [];
 
-
     for (let i = 0; i < images.length; i++) {
       const image = images[i];
       const originalUrl = originalImageUrls.current[i] ?? null;
@@ -251,9 +252,9 @@ const ProductForm: React.FC<ProductFormProps> = ({
   const [showOptional, setShowOptional] = useState(false);
   const [customCategory, setCustomCategory] = useState("");
   const categoryValue = watch("category") || "";
-  const isCustom =
+  const isCustom = 
     categoryValue === "__custom__" ||
-    (!CategoriesList.includes(categoryValue) && categoryValue !== "");
+    (!category.includes(categoryValue) && categoryValue !== "");
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-10">
       {/* Fullscreen submitting overlay */}
@@ -488,7 +489,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent>
-                {CategoriesList.map((cat: string) => (
+                {category.map((cat: string) => (
                   <SelectItem key={cat} value={cat}>
                     {cat}
                   </SelectItem>

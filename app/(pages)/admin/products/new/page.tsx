@@ -16,14 +16,11 @@ export default function NewProductPage() {
     setError(null);
 
     try {
-      const res = await fetch(
-        `/api/admin/products`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        }
-      );
+      const res = await fetch(`/api/admin/products`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
       if (res.ok) {
         router.push("/admin/products");

@@ -8,18 +8,22 @@ import Search from "@components/Navbar/components/Search";
 import NavigationMenuDemo from "@components/shadcn-components/NavigationMenuDemo";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { CategoriesList } from "@constants/index";
+//import { CategoriesList } from "@constants/index";
 import { useAuth } from "@hooks/useAuth";
 import Cart from "./components/Cart";
 import Bunner from "./components/Bunner";
 import { SearchDrawer } from "../shadcn";
+import { getCategories } from "@lib/utils";
 
 const Navbar = () => {
   const { isAuthenticated, logout, isAdmin } = useAuth();
 
+
   const [openMenu, setOpenMenu] = useState(false);
+    const [category, setCategory] = useState<string[]>([]);
   const pathname = usePathname();
   useEffect(() => {
+    getCategories().then(setCategory)
     setOpenMenu(false);
   }, [pathname]);
 
@@ -85,7 +89,7 @@ const Navbar = () => {
                       </li>
                     )}
                     <li>
-                      <NavigationMenuDemo categories={CategoriesList} />
+                      <NavigationMenuDemo categories={category} />
                     </li>
 
                     <li>
@@ -132,7 +136,7 @@ const Navbar = () => {
                         </li>
                       )}
                       <li>
-                        <NavigationMenuDemo categories={CategoriesList} />
+                        <NavigationMenuDemo categories={category} />
                       </li>
 
                       <li>

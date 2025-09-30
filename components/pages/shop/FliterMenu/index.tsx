@@ -1,9 +1,15 @@
-
-import { CategoriesList } from "@constants/index";
+"use client";
+//import { CategoriesList } from "@constants/index";
 import PriseSelecter from "./components/PriseSelecter";
 import CollapsibleMenu from "./components/CollapsibleMenu";
+import { useEffect, useState } from "react";
+import { getCategories } from "@lib/utils";
 
 const FliterMenu = () => {
+  const [category, setCategory] = useState<string[]>([]);
+  useEffect(() => {
+    getCategories().then(setCategory);
+  }, []);
   return (
     <div className=" bg-white border w-full rounded-3xl space-y-5 px-5 py-4   *:border-b *:border-gray-300 *:pb-6 ">
       <div className=" justify-between items-center hidden lg:flex">
@@ -24,7 +30,7 @@ const FliterMenu = () => {
         </svg>
       </div>
       <div>
-        <CollapsibleMenu categories={CategoriesList} />
+        <CollapsibleMenu categories={category} />
       </div>
 
       <PriseSelecter />

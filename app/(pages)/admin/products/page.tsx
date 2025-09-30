@@ -10,7 +10,8 @@ import Image from "next/image";
 
 import PaginationCustom from "@components/shadcn-components/PaginationCustom";
 import { useProducts } from "@hooks/useProducts";
-import { CategoriesList } from "@constants/index";
+import { getCategories } from "@lib/utils";
+// import { CategoriesList } from "@constants/index";
 
 export default function AdminProductsPage() {
   type ProductItem = {
@@ -22,6 +23,7 @@ export default function AdminProductsPage() {
   };
 
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [category, setCategory] = useState([]);
   const [sortOrder, setSortOrder] = useState("asc");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -36,7 +38,6 @@ export default function AdminProductsPage() {
 
   const products = data?.products || [];
   const totalPages = Math.ceil((data?.total || 0) / itemsPerPage);
-  console.log(totalPages);
   const queryClient = useQueryClient();
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -63,6 +64,7 @@ export default function AdminProductsPage() {
   };
 
   useEffect(() => {
+    getCategories().then(setCategory);
     setCurrentPage(1);
   }, [selectedCategory, sortOrder]);
 
@@ -97,7 +99,7 @@ export default function AdminProductsPage() {
               className="w-full md:w-1/3 bg-secondary placeholder:text-gray-400 border border-gray-700 rounded-lg shadow-sm text-primary px-4 py-2 focus:ring-2 focus:ring-primary/40 focus:outline-none"
             >
               <option value="">All Categories</option>
-              {CategoriesList.map((category: string) => (
+              {category.map((category: string) => (
                 <option key={category} value={category}>
                   {category}
                 </option>
