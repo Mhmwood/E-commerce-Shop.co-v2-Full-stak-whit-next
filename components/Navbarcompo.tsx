@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import NavigationMenuDemo from "@components/shadcn-components/NavigationMenuDemo";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
 import { useAuth } from "@hooks/useAuth";
 import { getCategories } from "@lib/utils";
-import Bunner from "./Navbar/components/Bunner";
-import { SearchDrawer } from "./shadcn";
-import Cart from "./Navbar/components/Cart";
-import SearchComponent from "./Navbar/components/SearchComponent";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import Bunner from "./Navbar/navComponents/Bunner";
+import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
+import { NavigationMenuDemo } from "./shadcn";
+import SearchComponent from "./Navbar/navComponents/SearchComponent";
+import Cart from "./Navbar/navComponents/Cart";
+
 
 const Navbarcompo = () => {
   const { isAuthenticated, logout, isAdmin } = useAuth();
@@ -168,7 +168,7 @@ const Navbarcompo = () => {
 
             <div className="flex items-center    gap-4">
               <div className=" lg:hidden   ">
-                <SearchDrawer />
+                {/* <SearchDrawer /> */}
               </div>
               <div className=" flex items-center gap-4">
                 <Cart />

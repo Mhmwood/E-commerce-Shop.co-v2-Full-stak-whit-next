@@ -8,7 +8,7 @@ import {
   DrawerClose,
 } from "../ui/drawer";
 import { useParams } from "next/navigation";
-import SearchComponent from "@components/Navbar/components/SearchComponent";
+import SearchComponent from "@components/Navbar/navComponents/SearchComponent";
 
 function SearchDrawer() {
   const [open, setOpen] = useState(false);
