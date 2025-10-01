@@ -5,7 +5,7 @@ import localFont from "next/font/local";
 import Footer from "@components/Footer";
 import GithubLink from "@components/GithubLink";
 import LoadingBar from "@components/ui/Loaders/Barload";
-import Navbar from "@components/Navbar/index";
+import Navbar from "@components/NavbarCom";
 
 export { metadata } from "@lib/seo";
 const integral = localFont({
