@@ -9,7 +9,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { NavigationMenuDemo } from "./shadcn";
 import SearchComponent from "./SearchComponent";
-import Cart from "./Navbar/navComponents/Cart";
+import Cart from "./Cart";
 import Bunner from "./Bunner";
 
 const Navbarcompo = () => {
