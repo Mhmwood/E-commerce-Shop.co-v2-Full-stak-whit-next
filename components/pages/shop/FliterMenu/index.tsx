@@ -1,5 +1,5 @@
 "use client";
-//import { CategoriesList } from "@constants/index";
+
 import PriseSelecter from "./components/PriseSelecter";
 import CollapsibleMenu from "./components/CollapsibleMenu";
 import { useEffect, useState } from "react";

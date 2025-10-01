@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useCart } from "@hooks/useCart";
 
-const Search = () => {
+const SearchComponent = () => {
   const [query, setQuery] = useState<string>("");
   const [results, setResults] = useState<Product[]>([]);
 
@@ -119,4 +119,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default SearchComponent;

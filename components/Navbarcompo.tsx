@@ -2,17 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Search from "@components/Navbar/components/SearchComponent";
 import NavigationMenuDemo from "@components/shadcn-components/NavigationMenuDemo";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@hooks/useAuth";
-import Cart from "./components/Cart";
-import Bunner from "./components/Bunner";
-import { SearchDrawer } from "../shadcn";
 import { getCategories } from "@lib/utils";
+import Bunner from "./Navbar/components/Bunner";
+import { SearchDrawer } from "./shadcn";
+import Cart from "./Navbar/components/Cart";
+import SearchComponent from "./Navbar/components/SearchComponent";
 
-const Navbar = () => {
+const Navbarcompo = () => {
   const { isAuthenticated, logout, isAdmin } = useAuth();
 
   const [openMenu, setOpenMenu] = useState(false);
@@ -162,7 +162,7 @@ const Navbar = () => {
                   </nav>
                 </div>
 
-                <Search />
+                <SearchComponent />
               </div>
             </div>
 
@@ -221,4 +221,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default Navbarcompo;

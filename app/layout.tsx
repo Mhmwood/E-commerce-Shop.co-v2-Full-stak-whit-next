@@ -1,4 +1,3 @@
-
 import "./globals.css";
 import { Providers } from "./providers";
 
@@ -6,8 +5,8 @@ import localFont from "next/font/local";
 import Footer from "@components/Footer";
 import GithubLink from "@components/GithubLink";
 import LoadingBar from "@components/ui/Loaders/Barload";
-import Navbar from "@components/Navbar";
-
+// import Navbar from "@components/Navbar";
+import Navbarcompo from "@components/Navbarcompo";
 
 export { metadata } from "@lib/seo";
 const integral = localFont({
@@ -30,7 +29,8 @@ export default function RootLayout({
     <html lang="en" className={`${integral.variable} ${satoshi.variable}`}>
       <body className="font-satoshi bg-background text-primary relative ">
         <Providers>
-          <Navbar />
+          {/* <Navbar /> */}
+          <Navbarcompo/>
           <LoadingBar />
           {children}
           <Footer />
