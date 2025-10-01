@@ -4,13 +4,13 @@ import { useAuth } from "@hooks/useAuth";
 import { getCategories } from "@lib/utils";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import Bunner from "./Navbar/navComponents/Bunner";
+
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { NavigationMenuDemo } from "./shadcn";
-import SearchComponent from "./Navbar/navComponents/SearchComponent";
+import SearchComponent from "./SearchComponent";
 import Cart from "./Navbar/navComponents/Cart";
-
+import Bunner from "./Bunner";
 
 const Navbarcompo = () => {
   const { isAuthenticated, logout, isAdmin } = useAuth();
@@ -167,9 +167,7 @@ const Navbarcompo = () => {
             </div>
 
             <div className="flex items-center    gap-4">
-              <div className=" lg:hidden   ">
-                {/* <SearchDrawer /> */}
-              </div>
+              <div className=" lg:hidden   ">{/* <SearchDrawer /> */}</div>
               <div className=" flex items-center gap-4">
                 <Cart />
 
