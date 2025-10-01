@@ -14,6 +14,10 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        console.log("******************************");
+        console.table(credentials);
+        console.log("******************************");
+
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Email and password are required");
         }
@@ -59,7 +63,7 @@ export const authOptions: NextAuthOptions = {
     error: "/auth/error",
   },
   debug: process.env.NODE_ENV === "development",
-  callbacks: {
+  callbacks: { 
     async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
