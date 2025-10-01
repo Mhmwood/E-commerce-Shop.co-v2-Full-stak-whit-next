@@ -10,8 +10,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { NavigationMenuDemo } from "./shadcn";
 import SearchComponent from "./SearchComponent";
 import Cart from "./Cart";
-import { Bunner } from "./Navbar/navComponents";
-
+import { Bunner } from "@components/Navbar/navComponents";
 
 const Navbarcompo = () => {
   const { isAuthenticated, logout, isAdmin } = useAuth();
