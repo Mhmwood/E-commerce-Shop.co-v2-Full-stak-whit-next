@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@hooks/useAuth";
 import Cart from "../Cart";
-import Bunner from "../Bunner";
+import Bunner from "./navComponents/Bunner";
 import { SearchDrawer } from "../shadcn";
 import { getCategories } from "@lib/utils";
 
