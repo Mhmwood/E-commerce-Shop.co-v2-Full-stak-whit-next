@@ -8,8 +8,7 @@ import {
   DrawerClose,
 } from "../ui/drawer";
 import { useParams } from "next/navigation";
-// import SearchComponent from "@components/Navbar/Search";
-
+import SearchComponent from "@components/NavbarCom/components/Search";
 
 function SearchDrawer() {
   const [open, setOpen] = useState(false);
@@ -64,7 +63,7 @@ function SearchDrawer() {
         </div>
 
         <div className="mx-auto w-full h-[calc(92vh-56px)] overflow-auto px-4 py-3 sm:h-auto sm:max-h-[70vh]">
-          {/* <SearchComponent /> */}
+          <SearchComponent />
         </div>
       </DrawerContent>
     </Drawer>
