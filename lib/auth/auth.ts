@@ -14,9 +14,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        console.log("******************************");
-        console.table(credentials);
-        console.log("******************************");
+   
 
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Email and password are required");
