@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Search from "@components/SearchComponent";
+import Search from "./Search";
 import NavigationMenuDemo from "@components/shadcn-components/NavigationMenuDemo";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@hooks/useAuth";
-import Cart from "../Cart";
-import Bunner from "./navComponents/Bunner";
+import Cart from "./Cart";
+import Bunner from "./Bunner";
 import { SearchDrawer } from "../shadcn";
 import { getCategories } from "@lib/utils";
 
