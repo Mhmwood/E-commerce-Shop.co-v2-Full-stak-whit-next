@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { BASE_URL } from "./utils";
 
 interface Props {
   params: { id: string };
@@ -7,10 +8,9 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const baseUrl = process.env.NEXTAUTH_URL;
 
   const product = await fetch(
-    `${baseUrl}/api/products/${id}?select=title,description,thumbnail`
+    `${BASE_URL}/api/products/${id}?select=title,description,thumbnail`
   ).then((res) => (res.ok ? res.json() : null));
 
   if (!product) return notFound();
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: product.title,
       description: product.description,
-      url: `${baseUrl}/product/${id}`,
+      url: `${BASE_URL}/product/${id}`,
       images: [
         {
           url: product.thumbnail || "/default-og.png",
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://shop.co"),
+  metadataBase: new URL(process.env.NEXTAUTH_URL!),
   alternates: {
     canonical: "/",
   },
