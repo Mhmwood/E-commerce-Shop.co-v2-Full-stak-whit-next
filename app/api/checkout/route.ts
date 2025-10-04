@@ -51,10 +51,7 @@ export async function POST(request: Request) {
         userId: session.user.id.toString(),
       },
     });
-    console.log(
-      "Creating Stripe session with metadata userId:",
-      session.user.id
-    );
+  
 
     return NextResponse.json({ url: sessionStripe.url });
   } catch (error) {

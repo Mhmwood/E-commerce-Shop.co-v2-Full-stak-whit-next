@@ -1,4 +1,4 @@
-import { createAsyncRoute } from "@lib/api/asyncRoute.ts";
+codimport { createAsyncRoute } from "@lib/api/asyncRoute.ts";
 import { prisma } from "@lib/prisma";
 import { SignUpSchema } from "@validations/authSchema";
 import { NextRequest, NextResponse } from "next/server";

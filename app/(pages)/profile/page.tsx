@@ -13,8 +13,10 @@ const ProfilePage = () => {
     updateUserProfile,
     changeUserPassword,
     loading: authLoading,
-    error: authError,
+    errorMsg: authError,
   } = useAuth();
+
+ 
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

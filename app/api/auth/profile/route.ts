@@ -16,7 +16,7 @@ import { checkServerAdmin } from "@lib/auth/role-utils";
 export const GET = createAsyncRoute(async (request: NextRequest) => {
   const session = await getServerSession(authOptions);
 
-  console.log("sessin", session);
+ 
 
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

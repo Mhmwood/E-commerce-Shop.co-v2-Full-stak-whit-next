@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function SignInPage() {
-  const { login, error, loading } = useAuth();
+  const { login, errorMsg, loading } = useAuth();
   const router = useRouter();
 
   const [email, setEmail] = useState("");
@@ -19,6 +19,8 @@ export default function SignInPage() {
     }
   };
 
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const devhelper = (forAdmin: boolean = false) => {
     if (forAdmin) {
       setEmail(process.env.NEXT_PUBLIC_ADMIN_EMAIL || "name@example.com");
@@ -42,7 +44,7 @@ export default function SignInPage() {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-4 py-3 px-2 rounded-lg focus:outline-1 focus:outline-gray-700"
+          className="w-full mb-4 py-3 px-2 rounded-lg  outline-1  outline-gray-400 focus:outline-gray-700"
           required
         />
         <input
@@ -50,15 +52,21 @@ export default function SignInPage() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-6  py-3 px-2 rounded-lg focus:outline-1 focus:outline-gray-700"
+          className="w-full mb-6  py-3 px-2 rounded-lg outline-1  outline-gray-400 focus:outline-gray-700"
           required
         />
         <button
           type="submit"
           className="w-full  px-4 py-2  font-bold rounded-3xl p-1 cursor-pointer border border-gray-700 hover:bg-primary hover:text-white transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary/40"
         >
-          {loading ? "Sign In ..." : error ? "Error" : "Sign In "}
+          {loading ? "Sign In ..." : errorMsg ? "failed" : "Sign In "}
         </button>
+
+        {errorMsg && (
+          <div className="mt-4 text-red-400 text-sm text-center">
+            {errorMsg}
+          </div>
+        )}
         {/* {this just helpers for dev} */}
 
         {/* <div className="flex gap-2 mt-4">

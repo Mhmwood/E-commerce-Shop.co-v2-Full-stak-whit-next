@@ -11,8 +11,6 @@ export async function deleteImage(Url: string, bucket: string) {
       console.error("Error deleting image:", error.message);
       throw new Error(error.message);
     }
-
-    console.log("Deleted:", path);
     return true;
   } catch (err) {
     console.error("Delete failed:", err);

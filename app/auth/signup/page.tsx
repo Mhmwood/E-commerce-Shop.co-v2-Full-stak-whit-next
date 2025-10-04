@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function SignUpPage() {
-  const { register, error, loading } = useAuth();
+  const { register, errorMsg, loading } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -171,8 +171,8 @@ export default function SignUpPage() {
             )}
           </div>
 
-          {error && (
-            <div className="mb-4 text-red-400 text-sm text-center">{error}</div>
+          {errorMsg && (
+            <div className="mb-4 text-red-400 text-sm text-center">{errorMsg}</div>
           )}
 
           <button

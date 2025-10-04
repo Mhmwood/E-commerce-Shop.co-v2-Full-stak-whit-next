@@ -16,7 +16,7 @@ export const useAuth = () => {
   const { data: session, status, update } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false);
   const [cachedSession, setCachedSession] = useState<typeof session>(null);
 
@@ -47,7 +47,7 @@ export const useAuth = () => {
 
   const login = async (credentials: SignInInput) => {
     setLoading(true);
-    setError(null);
+    setErrorMsg(null);
     try {
       const result = await signIn("credentials", {
         email: credentials.email,
@@ -55,7 +55,9 @@ export const useAuth = () => {
         redirect: false,
       });
       if (result?.error) {
-        setError(result.error);
+        setErrorMsg(
+          result.status == 401 ? "Invalid email or password" : result.error
+        );
         return { success: false, error: result.error };
       }
       await update();
@@ -63,7 +65,7 @@ export const useAuth = () => {
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Sign in failed";
-      setError(errorMessage);
+      setErrorMsg(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
       setLoading(false);
@@ -72,11 +74,11 @@ export const useAuth = () => {
 
   const register = async (userData: SignUpInput) => {
     setLoading(true);
-    setError(null);
+    setErrorMsg(null);
     try {
       const result = await signUpUser(userData);
       if (!result.success) {
-        setError(result.error || null);
+        setErrorMsg(result.error || null);
         return result;
       }
       const signInResult = await signIn("credentials", {
@@ -86,7 +88,7 @@ export const useAuth = () => {
         role: "USER",
       });
       if (signInResult?.error) {
-        setError(signInResult.error);
+        setErrorMsg(signInResult.error);
         return { success: false, error: signInResult.error };
       }
       await update();
@@ -94,7 +96,7 @@ export const useAuth = () => {
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Sign up failed";
-      setError(errorMessage);
+      setErrorMsg(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
       setLoading(false);
@@ -103,18 +105,18 @@ export const useAuth = () => {
 
   const logout = async () => {
     setLoading(true);
-    setError(null);
+    setErrorMsg(null);
     try {
       await signOut({ redirect: false });
       localStorage.removeItem("session");
-  setCachedSession(null);
-  router.replace("/");
+      setCachedSession(null);
+      router.replace("/");
 
       return { success: true };
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Sign out failed";
-      setError(errorMessage);
+      setErrorMsg(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
       setLoading(false);
@@ -128,13 +130,13 @@ export const useAuth = () => {
     role?: Role;
   }) => {
     setLoading(true);
-    setError(null);
+    setErrorMsg(null);
 
     try {
       const result = await updateProfile(profileData);
 
       if (!result.success) {
-        setError(result.error || null);
+        setErrorMsg(result.error || null);
         return result;
       }
 
@@ -150,7 +152,7 @@ export const useAuth = () => {
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Profile update failed";
-      setError(errorMessage);
+      setErrorMsg(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
       setLoading(false);
@@ -162,13 +164,13 @@ export const useAuth = () => {
     confirmNewPassword: string;
   }) => {
     setLoading(true);
-    setError(null);
+    setErrorMsg(null);
 
     try {
       const result = await changePassword(passwordData);
 
       if (!result.success) {
-        setError(result.error || null);
+        setErrorMsg(result.error || null);
         return result;
       }
 
@@ -176,7 +178,7 @@ export const useAuth = () => {
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Password change failed";
-      setError(errorMessage);
+      setErrorMsg(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
       setLoading(false);
@@ -184,13 +186,13 @@ export const useAuth = () => {
   };
   const getUserProfileData = async () => {
     setLoading(true);
-    setError(null);
+    setErrorMsg(null);
 
     try {
       const result = await getUserProfile();
 
       if (!result.success) {
-        setError(result.error || "Failed to get profile");
+        setErrorMsg(result.error || "Failed to get profile");
         return result;
       }
 
@@ -198,15 +200,11 @@ export const useAuth = () => {
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to get profile";
-      setError(errorMessage);
+      setErrorMsg(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
       setLoading(false);
     }
-  };
-
-  const clearError = () => {
-    setError(null);
   };
 
   return {
@@ -215,7 +213,7 @@ export const useAuth = () => {
     isAuthenticated,
     isLoading,
     loading,
-    error,
+    errorMsg,
     userRole,
 
     // Role-based checks
@@ -229,6 +227,5 @@ export const useAuth = () => {
     updateUserProfile,
     changeUserPassword,
     getUserProfileData,
-    clearError,
   };
 };

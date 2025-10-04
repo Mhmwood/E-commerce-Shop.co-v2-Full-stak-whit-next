@@ -28,7 +28,6 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
 
   const validation = CreateReviewSchema.safeParse(rawData);
   if (!validation.success) {
-    console.log(validation.error.issues);
     return NextResponse.json(
       { error: "Validation failed", details: validation.error.flatten() },
       { status: 400 }

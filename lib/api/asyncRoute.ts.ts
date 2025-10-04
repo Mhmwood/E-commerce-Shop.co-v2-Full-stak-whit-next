@@ -15,7 +15,7 @@ export const createAsyncRoute = (
       const params = context?.params ? await context.params : undefined;
       return await handler(request, params);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       const handledError = handlePrismaError(error);
       return NextResponse.json(handledError, {
         status: handledError.status || 500,

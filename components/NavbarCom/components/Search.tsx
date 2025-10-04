@@ -28,7 +28,7 @@ const SearchComponent = () => {
   };
 
   const handleAddToCart = (product: Product) => {
-    console.log(product);
+
     addItem(
       {
         id: String(product.id),
