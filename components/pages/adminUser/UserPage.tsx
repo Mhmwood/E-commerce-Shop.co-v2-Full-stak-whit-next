@@ -4,11 +4,12 @@ import { useState, useEffect, useCallback } from "react";
 import PaginationCustom from "@components/shadcn-components/PaginationCustom";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { User } from "@prisma/client";
+import { Role, User } from "@prisma/client";
 import Link from "next/link";
 import { useDebounce } from "use-debounce";
 import { CircleArrowLeft } from "lucide-react";
-
+import { useAuth } from "@hooks/useAuth";
+import { getAllUsers } from "@lib/auth/auth-utils"; // Add this import
 
 type UserWithCounts = User & {
   _count: {
@@ -48,6 +49,8 @@ export default function AdminUsersPage() {
   const [roleFilter, setRoleFilter] = useState(searchParams.get("role") || "");
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500);
 
+  const { updateUserRole, deleteUser } = useAuth();
+
   const updateURL = useCallback(() => {
     const params = new URLSearchParams(searchParams);
     params.set("page", pagination.page.toString());
@@ -68,19 +71,20 @@ export default function AdminUsersPage() {
     const fetchUsers = async () => {
       setIsLoading(true);
       setError(null);
-      const params = new URLSearchParams({
-        page: searchParams.get("page") || "1",
-        search: searchParams.get("search") || "",
-        role: searchParams.get("role") || "",
-        limit: "10",
-      });
 
       try {
-        const res = await fetch(`/api/admin/users?${params.toString()}`);
-        if (!res.ok) throw new Error("Failed to fetch users");
-        const data = await res.json();
-        setUsers(data.users);
-        setPagination(data.pagination);
+        const result = await getAllUsers({
+          page: Number(searchParams.get("page")) || 1,
+          search: searchParams.get("search") || "",
+          role: searchParams.get("role") || "",
+          limit: 10,
+        });
+
+        if (!result.success)
+          throw new Error(result.error || "Failed to fetch users");
+
+        setUsers(result.data.users);
+        setPagination(result.data.pagination);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "An unknown error occurred"
@@ -97,41 +101,27 @@ export default function AdminUsersPage() {
     updateURL();
   }, [pagination.page, debouncedSearchTerm, roleFilter, updateURL]);
 
-  const handleRoleChange = async (userId: string, newRole: string) => {
+  const handleRoleChange = async (userId: string, newRole: Role) => {
     if (!confirm("Are you sure you want to change this user's role?")) return;
 
-    const res = await fetch(`/api/admin/users`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, role: newRole }),
-    });
-
-    if (res.ok) {
+    const result = await updateUserRole(userId, newRole);
+    if (result.success) {
       setUsers(
-        users.map((u) =>
-          u.id === userId ? { ...u, role: newRole as "USER" | "ADMIN" } : u
-        )
+        users.map((u) => (u.id === userId ? { ...u, role: newRole } : u))
       );
     } else {
-      alert("Failed to update role");
+      alert(result.error || "Failed to update role");
     }
   };
 
   const handleDelete = async (userId: string) => {
     if (!confirm("Are you sure you want to delete this user?")) return;
 
-    const res = await fetch(
-      `/api/admin/users?BuserId=${userId}`,
-      {
-        method: "DELETE",
-      }
-    );
-
-    if (res.ok) {
+    const result = await deleteUser(userId);
+    if (result.success) {
       setUsers((prevUsers) => prevUsers.filter((u) => u.id !== userId));
     } else {
-      const data = await res.json();
-      alert(`Failed to delete user: ${data.error}`);
+      alert(result.error || "Failed to delete user");
     }
   };
 

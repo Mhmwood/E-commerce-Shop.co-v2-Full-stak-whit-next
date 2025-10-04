@@ -1,27 +1,6 @@
-import { signIn, signOut, getSession } from "next-auth/react";
-import { SignInInput, SignUpInput, Role } from "@validations/authSchema";
+import { SignUpInput, Role } from "@validations/authSchema";
 import { BASE_URL } from "@lib/utils";
 
-export const signInUser = async (credentials: SignInInput) => {
-  try {
-    const result = await signIn("credentials", {
-      email: credentials.email,
-      password: credentials.password,
-      redirect: false,
-    });
-
-    if (result?.error) {
-      throw new Error(result.error);
-    }
-
-    return { success: true, data: result };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Sign in failed",
-    };
-  }
-};
 
 export const signUpUser = async (userData: SignUpInput) => {
   try {
@@ -51,29 +30,6 @@ export const signUpUser = async (userData: SignUpInput) => {
   }
 };
 
-export const signOutUser = async () => {
-  try {
-    await signOut({ redirect: false });
-    return { success: true };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Sign out failed",
-    };
-  }
-};
-
-export const getCurrentSession = async () => {
-  try {
-    const session = await getSession();
-    return { success: true, data: session };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Failed to get session",
-    };
-  }
-};
 
 export const updateProfile = async (profileData: {
   name?: string;
@@ -134,28 +90,12 @@ export const changePassword = async (passwordData: {
   }
 };
 
-export const getUserProfile = async () => {
-  try {
-    const response = await fetch(`${BASE_URL}/api/auth/profile`);
-    const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error(data.error || "Failed to get profile");
-    }
-
-    return { success: true, data };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Failed to get profile",
-    };
-  }
-};
 
 
 export const updateUserRole = async (userId: string, role: Role) => {
   try {
-    const response = await fetch(`${BASE_URL}/api/auth/profile`, {
+    const response = await fetch(`${BASE_URL}/api/admin/users`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

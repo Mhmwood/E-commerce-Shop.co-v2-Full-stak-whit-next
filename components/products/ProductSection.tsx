@@ -14,6 +14,7 @@ interface ProductSectionProps {
   sortBy?: keyof Product;
   order?: "asc" | "desc";
   limit?: number;
+  productId?: string;
 }
 
 const ProductSection: React.FC<ProductSectionProps> = ({
@@ -22,6 +23,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({
   sortBy,
   order,
   limit = 10,
+  productId,
 }) => {
   const { data, isPending, isError, error } = useProducts({
     category: category || undefined,
@@ -39,6 +41,16 @@ const ProductSection: React.FC<ProductSectionProps> = ({
     },
   });
 
+  const Products = () => {
+    if (productId && data?.products) {
+      return data.products.filter(
+        (product: Product) => product.id !== productId
+      );
+    }
+
+    return data?.products ;
+  };
+
   const router = useRouter();
 
   return (
@@ -53,7 +65,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({
         ) : (
           <>
             <h2 className="text-4xl font-extrabold font-integral">{title}</h2>
-            <ProductList products={data.products} />
+            <ProductList products={Products()} />
             <div className="flex space-x-4">
               <button
                 onClick={() =>

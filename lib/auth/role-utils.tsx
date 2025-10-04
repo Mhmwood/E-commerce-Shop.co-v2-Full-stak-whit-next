@@ -58,29 +58,3 @@ export const checkClientRole = (
 export const checkClientAdmin = (userRole: Role | undefined) => {
   return checkClientRole(userRole, "ADMIN");
 };
-
-export const withRoleProtection = (requiredRole: Role = "USER") => {
-  return async () => {
-    const { hasAccess, error } = await checkServerRole(requiredRole);
-
-    if (!hasAccess) {
-      return new Response(JSON.stringify({ error: error || "Access denied" }), {
-        status: 403,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    return null;
-  };
-};
-
-export const withAdminProtection = () => {
-  return withRoleProtection("ADMIN");
-};
-
-export interface RoleBasedProps {
-  userRole?: Role;
-  requiredRole?: Role;
-  fallback?: React.ReactNode;
-  children: React.ReactNode;
-}

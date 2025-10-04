@@ -8,7 +8,8 @@ import {
   signUpUser,
   updateProfile,
   changePassword,
-  getUserProfile,
+  deleteUser as deleteUserApi,
+  updateUserRole as updateUserRoleApi,
 } from "@lib/auth/auth-utils";
 import { checkClientAdmin, checkClientRole } from "@lib/auth/role-utils";
 
@@ -184,22 +185,41 @@ export const useAuth = () => {
       setLoading(false);
     }
   };
-  const getUserProfileData = async () => {
+
+  // Add to useAuth
+  const updateUserRole = async (userId: string, role: Role) => {
     setLoading(true);
     setErrorMsg(null);
-
     try {
-      const result = await getUserProfile();
-
+      const result = await updateUserRoleApi(userId, role);
       if (!result.success) {
-        setErrorMsg(result.error || "Failed to get profile");
+        setErrorMsg(result.error || null);
         return result;
       }
-
       return result;
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "Failed to get profile";
+        err instanceof Error ? err.message : "Role update failed";
+      setErrorMsg(errorMessage);
+      return { success: false, error: errorMessage };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteUser = async (userId: string) => {
+    setLoading(true);
+    setErrorMsg(null);
+    try {
+      const result = await deleteUserApi(userId);
+      if (!result.success) {
+        setErrorMsg(result.error || null);
+        return result;
+      }
+      return result;
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to delete user";
       setErrorMsg(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
@@ -226,6 +246,7 @@ export const useAuth = () => {
     logout,
     updateUserProfile,
     changeUserPassword,
-    getUserProfileData,
+    updateUserRole, // <-- add here
+    deleteUser, // <-- add here
   };
 };

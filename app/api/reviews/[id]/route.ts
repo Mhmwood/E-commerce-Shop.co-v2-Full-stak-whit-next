@@ -1,7 +1,7 @@
 import { createAsyncRoute } from "@lib/api/asyncRoute.ts";
 import { updateProductRating } from "@lib/api/products-utils/updateProductRating";
 import { authOptions } from "@lib/auth/auth";
-import { checkServerRole } from "@lib/auth/role-utils";
+import { checkServerAdmin } from "@lib/auth/role-utils";
 
 import { prisma } from "@lib/prisma";
 import { UpdateReviewSchema } from "@validations/reviewSchema";
@@ -57,7 +57,7 @@ export const PATCH = createAsyncRoute(
 
 export const DELETE = createAsyncRoute(
   async (request: NextRequest, params?: { [key: string]: string }) => {
-    const { user, hasAccess } = await checkServerRole("ADMIN");
+    const { user, hasAccess } = await checkServerAdmin();
 
     const id = params?.id;
 

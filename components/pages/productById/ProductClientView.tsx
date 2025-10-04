@@ -39,10 +39,11 @@ const ProductClientView = ({ id }: { id: string }) => {
       <section className="mt-12">
         <ProductSection
           title="You might also like"
-          limit={5}
+          limit={6}
           category={product?.category}
           sortBy="rating"
           order="desc"
+          productId={id}
         />
       </section>
     </div>

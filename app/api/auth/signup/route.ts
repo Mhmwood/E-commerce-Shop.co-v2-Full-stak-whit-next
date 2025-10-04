@@ -1,4 +1,4 @@
-codimport { createAsyncRoute } from "@lib/api/asyncRoute.ts";
+import { createAsyncRoute } from "@lib/api/asyncRoute.ts";
 import { prisma } from "@lib/prisma";
 import { SignUpSchema } from "@validations/authSchema";
 import { NextRequest, NextResponse } from "next/server";
@@ -8,7 +8,6 @@ import { checkServerAdmin } from "@lib/auth/role-utils";
 export const POST = createAsyncRoute(async (request: NextRequest) => {
   const rawData = await request.json();
 
-  
   const validation = SignUpSchema.safeParse(rawData);
   if (!validation.success) {
     return NextResponse.json(
@@ -19,7 +18,6 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
 
   const { name, email, password, image, role } = validation.data;
 
-
   if (role === "ADMIN") {
     const { hasAccess } = await checkServerAdmin();
     if (!hasAccess) {
@@ -29,7 +27,6 @@ export const POST = createAsyncRoute(async (request: NextRequest) => {
       );
     }
   }
-
 
   const existingUser = await prisma.user.findUnique({
     where: { email },
