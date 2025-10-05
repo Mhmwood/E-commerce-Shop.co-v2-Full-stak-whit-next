@@ -2,33 +2,25 @@
 
 import { useClickOutside } from "@hooks/use-click-outside";
 import { Product } from "@prisma/client";
-
 import { useSearchProducts } from "@hooks/useProducts";
-
 import { Plus, ShoppingCart } from "lucide-react";
-
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "@hooks/useCart";
+import { formatCurrency } from "@lib/utils";
+import { useDebounce } from "use-debounce";
 
 const SearchComponent = () => {
   const [query, setQuery] = useState<string>("");
   const [results, setResults] = useState<Product[]>([]);
-
   const { addItem } = useCart();
-
   const router = useRouter();
   const dropdownRef = useClickOutside<HTMLDivElement>(() => setQuery(""));
 
-  const { data, isPending } = useSearchProducts(query, 7);
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
-    setResults(data?.products || []);
-  };
+  const [debouncedQuery] = useDebounce(query, 300);
+  const { data, isPending } = useSearchProducts(debouncedQuery, 7);
 
   const handleAddToCart = (product: Product) => {
-
     addItem(
       {
         id: String(product.id),
@@ -43,8 +35,17 @@ const SearchComponent = () => {
     );
   };
 
+  useEffect(() => {
+    if (data?.products) {
+      setResults(data.products);
+    }
+  }, [data]);
+
   return (
-    <div className="relative  flex flex-grow items-center bg-secondary rounded-full  ">
+    <div
+      ref={dropdownRef}
+      className="relative  flex flex-grow items-center bg-secondary rounded-full  "
+    >
       <div className="pl-4 pr-2 text-gray-500">
         <svg
           width="20"
@@ -65,15 +66,12 @@ const SearchComponent = () => {
         id="Search"
         placeholder="Search for products..."
         className="w-full py-3 pr-4 bg-transparent outline-none placeholder:text-gray-400 text-gray-700"
-        onChange={handleSearchChange}
+        onChange={(e) => setQuery(e.target.value)}
         value={query}
       />
 
       {query && (
-        <div
-          ref={dropdownRef}
-          className="absolute w-full max-lg:fixed max-lg:inset-x-0 max-lg:bottom-0 max-lg:rounded-t-xl max-lg:shadow-xl lg:h-80 overflow-y-auto no-scrollbar scroll-smooth top-40 lg:top-12 left-0 right-0 bg-white rounded-xl shadow-lg z-50 border border-gray-100"
-        >
+        <div className="absolute w-full max-lg:fixed max-lg:inset-x-0 max-lg:bottom-0 max-lg:rounded-t-xl max-lg:shadow-xl lg:h-80 overflow-y-auto no-scrollbar scroll-smooth top-40 lg:top-12 left-0 right-0 bg-white rounded-xl shadow-lg z-50 border border-gray-100">
           {isPending && <div className="p-4 text-center">Loading...</div>}
           {!isPending && results.length === 0 && (
             <div className="p-4 text-center text-gray-400">
@@ -94,7 +92,7 @@ const SearchComponent = () => {
                   {product.title}
                 </h2>
                 <p className="text-xs text-gray-500">
-                  ${product.price.toFixed(2)}
+                  {formatCurrency(product.price)}
                 </p>
               </div>
 

@@ -73,5 +73,6 @@ export const useSearchProducts = (query: string, limit = 7) => {
       return res.json();
     },
     enabled: !!query,
+    staleTime: 1000 * 60 * 5,
   });
 };
