@@ -11,10 +11,11 @@ interface UseProductsParams {
   minPrice?: string;
   maxPrice?: string;
   select?: Record<string, boolean>;
+  NoStaleTime?: boolean;
 }
 
 export const useProducts = (params: UseProductsParams) =>
-  useQuery({
+  useQuery({ 
     queryKey: ["products", JSON.stringify(params)],
     queryFn: async () => {
       const query = new URLSearchParams({
@@ -37,7 +38,8 @@ export const useProducts = (params: UseProductsParams) =>
 
       return res.json();
     },
-    staleTime: 1000 * 60 * 5,
+    staleTime: params.NoStaleTime ? 0 : 1000 * 60 * 5,
+    
   });
 
 export const useProductById = (

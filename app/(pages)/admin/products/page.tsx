@@ -34,6 +34,7 @@ export default function AdminProductsPage() {
     page: currentPage,
     sortBy: "price",
     order: (sortOrder as "asc") || "desc",
+    NoStaleTime: true,
   });
 
   const products = data?.products || [];

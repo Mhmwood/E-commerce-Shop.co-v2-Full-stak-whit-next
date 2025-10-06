@@ -7,7 +7,7 @@ const GithubLink = ({ linkProfile }: { linkProfile: string }) => {
   return (
     <div className=" fixed cursor-pointer left-5 md:left-10 bottom-16 size-15 md:size-20 ">
       <Link href={linkProfile} target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile">
-        <div className="p-1 rounded-full text-primary bg-white transform hover:scale-125 hover:text-white hover:bg-primary transition duration-150 ease-in-out border-2 border-gray-300">
+        <div className="p-1 rounded-full text-primary bg-white transform hover:scale-125 hover:text-white hover:bg-primary transition duration-150 ease-in-out border-2 border-gray-900">
           <svg
             width="14"
             height="14"

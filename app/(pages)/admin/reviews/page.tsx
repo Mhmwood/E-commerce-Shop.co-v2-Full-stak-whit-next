@@ -69,7 +69,7 @@ export default function AdminReviewsPage() {
       });
 
       if (!res.ok) throw new Error("Delete failed");
-      // Remove deleted review from state
+      
       setReviews((prev) => prev.filter((r) => r.id !== id));
     } catch (err: unknown) {
       if (err instanceof Error) {

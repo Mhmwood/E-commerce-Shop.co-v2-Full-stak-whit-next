@@ -17,7 +17,7 @@ import {
   SelectItem,
   SelectValue,
 } from "@components/ui/select";
-//import { CategoriesList } from "@constants/index";
+
 import { CirclePlus } from "lucide-react";
 import {
   Carousel,
@@ -27,7 +27,8 @@ import {
   CarouselPrevious,
 } from "@components/ui/carousel";
 import { Trash, Edit } from "lucide-react";
-import { getCategories } from "@lib/utils";
+import { formatCurrency, getCategories } from "@lib/utils";
+
 
 interface ProductFormProps {
   onSubmit: (data: ProductInput) => Promise<void>;
@@ -92,12 +93,20 @@ const ProductForm: React.FC<ProductFormProps> = ({
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [imageErrors, setImageErrors] = useState<string[]>([]);
   const [category, setCategory] = useState<string[]>([]);
-
+  const [isCustomMode, setIsCustomMode] = useState<boolean>(false);
   const createdBlobUrls = useRef<string[]>([]);
   const originalImageUrls = useRef<(string | null)[]>([]);
 
   useEffect(() => {
-    getCategories().then(setCategory);
+    getCategories().then((cats) => {
+      setCategory(cats);
+      // if editing and product.category not in fetched categories -> custom mode
+      if (product?.category && !cats.includes(product.category)) {
+        setIsCustomMode(true);
+        setCustomCategory(product.category);
+        setValue("category", product.category, { shouldValidate: false });
+      }
+    });
     if (product?.images && product.images.length > 0) {
       setImagePreviews(product.images);
       setImages(product.images.map(() => null));
@@ -105,6 +114,8 @@ const ProductForm: React.FC<ProductFormProps> = ({
 
       originalImageUrls.current = product.images.slice();
     }
+  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product]);
 
   const handleAddImage = () => {
@@ -251,10 +262,25 @@ const ProductForm: React.FC<ProductFormProps> = ({
 
   const [showOptional, setShowOptional] = useState(false);
   const [customCategory, setCustomCategory] = useState("");
-  const categoryValue = watch("category") || "";
-  const isCustom = 
-    categoryValue === "__custom__" ||
-    (!category.includes(categoryValue) && categoryValue !== "");
+  const categoryValue = watch("category") || product?.category || "";
+
+
+  const [discount, setDiscount] = useState<number>(
+    product?.discountPercentage || 0
+  );
+  const priceValue = watch("price") || 0;
+  const discountedPrice = Math.max(
+    priceValue - (priceValue * discount) / 100,
+    0
+  );
+  const handleDiscountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let val = Number(e.target.value);
+    if (val < 0) val = 0;
+    if (val > 100) val = 100;
+    setDiscount(val);
+    setValue("discountPercentage", val, { shouldValidate: true });
+  };
+
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-10">
       {/* Fullscreen submitting overlay */}
@@ -463,23 +489,26 @@ const ProductForm: React.FC<ProductFormProps> = ({
               Category
             </label>
             <Select
-              value={isCustom ? "__custom__" : categoryValue}
+              value={isCustomMode ? "__custom__" : categoryValue}
               onValueChange={(value) => {
                 if (value === "__custom__") {
                   const confirmCustom = window.confirm(
                     "Are you sure you want to add a new category?"
                   );
                   if (confirmCustom) {
-                    setCustomCategory("");
-                    setValue("category", "__custom__", {
-                      shouldValidate: true,
-                    });
+                    setIsCustomMode(true);
+                    setCustomCategory(""); // clear custom input for new entry
+                    // set a neutral value and avoid immediate validation until user types
+                    setValue("category", "", { shouldValidate: false });
                   } else {
+                    // keep previous selection
+                    setIsCustomMode(false);
                     setValue("category", categoryValue, {
                       shouldValidate: true,
                     });
                   }
                 } else {
+                  setIsCustomMode(false);
                   setCustomCategory("");
                   setValue("category", value, { shouldValidate: true });
                 }
@@ -497,18 +526,15 @@ const ProductForm: React.FC<ProductFormProps> = ({
                 <SelectItem value="__custom__">Custom...</SelectItem>
               </SelectContent>
             </Select>
-            {isCustom && (
+            {isCustomMode && (
               <input
                 type="text"
                 className="mt-3 block w-full bg-secondary placeholder:text-gray-400 border border-gray-700 rounded-lg shadow-sm text-primary px-4 py-2 focus:ring-2 focus:ring-primary/40 focus:outline-none"
                 placeholder="Enter custom category"
-                value={
-                  categoryValue === "__custom__"
-                    ? customCategory
-                    : categoryValue
-                }
+                value={customCategory}
                 onChange={(e) => {
                   setCustomCategory(e.target.value);
+                  // update form value and validate as user types
                   setValue("category", e.target.value, {
                     shouldValidate: true,
                   });
@@ -538,6 +564,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
             <h3 className="md:col-span-2 text-lg font-semibold mb-4 text-primary">
               Optional Details
             </h3>
+
             <div>
               <label
                 htmlFor="discountPercentage"
@@ -546,19 +573,34 @@ const ProductForm: React.FC<ProductFormProps> = ({
                 Discount (%)
               </label>
               <input
-                {...register("discountPercentage", { valueAsNumber: true })}
                 type="number"
-                step="0.01"
                 id="discountPercentage"
                 className="mt-1 block w-full bg-secondary placeholder:text-gray-400 border border-gray-700 rounded-lg shadow-sm text-primary px-4 py-2 focus:ring-2 focus:ring-primary/40 focus:outline-none"
                 placeholder="0"
+                value={discount}
+                onChange={handleDiscountChange}
+                step="0.01"
               />
               {errors.discountPercentage && (
                 <p className="mt-2 text-sm text-red-500">
                   {errors.discountPercentage.message}
                 </p>
               )}
+
+              {/* Show price */}
+              <p className="mt-2 text-sm text-muted-foreground">
+                Original Price: {formatCurrency(priceValue)}
+              </p>
+              <p className="mt-1 text-sm font-semibold text-primary">
+                Price after discount: {formatCurrency(discountedPrice)}
+              </p>
+              {discount === 100 && (
+                <span className="mt-2 text-sm text-red-600 font-bold">
+                  This product is now free!
+                </span>
+              )}
             </div>
+
             <div>
               <label
                 htmlFor="brand"
