@@ -6,6 +6,8 @@ import Footer from "@components/Footer";
 import GithubLink from "@components/GithubLink";
 import LoadingBar from "@components/ui/Loaders/Barload";
 import Navbar from "@components/NavbarCom";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+
 
 export { metadata } from "@lib/seo";
 const integral = localFont({
@@ -34,6 +36,7 @@ export default function RootLayout({
           <Footer />
         </Providers>
         <GithubLink linkProfile="https://github.com/Mhmwood" />
+        <SpeedInsights />
       </body>
     </html>
   );
