@@ -185,4 +185,4 @@ The seeder automatically adds:
 - Error modes: validation errors (400), auth/permission errors (401/403), server errors (500)
 
 ## ⭐ Credits  
-- **Design by:** [Hamza Naeem](https://www.figma.com/community/file/1273571982885059508)  
+- **Design UI by:** [Hamza Naeem](https://www.figma.com/community/file/1273571982885059508)  
