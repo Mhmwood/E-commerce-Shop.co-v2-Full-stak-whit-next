@@ -1,8 +1,17 @@
-# E‑commerce Shop (Next.js + Prisma + Stripe + Supabase)
+# Full-Stack E-Commerce App (Next.js + Prisma + Stripe + Supabase)
 
-## LINK [https://e-commerce-shop-co-v2-full-stak-whi.vercel.app/]
+## 🚀 Live Demo  
+👉 [E-commerce Shop on Vercel](https://e-commerce-shop-co-v2-full-stak-whi.vercel.app/)
 
-This repository is a full-stack e-commerce storefront built with Next.js (App Router), TypeScript, Prisma (PostgreSQL), NextAuth, Stripe for payments, and Supabase for image storage. The app includes a public shop, product pages, cart and checkout flow, user profiles, reviews, and an admin area for managing products, users and analytics.
+## 🖼️ Preview
+
+
+
+
+This repository is a full-stack e-commerce storefront built with Next.js (App Router), TypeScript, Prisma (PostgreSQL), NextAuth, Stripe for payments, and Supabase for image storage. The app includes a public shop, product pages, cart and checkout flow, user profiles, reviews, and an admin area for managing products, users, and analytics.
+
+A complete modern e-commerce experience with authentication, Stripe checkout, and admin
+dashboard — built for performance and scalability.
 
 ## Quick summary
 
@@ -17,7 +26,7 @@ This repository is a full-stack e-commerce storefront built with Next.js (App Ro
 
 ## Key features
 
-- User registration, signin, profiles and role-based access (ADMIN / USER)
+- User registration, sign in, profiles and role-based access (ADMIN / USER)
 - Product catalog with rich product model (images, tags, SKU, dimensions, meta, stock, availability)
 - Search and pagination components
 - Cart and server-side checkout using Stripe Checkout
