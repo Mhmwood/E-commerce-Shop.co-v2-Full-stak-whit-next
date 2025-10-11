@@ -133,9 +133,7 @@ export default function SignUpPage() {
             </label>
 
             <ProfileImg
-          
               msg="Click the camera icon to add your profile picture"
-            
               imagePreview={
                 imageFile
                   ? URL.createObjectURL(imageFile)
@@ -143,8 +141,6 @@ export default function SignUpPage() {
               }
               onChange={(e) => setImageFile(e.target.files?.[0] || null)}
             />
-
-      
           </div>
 
           {errorMsg && (
