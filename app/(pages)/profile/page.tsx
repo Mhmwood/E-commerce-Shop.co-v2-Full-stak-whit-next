@@ -5,6 +5,7 @@ import { useAuth } from "@hooks/useAuth";
 import { uploadImage } from "@lib/upload/imgeUpload";
 import Image from "next/image";
 import { updateImage } from "@lib/upload/updateImg";
+import ProfileImg from "@components/ui/profileImg";
 
 const ProfilePage = () => {
   const {
@@ -15,8 +16,6 @@ const ProfilePage = () => {
     loading: authLoading,
     errorMsg: authError,
   } = useAuth();
-
- 
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -183,16 +182,11 @@ const ProfilePage = () => {
           </div>
         )}
         <form onSubmit={handleProfileUpdate}>
-          <div className="flex items-center mb-4">
-            <Image
-              src={imagePreview || "/defaultProfile.png"}
-              alt="Profile"
-              width={80}
-              height={80}
-              className="rounded-full mr-4"
-            />
-            <input type="file" onChange={handleImageChange} accept="image/*" />
-          </div>
+          <ProfileImg
+            msg="Click the camera icon to change your profile picture"
+            imagePreview={imagePreview}
+            onChange={handleImageChange}
+          />
           <div className="mb-4">
             <label
               htmlFor="name"

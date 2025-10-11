@@ -1,8 +1,8 @@
 "use client";
 
+import ProfileImg from "@components/ui/profileImg";
 import { useAuth } from "@hooks/useAuth";
 import { uploadImage } from "@lib/upload/imgeUpload";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -132,47 +132,25 @@ export default function SignUpPage() {
               {imgaload && <span className="text-red-500">Loading...</span>}
             </label>
 
-            {imageFile && (
-              <div className="flex flex-col items-start gap-2">
-                <Image
-                  className="w-24 h-24 rounded-full object-cover"
-                  src={URL.createObjectURL(imageFile)}
-                  alt="Profile Image"
-                  width={100}
-                  height={100}
-                />
+            <ProfileImg
+          
+              msg="Click the camera icon to add your profile picture"
+            
+              imagePreview={
+                imageFile
+                  ? URL.createObjectURL(imageFile)
+                  : "https://bkddaewshluqnvphgnqv.supabase.co/storage/v1/object/public/avatars/users/1750361164941-2cjwdmitlro.png"
+              }
+              onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+            />
 
-                <label
-                  htmlFor="image"
-                  className="inline-block cursor-pointer bg-primary text-white hover:bg-primary/95 px-4 py-2 rounded text-xs font-semibold"
-                  title="Change the image"
-                >
-                  Change Image
-                </label>
-
-                <input
-                  id="image"
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-                  className="hidden "
-                />
-              </div>
-            )}
-
-            {!imageFile && (
-              <input
-                id="image"
-                type="file"
-                accept="image/*"
-                onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-                className="w-full text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/95"
-              />
-            )}
+      
           </div>
 
           {errorMsg && (
-            <div className="mb-4 text-red-400 text-sm text-center">{errorMsg}</div>
+            <div className="mb-4 text-red-400 text-sm text-center">
+              {errorMsg}
+            </div>
           )}
 
           <button

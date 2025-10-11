@@ -32,7 +32,7 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ images }) => {
               key={index}
               onClick={() => setMainImage(image)}
               onMouseEnter={() => setMainImage(image)}
-              className=" relative aspect-square w-full overflow-hidden rounded-[1.25rem] bg-neutral-100 md:aspect-[19/21] md:max-w-[9.5rem]"
+              className=" relative aspect-square  min-w-[7rem]  overflow-hidden rounded-[1.25rem] bg-neutral-100 md:aspect-[19/21] md:max-w-[9.5rem]"
             >
               <Image
                 src={image}
@@ -49,11 +49,7 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ images }) => {
       <div
         className={`relative w-full overflow-hidden rounded-[1.25rem] bg-neutral-200 max-md:row-start-1 
           flex justify-center items-center
-    ${
-      images.length > 1
-        ? "lg:aspect-[222/265]   "
-        : "  md:h-[444px] md:w-[444px]"
-    }`}
+    ${!(images.length > 1) && "  md:h-[444px] md:w-[444px]"}`}
       >
         <Image
           src={mainImage}
