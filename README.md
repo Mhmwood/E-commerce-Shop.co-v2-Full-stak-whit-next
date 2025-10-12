@@ -1,10 +1,29 @@
 # Full-Stack E-Commerce App (Next.js + Prisma + Stripe + Supabase)
+![Next.js](https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=nextdotjs)
+![TypeScript](https://img.shields.io/badge/TypeScript-blue?style=for-the-badge&logo=typescript)
+![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma)
+![Stripe](https://img.shields.io/badge/Stripe-626CD9?style=for-the-badge&logo=stripe)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss)
+
 
 ## 🚀 Live Demo  
 👉 [E-commerce Shop on Vercel](https://e-commerce-shop-co-v2-full-stak-whi.vercel.app/)
 
 ## 🖼️ Preview
 
+### 🏠 Home | 🏬 Shop | 🛒 Cart
+![Home](public/github/home.png)
+![Shop](public/github/shop.png)
+![Cart](public/github/cart.png)
+
+### 👤 Profile | ⚙️ Admin
+![Profile](public/github/profile.jpg)
+![Admin Dashboard](public/github/admin.png)
+
+### 🧩 Products & Reviews Management
+![Products](public/github/admin-products.png)
+![Reviews](public/github/admin-reviews.png)
 
 
 
