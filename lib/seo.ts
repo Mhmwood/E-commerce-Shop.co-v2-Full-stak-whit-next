@@ -27,10 +27,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [
         {
           url: product.thumbnail || "/defaultProfile",
-          // width: 295,
-          // height: 298,
-          width: 1200,
-          height: 630,
+          width: 295,
+          height: 298,
+      
           alt: product.title,
         },
       ],
@@ -41,10 +40,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [
         {
           url: product.thumbnail || "/defaultProfile",
-          // width: 295,
-          // height: 298,
-          width: 1200,
-          height: 630,
+          width: 295,
+          height: 298,
           alt: product.title,
         },
       ],
