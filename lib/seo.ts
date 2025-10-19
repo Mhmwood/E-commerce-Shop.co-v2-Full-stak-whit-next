@@ -26,7 +26,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: `${BASE_URL}/product/${id}`,
       images: [
         {
-          url: product.thumbnail || "/default-og.png",
+          url: product.thumbnail || "/defaultProfile",
+          // width: 295,
+          // height: 298,
           width: 1200,
           height: 630,
           alt: product.title,
@@ -34,11 +36,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ],
     },
     twitter: {
-      card: "summary_large_image",
       title: product.title,
       description: product.description,
       images: [
-        product.thumbnail || "/images/website/Browse By Dress/party.png",
+        {
+          url: product.thumbnail || "/defaultProfile",
+          // width: 295,
+          // height: 298,
+          width: 1200,
+          height: 630,
+          alt: product.title,
+        },
       ],
     },
   };
@@ -85,7 +93,7 @@ export const metadata: Metadata = {
     siteName: "Shop.co",
     images: [
       {
-        url: "/images/website/Browse By Dress/party.png",
+        url: "/github/home.png",
         width: 1200,
         height: 630,
       },
@@ -93,9 +101,14 @@ export const metadata: Metadata = {
     type: "website",
   },
   twitter: {
-    card: "summary_large_image",
     title: "Shop.co - Home",
     description: "Shop.co is your online store for the latest trends",
-    images: ["/images/website/Browse By Dress/gym.png"],
+    images: [
+      {
+        url: "/github/home.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
   },
 };
