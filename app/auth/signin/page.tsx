@@ -4,6 +4,7 @@ import { useAuth } from "@hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { GoogleIcon } from "@/components/GoogleIcon";
 export default function SignInPage() {
   const { login, errorMsg, loading } = useAuth();
   const router = useRouter();
@@ -63,10 +64,13 @@ export default function SignInPage() {
         >
           {loading ? "Sign In ..." : errorMsg ? "failed" : "Sign In "}
         </button>
+      <button                                                   type="submit"                                           className="w-full  px-4 py-2  font-bold rounded-3xl p-1 cursor-pointer border border-gray-700 hover:bg-primary hover:text-white transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary/40"           onClick={() => signIn("google")} >  
+<
 
-        <button onClick={() => signIn("google")}>
+      <GoogleIcon className="mr-2 h-4 w-4" />
   Sign in with Google
-</button>
+      </button>
+	
         {errorMsg && (
           <div className="mt-4 text-red-400 text-sm text-center">
             {errorMsg}
