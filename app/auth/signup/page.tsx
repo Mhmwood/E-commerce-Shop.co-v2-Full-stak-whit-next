@@ -5,6 +5,7 @@ import { useAuth } from "@hooks/useAuth";
 import { uploadImage } from "@lib/upload/imgeUpload";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 import { GoogleIcon } from "../../../components/GoogleIcon";
 export default function SignUpPage() {
   const { register, errorMsg, loading } = useAuth();

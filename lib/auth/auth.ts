@@ -72,7 +72,7 @@ export const authOptions: NextAuthOptions = {
         token.email = user.email;
         token.name = user.name;
         token.picture = user.image;
-        token.role = user.role;
+        token.role = user.role ?? "USER";
       }
       if (trigger === "update" && session) {
         token.name = session.name ?? token.name;
@@ -88,7 +88,7 @@ export const authOptions: NextAuthOptions = {
         session.user.name = token.name as string;
         session.user.email = token.email as string;
         session.user.image = token.picture as string;
-        session.user.role = token.role as "ADMIN" | "USER";
+        session.user.role = (token.role ?? "USER") as "ADMIN" | "USER";
       }
       return session;
     },
