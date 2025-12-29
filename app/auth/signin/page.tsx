@@ -4,7 +4,8 @@ import { useAuth } from "@hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { GoogleIcon } from "@/components/GoogleIcon";
+import { GoogleIcon } from "../../../components/GoogleIcon";
+
 export default function SignInPage() {
   const { login, errorMsg, loading } = useAuth();
   const router = useRouter();
