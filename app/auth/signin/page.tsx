@@ -3,7 +3,7 @@
 import { useAuth } from "@hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
+import { signIn } from "next-auth/react";
 export default function SignInPage() {
   const { login, errorMsg, loading } = useAuth();
   const router = useRouter();
@@ -34,7 +34,9 @@ export default function SignInPage() {
 
   return (
     <main className="dark bg-secondary min-h-screen py-10 md:py-20 px-4 md:px-20 mt-10 text-primary flex items-center justify-center">
-      <form
+    
+	
+    <form
         onSubmit={handleSubmit}
         className="border-2 p-8 rounded-2xl shadow w-full max-w-sm"
       >
@@ -62,6 +64,9 @@ export default function SignInPage() {
           {loading ? "Sign In ..." : errorMsg ? "failed" : "Sign In "}
         </button>
 
+        <button onClick={() => signIn("google")}>
+  Sign in with Google
+</button>
         {errorMsg && (
           <div className="mt-4 text-red-400 text-sm text-center">
             {errorMsg}
