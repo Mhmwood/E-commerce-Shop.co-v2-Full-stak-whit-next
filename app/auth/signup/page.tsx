@@ -157,12 +157,7 @@ export default function SignUpPage() {
             {loading ? "Signing Up..." : "Sign Up"}
           </button>
 
-	          <button                                                   type="button"                                             onClick={() => signIn("google", { callbackUr
-																			    l: "/" })}
-																			                  className="w-full mt-4 flex items-center j
-																					  ustify-center px-4 py-2 font-bold rounded-3xl cursor-pointer border border-gray-700 hover:bg-primary hover:text-
-																						  white transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary/40"
-																					                >                                                         <GoogleIcon className="mr-2 h-5 w-5" />                   Sign in with Google                                     </button>                             
+	          <button                                                   type="button"                                             onClick={() => signIn("google", { callbackUrl: "/" })}					                  className="w-full mt-4 flex items-center justify-center px-4 py-2 font-bold rounded-3xl cursor-pointer border border-gray-700 hover:bg-primary hover:text-white transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary/40" >                                         <GoogleIcon className="mr-2 h-5 w-5" />                   Sign in with Google                                     </button>                             
         </form>
         <div className="mt-6 text-center text-gray-400 text-sm">
           Already have an account?{" "}
